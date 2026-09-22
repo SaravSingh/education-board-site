@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120" width="180" height="98">
+  <g transform="translate(10, 10)">
+    <!-- Spectacles Left Lens -->
+    <circle cx="50" cy="40" r="24" fill="none" stroke="#000000" stroke-width="4"/>
+    <text x="50" y="45" font-family="'Kohinoor Devanagari', 'Mangal', sans-serif" font-size="12" font-weight="bold" fill="#000000" text-anchor="middle">स्वच्छ</text>
+
+    <!-- Spectacles Right Lens -->
+    <circle cx="110" cy="40" r="24" fill="none" stroke="#000000" stroke-width="4"/>
+    <text x="110" y="45" font-family="'Kohinoor Devanagari', 'Mangal', sans-serif" font-size="12" font-weight="bold" fill="#000000" text-anchor="middle">भारत</text>
+
+    <!-- Bridge & Side Arms -->
+    <path d="M 74,40 C 78,32 82,32 86,40" fill="none" stroke="#000000" stroke-width="4"/>
+    <path d="M 26,40 C 15,35 5,15 0,0" fill="none" stroke="#000000" stroke-width="3"/>
+    <path d="M 134,40 C 145,35 175,15 200,30" fill="none" stroke="#000000" stroke-width="3"/>
+
+    <!-- Bottom Line Text -->
+    <text x="80" y="85" font-family="'Kohinoor Devanagari', 'Mangal', sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">एक कदम स्वच्छता की ओर</text>
+  </g>
+</svg>

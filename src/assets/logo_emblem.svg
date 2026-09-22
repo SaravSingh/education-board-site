@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100" height="100">
+  <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#a00000" stroke-width="4"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#a00000" stroke-width="2" stroke-dasharray="4 2"/>
+  <circle cx="100" cy="100" r="76" fill="#fff5f5" stroke="#a00000" stroke-width="2"/>
+  
+  <path id="textPathTop" d="M 28,100 A 72,72 0 1,1 172,100" fill="none"/>
+  
+  <text font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#a00000" text-anchor="middle">
+    <textPath href="#textPathTop" startOffset="50%">
+      BOARD OF HIGHER SECONDARY EDUCATION
+    </textPath>
+  </text>
+  
+  <g transform="translate(100, 102) scale(0.85)">
+    <rect x="-35" y="25" width="70" height="10" fill="#a00000" rx="2"/>
+    <rect x="-30" y="20" width="60" height="5" fill="#a00000"/>
+    <circle cx="0" cy="25" r="5" fill="#ffffff" stroke="#a00000" stroke-width="1.5"/>
+    
+    <path d="M 0,-35 L -10,-10 L -25,-25 L -12,15 L 12,15 L 25,-25 L 10,-10 Z" fill="#b30000"/>
+    <path d="M -15,-30 Q 0,-50 15,-30 Q 0,-38 -15,-30 Z" fill="#ff9900"/>
+    <path d="M -8,-32 Q 0,-45 8,-32 Q 0,-36 -8,-32 Z" fill="#ffcc00"/>
+    
+    <path d="M -30,0 Q 0,-10 30,0 L 25,18 Q 0,8 -25,18 Z" fill="#a00000"/>
+    <path d="M -28,3 Q 0,-7 28,3 L 24,15 Q 0,5 -24,15 Z" fill="#ffffff"/>
+    <line x1="0" y1="-5" x2="0" y2="12" stroke="#a00000" stroke-width="2"/>
+  </g>
+  
+  <rect x="55" y="152" width="90" height="22" rx="4" fill="#a00000"/>
+  <text x="100" y="167" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Estd.- 1964
+  </text>
+</svg>

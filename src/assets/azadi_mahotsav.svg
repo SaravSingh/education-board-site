@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" width="160" height="128">
+  <g transform="translate(10, 10)">
+    <!-- 75 Number in Tricolor Motif -->
+    <path d="M 20,20 L 75,20 L 50,80 L 70,80" fill="none" stroke="#f7931e" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Flag Swirl Ribbon -->
+    <path d="M 65,15 Q 110,-5 150,20 Q 120,45 80,35 Q 120,60 160,50" fill="none" stroke="#ff9933" stroke-width="6"/>
+    <path d="M 65,21 Q 110,1 150,26 Q 120,51 80,41 Q 120,66 160,56" fill="none" stroke="#ffffff" stroke-width="6"/>
+    <path d="M 65,27 Q 110,7 150,32 Q 120,57 80,47 Q 120,72 160,62" fill="none" stroke="#138808" stroke-width="6"/>
+    
+    <!-- Ashoka Chakra -->
+    <circle cx="115" cy="30" r="8" fill="none" stroke="#000080" stroke-width="1.5"/>
+    <circle cx="115" cy="30" r="2" fill="#000080"/>
+    
+    <!-- Text: Azadi Ka Amrit Mahotsav in Hindi -->
+    <text x="90" y="95" font-family="'Kohinoor Devanagari', 'Mangal', 'Arial', sans-serif" font-size="20" font-weight="bold" fill="#333333" text-anchor="middle">आज़ादी का</text>
+    <text x="90" y="122" font-family="'Kohinoor Devanagari', 'Mangal', 'Arial', sans-serif" font-size="22" font-weight="bold" fill="#8b1d1d" text-anchor="middle">अमृत महोत्सव</text>
+  </g>
+</svg>

@@ -1,0 +1,368 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.25 0.1 260);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.96 0.01 250);
+  --secondary-foreground: oklch(0.2 0.04 260);
+  --muted: oklch(0.96 0.01 250);
+  --muted-foreground: oklch(0.55 0.04 250);
+  --accent: oklch(0.96 0.01 250);
+  --accent-foreground: oklch(0.2 0.04 260);
+  --destructive: oklch(0.57 0.24 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.92 0.01 255);
+  --input: oklch(0.92 0.01 255);
+  --ring: oklch(0.7 0.04 256);
+}
+
+.dark {
+  --background: oklch(0.13 0.04 264);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.2 0.04 265);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.2 0.04 265);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.92 0.01 255);
+  --primary-foreground: oklch(0.2 0.04 265);
+  --secondary: oklch(0.27 0.04 260);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.27 0.04 260);
+  --muted-foreground: oklch(0.7 0.04 256);
+  --accent: oklch(0.27 0.04 260);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.7 0.19 22);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.55 0.02 264);
+}
+
+/* Animations & Keyframes */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes accordionDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordionUp {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordionDown 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordionUp 0.2s ease-out;
+}
+
+@keyframes caretBlink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  35%,
+  65% {
+    opacity: 0;
+  }
+}
+
+.animate-caret-blink {
+  animation: caretBlink 1.2s ease-in-out infinite;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      "Open Sans",
+      "Helvetica Neue",
+      sans-serif;
+  }
+}
+
+/* Print Stylesheet for A4 Sheet Marksheet Printing */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 4mm 5mm;
+  }
+
+  /* Reset body and html for print canvas */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide UI elements not meant for print */
+  header,
+  footer,
+  nav,
+  aside,
+  form,
+  button,
+  .print\:hidden,
+  .no-print,
+  [data-aria-hidden="true"] {
+    display: none !important;
+  }
+
+  /* Hide everything on screen by default when printing */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Reset container styles for print modals */
+  div,
+  main,
+  section,
+  article,
+  [role="dialog"] {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Show ONLY printable marksheet content and its descendants */
+  .printable-marksheet,
+  .printable-marksheet * {
+    visibility: visible !important;
+  }
+
+  /* Preserve position relative & absolute inside printable marksheet */
+  .printable-marksheet .relative,
+  .printable-marksheet [class*="relative"] {
+    position: relative !important;
+  }
+
+  .printable-marksheet .absolute,
+  .printable-marksheet [class*="absolute"] {
+    position: absolute !important;
+  }
+
+  /* Position printable marksheet cleanly to fill 1 single A4 sheet */
+  .printable-marksheet {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 6px 12px !important;
+    background: #ffffff !important;
+    border: 2px solid #06b6d4 !important;
+    box-shadow: none !important;
+    border-radius: 4px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure print buttons inside printable marksheet are hidden */
+  .printable-marksheet .print\:hidden,
+  .printable-marksheet button {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Watermark positioning fix in print mode */
+  .printable-marksheet .marksheet-watermark,
+  .marksheet-watermark {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    opacity: 0.1 !important;
+  }
+
+  .printable-marksheet .marksheet-watermark img,
+  .marksheet-watermark img {
+    max-width: 210px !important;
+    max-height: 210px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Compact typography & cell paddings so everything fits on 1 A4 page */
+  .printable-marksheet h1 {
+    font-size: 1.05rem !important;
+    line-height: 1.15 !important;
+    margin-top: 0 !important;
+    margin-bottom: 2px !important;
+  }
+
+  .printable-marksheet h2 {
+    font-size: 0.9rem !important;
+    line-height: 1.15 !important;
+    margin-top: 0 !important;
+    margin-bottom: 2px !important;
+  }
+
+  .printable-marksheet h3 {
+    font-size: 0.85rem !important;
+    line-height: 1.15 !important;
+    margin-top: 2px !important;
+    margin-bottom: 3px !important;
+  }
+
+  .printable-marksheet table th,
+  .printable-marksheet table td {
+    padding: 2.5px 4px !important;
+    font-size: 10px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .printable-marksheet .mb-3,
+  .printable-marksheet .mb-4,
+  .printable-marksheet .mb-6 {
+    margin-bottom: 5px !important;
+  }
+
+  .printable-marksheet .p-3,
+  .printable-marksheet .p-4,
+  .printable-marksheet .p-8 {
+    padding: 5px 8px !important;
+  }
+
+  .printable-marksheet .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 6px !important;
+  }
+}
