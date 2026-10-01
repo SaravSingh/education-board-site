@@ -125,15 +125,12 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           {/* TOP SECTION: SERIAL NO & EMBLEM HEADERS */}
           <div>
             {/* Top Serial Number */}
-            <div className="flex justify-between items-baseline mb-0.5 px-0.5">
+            <div className="flex justify-start items-baseline mb-0.5 px-0.5">
               <div className="text-xs sm:text-[13px] print:text-[11px] font-bold text-slate-900 font-sans tracking-wide">
                 <span>क्रमांक (S.No.)</span>{" "}
                 <span className="font-mono font-extrabold text-sm print:text-xs ml-1.5 text-black">
                   {student.serial_no || "401879"}
                 </span>
-              </div>
-              <div className="text-[10px] print:text-[8.5px] text-slate-700 font-sans font-extrabold uppercase tracking-wider">
-                COSE RAJASTHAN
               </div>
             </div>
 

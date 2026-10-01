@@ -444,7 +444,7 @@ function ResultPage() {
                           className="w-full bg-[#007bff] hover:bg-blue-700 text-white font-extrabold px-5 py-2.5 rounded text-xs uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                         >
                           <FileText className="w-4 h-4" />
-                          <span>SHOW MARKSHEET &amp; DEGREE</span>
+                          <span>SHOW MARKSHEET</span>
                         </button>
                       </div>
                     </div>
@@ -485,8 +485,8 @@ function ResultPage() {
                       <div className="flex items-start gap-2">
                         <div className="w-2 h-2 rounded-full bg-blue-600 mt-1.5 shrink-0"></div>
                         <span>
-                          Click <strong>"Show Marksheet &amp; Degree"</strong> to preview, download,
-                          or print official documents for university admissions.
+                          Click <strong>"Show Marksheet"</strong> to preview, download, or print
+                          official documents for university admissions.
                         </span>
                       </div>
 
@@ -504,10 +504,11 @@ function ResultPage() {
           </div>
         )}
 
-        {/* STEP 3: OFFICIAL MARKSHEET & DEGREE VIEW */}
+        {/* STEP 3: OFFICIAL MARKSHEET VIEW */}
         {step === 3 && selectedResult && (
           <div className="max-w-5xl mx-auto space-y-4">
-            {/* Template Format Switcher Bar (Hidden in Print) */}
+            {/* Template Format Switcher Bar hidden as requested — only single official format shown */}
+            {/*
             <div className="bg-white p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-3 print:hidden">
               <div className="text-xs font-bold text-slate-700 flex items-center gap-2">
                 <span className="font-extrabold text-blue-900">Certificate Format:</span>
@@ -540,6 +541,7 @@ function ResultPage() {
                 </button>
               </div>
             </div>
+            */}
 
             {/* RENDER SELECTED FORMAT */}
             {templateFormat === "COSE" ? (
