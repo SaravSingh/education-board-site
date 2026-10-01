@@ -9,8 +9,6 @@ import {
   Loader2,
   Image as ImageIcon,
 } from "lucide-react";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
 
 interface CoseMarksheetDegreeProps {
   student: StudentResult;
@@ -79,9 +77,10 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
       });
       await Promise.all(imgPromises);
 
-      if (document.fonts) {
-        await document.fonts.ready;
-      }
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
 
       // Render at 2x scale (~192 DPI) for crisp vector sharpness
       const canvas = await html2canvas(docElement, {
@@ -176,6 +175,8 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         ),
       );
       if (document.fonts) await document.fonts.ready;
+
+      const { default: html2canvas } = await import("html2canvas");
 
       const canvas = await html2canvas(docElement, {
         scale: 2,

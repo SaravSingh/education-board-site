@@ -1,5 +1,3 @@
-import { createClient } from "@libsql/client";
-
 // Turso libSQL client configuration
 const TURSO_URL = "libsql://education-saravsingh729.aws-ap-south-1.turso.io";
 
@@ -1130,8 +1128,9 @@ class LocalStore {
 
 export const dbStore = new LocalStore();
 
-export function getTursoClient() {
+export async function getTursoClient() {
   try {
+    const { createClient } = await import("@libsql/client/web");
     return createClient({ url: TURSO_URL });
   } catch (err) {
     console.warn("Turso libSQL client initialization warning:", err);
