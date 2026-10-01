@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { StudentResult, SubjectMarks, numberToIndividualDigitWords } from "@/lib/db";
-import { Printer, ArrowLeft, Award, FileText, Download, Loader2 } from "lucide-react";
+import {
+  Printer,
+  ArrowLeft,
+  Award,
+  FileText,
+  Download,
+  Loader2,
+  Image as ImageIcon,
+} from "lucide-react";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 interface CoseMarksheetDegreeProps {
   student: StudentResult;
@@ -8,6 +18,22 @@ interface CoseMarksheetDegreeProps {
   defaultDocType?: "MARKSHEET" | "DEGREE";
   autoDownload?: boolean;
 }
+
+// Convert any image URL to an inline base64 Data URL to guarantee zero canvas tainting
+const fetchAsDataUrl = async (url: string): Promise<string> => {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => resolve(url);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    return url;
+  }
+};
 
 export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   student,
@@ -17,6 +43,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
 }) => {
   const [docType, setDocType] = useState<"MARKSHEET" | "DEGREE">(defaultDocType);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isGeneratingImg, setIsGeneratingImg] = useState(false);
 
   let subjects: SubjectMarks[] = [];
   try {
@@ -56,33 +83,41 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         await document.fonts.ready;
       }
 
-      const html2canvas = (await import("html2canvas")).default;
-      const { jsPDF } = await import("jspdf");
-
-      // Render at 2.5x scale (~240 DPI) for crisp vector sharpness while keeping memory light
+      // Render at 2x scale (~192 DPI) for crisp vector sharpness
       const canvas = await html2canvas(docElement, {
-        scale: 2.5,
+        scale: 2,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         logging: false,
         backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
         windowWidth: 1200,
-        onclone: (clonedDoc) => {
+        onclone: async (clonedDoc) => {
           const clonedEl = clonedDoc.getElementById("bhse-degree-document");
           if (clonedEl) {
             clonedEl.style.width = "794px";
-            clonedEl.style.height = "1123px";
             clonedEl.style.maxWidth = "794px";
-            clonedEl.style.maxHeight = "1123px";
-            clonedEl.style.minHeight = "1123px";
-            clonedEl.style.margin = "0";
+            clonedEl.style.margin = "0 auto";
             clonedEl.style.boxSizing = "border-box";
             clonedEl.style.transform = "none";
           }
+          // Convert all images inside the clone to inline base64 so canvas is 100% untainted
+          const clonedImgs = clonedDoc.querySelectorAll<HTMLImageElement>(
+            "#bhse-degree-document img",
+          );
+          await Promise.all(
+            Array.from(clonedImgs).map(async (img) => {
+              if (img.src && !img.src.startsWith("data:")) {
+                const dataUrl = await fetchAsDataUrl(img.src);
+                if (dataUrl) img.src = dataUrl;
+              }
+            }),
+          );
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.98);
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -98,7 +133,21 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         : "Student";
       const rollNo = student.roll_no || "Result";
       const fileName = `${cleanName}_Roll_${rollNo}_Marksheet.pdf`;
-      pdf.save(fileName);
+
+      // Multi-method download trigger to guarantee download works across all browsers
+      try {
+        pdf.save(fileName);
+      } catch (saveErr) {
+        const blob = pdf.output("blob");
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+      }
     } catch (err) {
       console.error("PDF generation error:", err);
       // Fallback to native print dialog
@@ -107,6 +156,84 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
       setIsGeneratingPdf(false);
     }
   }, [student, isGeneratingPdf]);
+
+  // Direct High-Resolution HD Image Download (JPG)
+  const handleDownloadImage = useCallback(async () => {
+    const docElement = document.getElementById("bhse-degree-document");
+    if (!docElement || isGeneratingImg) return;
+
+    setIsGeneratingImg(true);
+    try {
+      const images = docElement.getElementsByTagName("img");
+      await Promise.all(
+        Array.from(images).map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((r) => {
+                img.onload = r;
+                img.onerror = r;
+              }),
+        ),
+      );
+      if (document.fonts) await document.fonts.ready;
+
+      const canvas = await html2canvas(docElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200,
+        onclone: async (clonedDoc) => {
+          const clonedEl = clonedDoc.getElementById("bhse-degree-document");
+          if (clonedEl) {
+            clonedEl.style.width = "794px";
+            clonedEl.style.maxWidth = "794px";
+            clonedEl.style.margin = "0 auto";
+            clonedEl.style.boxSizing = "border-box";
+            clonedEl.style.transform = "none";
+          }
+          const clonedImgs = clonedDoc.querySelectorAll<HTMLImageElement>(
+            "#bhse-degree-document img",
+          );
+          await Promise.all(
+            Array.from(clonedImgs).map(async (img) => {
+              if (img.src && !img.src.startsWith("data:")) {
+                const dataUrl = await fetchAsDataUrl(img.src);
+                if (dataUrl) img.src = dataUrl;
+              }
+            }),
+          );
+        },
+      });
+
+      const cleanName = student.student_name
+        ? student.student_name.trim().replace(/\s+/g, "_")
+        : "Student";
+      const rollNo = student.roll_no || "Result";
+      const fileName = `${cleanName}_Roll_${rollNo}_Marksheet.jpg`;
+
+      const imgBlob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/jpeg", 0.95),
+      );
+      if (imgBlob) {
+        const imgUrl = URL.createObjectURL(imgBlob);
+        const link = document.createElement("a");
+        link.href = imgUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(imgUrl), 15000);
+      }
+    } catch (e) {
+      console.error("Image generation error:", e);
+    } finally {
+      setIsGeneratingImg(false);
+    }
+  }, [student, isGeneratingImg]);
 
   useEffect(() => {
     if (autoDownload) {
@@ -142,14 +269,14 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         </div>
 
-        {/* Actions: Download PDF (A4) & Print */}
+        {/* Actions: Download PDF (A4), Download Image (HD), & Print */}
         <div className="flex items-center gap-2 ml-auto sm:ml-0">
           <button
             id="bhse-download-pdf-btn"
             onClick={handleDownloadPdf}
             disabled={isGeneratingPdf}
             className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95"
-            title="Download high-resolution official marksheet in exact A4 sheet fit size"
+            title="Download official marksheet in exact A4 sheet fit size (PDF)"
           >
             {isGeneratingPdf ? (
               <>
@@ -165,8 +292,22 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
 
           <button
+            onClick={handleDownloadImage}
+            disabled={isGeneratingImg}
+            className="px-3 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95"
+            title="Download high-resolution image format (JPG)"
+          >
+            {isGeneratingImg ? (
+              <Loader2 className="w-4 h-4 text-white animate-spin" />
+            ) : (
+              <ImageIcon className="w-4 h-4 text-yellow-300" />
+            )}
+            <span>Download Image (HD)</span>
+          </button>
+
+          <button
             onClick={() => window.print()}
-            className="px-3.5 py-2 bg-slate-700 hover:bg-slate-800 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95"
+            className="px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95"
             title="Print or Save via Browser System Print Dialog"
           >
             <Printer className="w-4 h-4 text-yellow-300" />
@@ -188,7 +329,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           className="bhse-bg-watermark absolute inset-0 pointer-events-none z-0 opacity-80"
           style={{
             backgroundImage:
-              'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjEzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDx0ZXh0IHg9IjAiIHk9IjEwLjIiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOC4yIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjYTI5Y2Q2IiB0ZXh0TGVuZ3RoPSIyNDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyI+Qk9BUkQgT0YgSElHSEVSIFNFQ09OREFSWSBFRFVDQVRJT04gREVMSEkmIzE2MDs8L3RleHQ+Cjwvc3ZnPg=="), url("/bhse_degree_bg_pattern.svg")',
+              'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjEzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDx0ZXh0IHg9IjAiIHk9IjEwLjIiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOC4yIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjYTI5Y2Q2IiB0ZXh0TGVuZ3RoPSIyNDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyI+Qk9BUkQgT0YgSElHSEVSIFNFQ09OREFSWSBFRFVDQVRJT04gREVMSEkmIzE2MDs8L3RleHQ+Cjwvc3ZnPg==")',
             backgroundRepeat: "repeat",
             backgroundSize: "240px 13px",
             WebkitPrintColorAdjust: "exact",
@@ -201,6 +342,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           <img
             src="/bhse_emblem_blue.png"
             alt="Watermark"
+            crossOrigin="anonymous"
             className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
           />
         </div>
@@ -244,6 +386,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                 <img
                   src="/bhse_emblem_blue.png"
                   alt="BHSE Emblem Seal"
+                  crossOrigin="anonymous"
                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
                 />
               </div>
@@ -369,6 +512,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                 <img
                   src={student.photo_url || "/students/dhirodutta_saha.jpg"}
                   alt={student.student_name}
+                  crossOrigin="anonymous"
                   className="w-[105px] h-[132px] sm:w-[115px] sm:h-[144px] object-cover block grayscale contrast-105"
                 />
               </div>
@@ -530,6 +674,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                 <img
                   src="/bhse_controller_signature.png"
                   alt="Controller Signature"
+                  crossOrigin="anonymous"
                   className="h-8 sm:h-9 object-contain mb-0.5"
                 />
                 <div className="font-bold text-xs sm:text-[12.5px] text-[#0028a5] leading-tight">
