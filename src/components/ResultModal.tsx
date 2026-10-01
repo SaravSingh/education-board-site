@@ -12,6 +12,7 @@ import {
   Award,
   FileText,
   ExternalLink,
+  Download,
 } from "lucide-react";
 import {
   dbStore,
@@ -46,6 +47,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
   const [selectedResult, setSelectedResult] = useState<StudentResult | null>(null);
   const [parsedSubjects, setParsedSubjects] = useState<SubjectMarks[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
+  const [autoDownloadMarksheet, setAutoDownloadMarksheet] = useState(false);
 
   useEffect(() => {
     const updateClock = () => {
@@ -497,11 +499,24 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
 
                         <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
                           <button
-                            onClick={() => setStep(3)}
-                            className="w-full bg-[#1b3f8b] hover:bg-[#102d68] text-white font-extrabold px-5 py-3 rounded text-sm uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-2"
+                            onClick={() => {
+                              setAutoDownloadMarksheet(false);
+                              setStep(3);
+                            }}
+                            className="w-full sm:flex-1 bg-[#1b3f8b] hover:bg-[#102d68] text-white font-extrabold px-4 py-3 rounded-lg text-xs sm:text-sm uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-2"
                           >
-                            <FileText className="w-5 h-5 text-yellow-300" />
-                            <span>अंक विवरणिका (Marks Statement)</span>
+                            <FileText className="w-4 h-4 text-yellow-300" />
+                            <span>अंक विवरणिका देखें (View Marksheet)</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setAutoDownloadMarksheet(true);
+                              setStep(3);
+                            }}
+                            className="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-3 rounded-lg text-xs sm:text-sm uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-2"
+                          >
+                            <Download className="w-4 h-4 text-yellow-300" />
+                            <span>डाउनलोड करें (Download A4 PDF)</span>
                           </button>
                         </div>
                       </div>
@@ -563,7 +578,14 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
 
           {/* STEP 3: OFFICIAL MARKSHEET VIEW (100% Faithful BHSE Delhi Format) */}
           {step === 3 && selectedResult && (
-            <CoseMarksheetDegree student={selectedResult} onBack={() => setStep(2)} />
+            <CoseMarksheetDegree
+              student={selectedResult}
+              onBack={() => {
+                setAutoDownloadMarksheet(false);
+                setStep(2);
+              }}
+              autoDownload={autoDownloadMarksheet}
+            />
           )}
         </div>
       </div>

@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StudentResult, SubjectMarks, numberToIndividualDigitWords } from "@/lib/db";
-import { Printer, ArrowLeft, Award, FileText, CheckCircle2 } from "lucide-react";
+import { Printer, ArrowLeft, Award, FileText, Download, Loader2 } from "lucide-react";
 
 interface CoseMarksheetDegreeProps {
   student: StudentResult;
   onBack?: () => void;
   defaultDocType?: "MARKSHEET" | "DEGREE";
+  autoDownload?: boolean;
 }
 
 export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   student,
   onBack,
   defaultDocType = "MARKSHEET",
+  autoDownload = false,
 }) => {
   const [docType, setDocType] = useState<"MARKSHEET" | "DEGREE">(defaultDocType);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   let subjects: SubjectMarks[] = [];
   try {
@@ -31,6 +34,89 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
     : "Secondary School Examination";
   const examSession = student.batch || `MAY ${student.exam_year || "2009"}`;
 
+  // Direct High-Resolution A4 Sheet Fit PDF Download
+  const handleDownloadPdf = useCallback(async () => {
+    const docElement = document.getElementById("bhse-degree-document");
+    if (!docElement || isGeneratingPdf) return;
+
+    setIsGeneratingPdf(true);
+    try {
+      // Ensure all images are fully loaded before capturing
+      const images = docElement.getElementsByTagName("img");
+      const imgPromises = Array.from(images).map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+      await Promise.all(imgPromises);
+
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
+
+      // Render at 2.5x scale (~240 DPI) for crisp vector sharpness while keeping memory light
+      const canvas = await html2canvas(docElement, {
+        scale: 2.5,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const clonedEl = clonedDoc.getElementById("bhse-degree-document");
+          if (clonedEl) {
+            clonedEl.style.width = "794px";
+            clonedEl.style.height = "1123px";
+            clonedEl.style.maxWidth = "794px";
+            clonedEl.style.maxHeight = "1123px";
+            clonedEl.style.minHeight = "1123px";
+            clonedEl.style.margin = "0";
+            clonedEl.style.boxSizing = "border-box";
+            clonedEl.style.transform = "none";
+          }
+        },
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.98);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+        compress: true,
+      });
+
+      // Standard A4 dimensions in mm: 210mm x 297mm (100% exact fit)
+      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
+
+      const cleanName = student.student_name
+        ? student.student_name.trim().replace(/\s+/g, "_")
+        : "Student";
+      const rollNo = student.roll_no || "Result";
+      const fileName = `${cleanName}_Roll_${rollNo}_Marksheet.pdf`;
+      pdf.save(fileName);
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      // Fallback to native print dialog
+      window.print();
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  }, [student, isGeneratingPdf]);
+
+  useEffect(() => {
+    if (autoDownload) {
+      const timer = setTimeout(() => {
+        handleDownloadPdf();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoDownload, handleDownloadPdf]);
+
   return (
     <div className="w-full flex flex-col items-center">
       {/* Top Action Bar (Hidden in Print) */}
@@ -38,7 +124,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         {onBack && (
           <button
             onClick={onBack}
-            className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back</span>
@@ -56,14 +142,37 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         </div>
 
-        {/* Print / Save PDF Button */}
-        <button
-          onClick={() => window.print()}
-          className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95 ml-auto sm:ml-0"
-        >
-          <Printer className="w-4 h-4 text-yellow-300" />
-          <span>Print / Save PDF (A4 100%)</span>
-        </button>
+        {/* Actions: Download PDF (A4) & Print */}
+        <div className="flex items-center gap-2 ml-auto sm:ml-0">
+          <button
+            id="bhse-download-pdf-btn"
+            onClick={handleDownloadPdf}
+            disabled={isGeneratingPdf}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95"
+            title="Download high-resolution official marksheet in exact A4 sheet fit size"
+          >
+            {isGeneratingPdf ? (
+              <>
+                <Loader2 className="w-4 h-4 text-white animate-spin" />
+                <span>Generating A4 PDF...</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 text-yellow-300" />
+                <span>Download PDF (A4 Size)</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={() => window.print()}
+            className="px-3.5 py-2 bg-slate-700 hover:bg-slate-800 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95"
+            title="Print or Save via Browser System Print Dialog"
+          >
+            <Printer className="w-4 h-4 text-yellow-300" />
+            <span>Print (A4)</span>
+          </button>
+        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -78,9 +187,12 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         <div
           className="bhse-bg-watermark absolute inset-0 pointer-events-none z-0 opacity-80"
           style={{
-            backgroundImage: 'url("/bhse_degree_bg_pattern.svg")',
+            backgroundImage:
+              'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjEzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDx0ZXh0IHg9IjAiIHk9IjEwLjIiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOC4yIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjYTI5Y2Q2IiB0ZXh0TGVuZ3RoPSIyNDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyI+Qk9BUkQgT0YgSElHSEVSIFNFQ09OREFSWSBFRFVDQVRJT04gREVMSEkmIzE2MDs8L3RleHQ+Cjwvc3ZnPg=="), url("/bhse_degree_bg_pattern.svg")',
             backgroundRepeat: "repeat",
             backgroundSize: "240px 13px",
+            WebkitPrintColorAdjust: "exact",
+            printColorAdjust: "exact",
           }}
         />
 
