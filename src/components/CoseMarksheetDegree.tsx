@@ -34,7 +34,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   return (
     <div className="w-full flex flex-col items-center">
       {/* Top Action Bar (Hidden in Print) */}
-      <div className="w-full max-w-[800px] mb-4 bg-white/95 backdrop-blur-xs p-3 rounded-xl border border-slate-300 shadow-md flex items-center justify-between gap-3 print:hidden">
+      <div className="w-full max-w-[800px] mb-4 bg-white/95 backdrop-blur-xs p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-3 print:hidden">
         {onBack && (
           <button
             onClick={onBack}
@@ -45,10 +45,21 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         )}
 
+        {/* Marks Statement Button (Active) */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-300">
+          <button
+            type="button"
+            className="px-4 py-1.5 bg-[#1b3f8b] text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-2 cursor-default"
+          >
+            <FileText className="w-3.5 h-3.5 text-yellow-300" />
+            <span>अंक विवरणिका (Marks Statement)</span>
+          </button>
+        </div>
+
         {/* Print / Save PDF Button */}
         <button
           onClick={() => window.print()}
-          className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95 ml-auto"
+          className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95 ml-auto sm:ml-0"
         >
           <Printer className="w-4 h-4 text-yellow-300" />
           <span>Print / Save PDF (A4 100%)</span>
