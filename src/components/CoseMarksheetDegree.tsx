@@ -259,68 +259,15 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         )}
 
-        {/* Action Buttons: Download PDF, Download JPG, Print */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Download PDF (A4 Fit) */}
+        {/* Marks Statement Title Badge */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-300">
           <button
             type="button"
-            onClick={handleDownloadPdf}
-            disabled={isGeneratingPdf}
-            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50"
-            title="Download authentic Marksheet as A4 PDF (100% Fit)"
+            className="px-4 py-1.5 bg-[#1b3f8b] text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-2 cursor-default"
           >
-            {isGeneratingPdf ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Generating PDF...</span>
-              </>
-            ) : (
-              <>
-                <Download className="w-3.5 h-3.5" />
-                <span>Download PDF (A4)</span>
-              </>
-            )}
+            <FileText className="w-3.5 h-3.5 text-yellow-300" />
+            <span>अंक विवरणिका (Marks Statement)</span>
           </button>
-
-          {/* Download JPG (High-Res Image) */}
-          <button
-            type="button"
-            onClick={handleDownloadImage}
-            disabled={isGeneratingImg}
-            className="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50"
-            title="Download authentic Marksheet as High-Res JPG"
-          >
-            {isGeneratingImg ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Generating JPG...</span>
-              </>
-            ) : (
-              <>
-                <ImageIcon className="w-3.5 h-3.5" />
-                <span>Download JPG</span>
-              </>
-            )}
-          </button>
-
-          {/* Print */}
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="px-3.5 py-2 bg-[#1b3f8b] hover:bg-[#15326f] active:scale-95 text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
-            title="Print Marksheet"
-          >
-            <Printer className="w-3.5 h-3.5 text-yellow-300" />
-            <span>Print</span>
-          </button>
-
-          {/* Marks Statement Title Badge */}
-          <div className="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300">
-            <span className="px-3 py-1.5 bg-slate-200 text-slate-800 font-bold text-xs rounded-md flex items-center gap-1.5 cursor-default">
-              <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
-              <span>अंक विवरणिका</span>
-            </span>
-          </div>
         </div>
       </div>
 
