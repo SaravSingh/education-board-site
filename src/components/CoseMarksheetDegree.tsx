@@ -370,12 +370,12 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             <div className="text-center my-1">
               <div className="text-[#0028a5] font-bold text-[13px] sm:text-[15px] leading-tight">
                 {isClass12
-                  ? "हायर सेकण्डरी सर्टिफिकेट परीक्षा (इण्टरमीडिएट)"
+                  ? "सीनीयर सेकण्डरी स्कूल सर्टिफिकेट परीक्षा (10+2)"
                   : "सेकण्डरी स्कूल सर्टिफिकेट परीक्षा (हाई स्कूल)"}
               </div>
               <div className="text-[#0028a5] font-black text-[13px] sm:text-[15px] leading-tight mt-0.5">
                 {isClass12
-                  ? "Senior Secondary School Certificate Examination (Intermediate)"
+                  ? "Senior Secondary School Certificate Examination (10+2)"
                   : "Secondary School Certificate Examination (High School)"}{" "}
                 <span className="font-mono font-bold text-black ml-1.5 text-xs sm:text-[14px]">
                   {student.exam_year || "2026"}
@@ -433,7 +433,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
 
               <div>
                 <div className="leading-tight">
-                  ने बोर्ड द्वारा अप्रैल/मई में आयोजित {isClass12 ? "हायर सेकण्डरी" : "सेकण्डरी"}{" "}
+                  ने बोर्ड द्वारा अप्रैल/मई में आयोजित {isClass12 ? "सीनीयर सेकण्डरी" : "सेकण्डरी"}{" "}
                   परीक्षा,
                 </div>
                 <div className="leading-tight flex items-baseline">

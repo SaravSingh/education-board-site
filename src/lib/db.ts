@@ -707,6 +707,89 @@ const INITIAL_RESULTS: StudentResult[] = [
       },
     ]),
   },
+  {
+    serial_no: "240926",
+    roll_no: "480926328",
+    school_code: "105-G",
+    centre_code: "105-G",
+    exam_center: "105-G NASIK (MS)",
+    status_mode: "REGULAR",
+    fee_status: "PAID",
+    student_name: "KARIMSAHEB URF IRSHAD MARUF",
+    dob: "22-07-1986",
+    dob_words: "22TH JULY, NINETEEN HUNDRED EIGHTY SIX",
+    father_name: "MARUF SAHEB",
+    mother_name: "RAFUNA",
+    course: "12TH (Senior Secondary)",
+    batch: "SESSION: 2011-12",
+    enrollment_no: "240926",
+    school_name: "CENTRE CODE - 105- G NASIK (MS)",
+    photo_url: "/students/karimsaheb.jpg",
+    exam_year: "2012",
+    total_marks: 305,
+    max_marks: 500,
+    total_words: "THREE ZERO FIVE",
+    percentage: "61.0%",
+    status: "PASS / FIRST DIVISION",
+    result_declaration_date: "21/06/2012",
+    subjects_json: JSON.stringify([
+      {
+        sl_no: 1,
+        code: "HINDI",
+        name: "HINDI",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 67,
+        practical: 0,
+        total: 67,
+        words: "SIXTY SEVEN",
+      },
+      {
+        sl_no: 2,
+        code: "ENGLISH",
+        name: "ENGLISH",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 60,
+        practical: 0,
+        total: 60,
+        words: "SIXTY",
+      },
+      {
+        sl_no: 3,
+        code: "PHYSICS",
+        name: "PHYSICS",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 42,
+        practical: 19,
+        total: 61,
+        words: "SIXTY ONE",
+      },
+      {
+        sl_no: 4,
+        code: "CHEMISTRY",
+        name: "CHEMISTRY",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 38,
+        practical: 20,
+        total: 58,
+        words: "FIFTY EIGHT",
+      },
+      {
+        sl_no: 5,
+        code: "BIOLOGY",
+        name: "BIOLOGY",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 52,
+        practical: 17,
+        total: 59,
+        words: "FIFTY NINE",
+      },
+    ]),
+  },
 ];
 
 const INITIAL_ENROLLMENTS: EnrollmentRecord[] = [
@@ -764,6 +847,15 @@ const INITIAL_ENROLLMENTS: EnrollmentRecord[] = [
     is_verified: true,
     issue_date: "2024-06-19",
   },
+  {
+    enrollment_no: "240926",
+    student_name: "KARIMSAHEB URF IRSHAD MARUF",
+    cert_no: "BHSE/VER/2012/480926328",
+    course: "CLASS XII",
+    year: "2012",
+    is_verified: true,
+    issue_date: "2012-06-21",
+  },
 ];
 
 type StoreListener = () => void;
@@ -786,11 +878,11 @@ class LocalStore {
           console.warn("Failed to parse saved announcements:", e);
         }
       }
-      const savedRes = localStorage.getItem("bhse_results_v5");
+      const savedRes = localStorage.getItem("bhse_results_v6");
       if (savedRes) {
         try {
           const parsed: StudentResult[] = JSON.parse(savedRes);
-          // Ensure any missing initial results (like Satish Kumar) are present
+          // Ensure any missing initial results (like Satish Kumar or Karimsaheb) are present
           const existingRolls = new Set(parsed.map((r) => r.roll_no.toLowerCase()));
           INITIAL_RESULTS.forEach((initR) => {
             if (!existingRolls.has(initR.roll_no.toLowerCase())) {
@@ -806,9 +898,10 @@ class LocalStore {
         localStorage.removeItem("bhse_results_v2");
         localStorage.removeItem("bhse_results_v3");
         localStorage.removeItem("bhse_results_v4");
+        localStorage.removeItem("bhse_results_v5");
         this.save();
       }
-      const savedEnr = localStorage.getItem("bhse_enrollments_v5");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v6");
       if (savedEnr) {
         try {
           const parsedEnr: EnrollmentRecord[] = JSON.parse(savedEnr);
@@ -827,6 +920,7 @@ class LocalStore {
         localStorage.removeItem("bhse_enrollments_v2");
         localStorage.removeItem("bhse_enrollments_v3");
         localStorage.removeItem("bhse_enrollments_v4");
+        localStorage.removeItem("bhse_enrollments_v5");
         this.save();
       }
       const savedAdmin = localStorage.getItem("bhse_admin_creds");
@@ -863,9 +957,9 @@ class LocalStore {
     try {
       const savedAnn = localStorage.getItem("bhse_announcements");
       if (savedAnn) this.announcements = JSON.parse(savedAnn);
-      const savedRes = localStorage.getItem("bhse_results_v5");
+      const savedRes = localStorage.getItem("bhse_results_v6");
       if (savedRes) this.results = JSON.parse(savedRes);
-      const savedEnr = localStorage.getItem("bhse_enrollments_v5");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v6");
       if (savedEnr) this.enrollments = JSON.parse(savedEnr);
     } catch (e) {
       console.warn("Error reloading storage:", e);
@@ -875,8 +969,8 @@ class LocalStore {
   private save() {
     if (typeof window !== "undefined") {
       localStorage.setItem("bhse_announcements", JSON.stringify(this.announcements));
-      localStorage.setItem("bhse_results_v5", JSON.stringify(this.results));
-      localStorage.setItem("bhse_enrollments_v5", JSON.stringify(this.enrollments));
+      localStorage.setItem("bhse_results_v6", JSON.stringify(this.results));
+      localStorage.setItem("bhse_enrollments_v6", JSON.stringify(this.enrollments));
       localStorage.setItem("bhse_admin_creds", JSON.stringify(this.adminCreds));
     }
     this.notify();
