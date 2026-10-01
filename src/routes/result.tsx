@@ -332,7 +332,8 @@ function ResultPage() {
                     </button>
                   </div>
 
-                  {/* Quick Verification Chips */}
+                  {/* Quick Verification Chips (Hidden as requested) */}
+                  {/*
                   <div className="pt-3 border-t border-gray-200 space-y-1.5">
                     <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
                       <span>Quick Test Verification Records:</span>
@@ -376,6 +377,7 @@ function ResultPage() {
                       </button>
                     </div>
                   </div>
+                  */}
                 </form>
               </div>
 
