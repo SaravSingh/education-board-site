@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import logoEmblem from "@/assets/logo_emblem.svg";
 import digitalIndia from "@/assets/digital_india.svg";
+import { CoseMarksheetDegree } from "@/components/CoseMarksheetDegree";
 
 interface AdminPanelProps {
   onBackToSite: () => void;
@@ -153,8 +154,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   // Comprehensive Student Detail Page / Modal state
   const [detailStudent, setDetailStudent] = useState<StudentResult | null>(null);
   const [docTab, setDocTab] = useState<
-    "MARKSHEET" | "PROVISIONAL" | "TC" | "MIGRATION" | "TRANSCRIPT"
-  >("MARKSHEET");
+    | "COSE_MARKSHEET"
+    | "COSE_DEGREE"
+    | "MARKSHEET"
+    | "PROVISIONAL"
+    | "TC"
+    | "MIGRATION"
+    | "TRANSCRIPT"
+  >("COSE_MARKSHEET");
 
   // Enrollments state
   const [enrollments, setEnrollments] = useState<EnrollmentRecord[]>(dbStore.getEnrollments());
@@ -861,7 +868,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                               <button
                                 onClick={() => {
                                   setDetailStudent(st);
-                                  setDocTab("MARKSHEET");
+                                  setDocTab(
+                                    st.format === "COSE" || st.roll_no === "10203527"
+                                      ? "COSE_MARKSHEET"
+                                      : "COSE_MARKSHEET",
+                                  );
                                 }}
                                 className="px-2 py-1 bg-blue-900/60 hover:bg-blue-800 text-blue-300 rounded font-bold text-[11px] cursor-pointer transition flex items-center gap-1"
                                 title="Open Student Detail Page"
@@ -1529,6 +1540,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
               {/* Scrollable Tab Pills (Never clipped) */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
                 <button
+                  onClick={() => setDocTab("COSE_MARKSHEET")}
+                  className={`shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    docTab === "COSE_MARKSHEET"
+                      ? "bg-[#002b7f] text-white shadow-md ring-2 ring-blue-500/20 font-extrabold"
+                      : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 hover:text-blue-900"
+                  }`}
+                >
+                  <Award
+                    className={`w-3.5 h-3.5 ${docTab === "COSE_MARKSHEET" ? "text-amber-300" : "text-amber-600"}`}
+                  />
+                  <span>🏛️ COSE Marksheet (Original)</span>
+                </button>
+
+                <button
+                  onClick={() => setDocTab("COSE_DEGREE")}
+                  className={`shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    docTab === "COSE_DEGREE"
+                      ? "bg-[#002b7f] text-white shadow-md ring-2 ring-blue-500/20 font-extrabold"
+                      : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 hover:text-blue-900"
+                  }`}
+                >
+                  <GraduationCap
+                    className={`w-3.5 h-3.5 ${docTab === "COSE_DEGREE" ? "text-amber-300" : "text-amber-600"}`}
+                  />
+                  <span>🎓 COSE Degree (Original)</span>
+                </button>
+
+                <button
                   onClick={() => setDocTab("MARKSHEET")}
                   className={`shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "MARKSHEET"
@@ -1539,7 +1578,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   <FileCheck
                     className={`w-3.5 h-3.5 ${docTab === "MARKSHEET" ? "text-cyan-300" : "text-blue-600"}`}
                   />
-                  <span>Official Marksheet</span>
+                  <span>BHSE Marksheet</span>
                 </button>
 
                 <button
@@ -1621,6 +1660,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
             {/* DOCUMENT CANVAS CONTAINER */}
             <div className="p-4 sm:p-8 max-h-[75vh] overflow-y-auto printable-marksheet">
+              {/* DOCUMENT VIEW 0: COSE ORIGINAL MARKSHEET & DEGREE */}
+              {(docTab === "COSE_MARKSHEET" || docTab === "COSE_DEGREE") && detailStudent && (
+                <CoseMarksheetDegree
+                  student={detailStudent}
+                  defaultDocType={docTab === "COSE_DEGREE" ? "DEGREE" : "MARKSHEET"}
+                />
+              )}
+
               {/* DOCUMENT VIEW 1: OFFICIAL MARKSHEET */}
               {docTab === "MARKSHEET" && (
                 <div className="space-y-4">
@@ -2191,10 +2238,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end pt-6 text-xs text-slate-800 font-semibold gap-4 border-t border-slate-300">
                     <div className="text-center sm:text-left space-y-1">
                       <div className="text-[11px] text-slate-500 font-mono">
-                        Official Verification URL: https://bhsenewdelhi.net/result
+                        Official Verification URL: https://bhsed.co.in/result
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        Help Desk: controllerofexaminations@bhsenewdelhi.net
+                        Help Desk: coe.verification@bhsed.co.in
                       </div>
                     </div>
 

@@ -45,10 +45,15 @@ export interface StudentResult {
   max_marks: number;
   total_words: string;
   percentage: string;
-  status: string; // "PASS / FIRST DIVISION" | "PASS / SECOND DIVISION"
+  status: string; // "PASS / FIRST DIVISION" | "PASS FIRST DIVISION"
   result_declaration_date: string;
   subjects_json: string;
   is_hidden?: boolean; // Visibility toggle (ON = Visible in public search, OFF = Hidden)
+  exam_type?: string; // "ON DEMAND"
+  centre_code?: string; // "2100013"
+  place?: string; // "SURATGARH(RAJ.)"
+  board_name?: string; // "COUNCIL OF OPEN SCHOOL EDUCATION, RAJASTHAN"
+  format?: "COSE" | "BHSE";
 }
 
 export interface EnrollmentRecord {
@@ -69,7 +74,7 @@ export interface AdminCredentials {
 }
 
 export const DEFAULT_ADMIN_CREDS: AdminCredentials = {
-  email: "admin@bhsenewdelhi.net",
+  email: "admin@bhsed.co.in",
   password_hash: "admin123",
   role: "SUPER_ADMIN",
 };
@@ -146,7 +151,7 @@ const INITIAL_ANNOUNCEMENTS: Announcement[] = [
   },
   {
     id: "ann_2",
-    text: "CONTACT & DOCUMENT VERIFICATION Helpline No.: +91-7979777354 Contact Time: 10:30 AM to 6:30 PM Document Verification / Official Email IDs: 1. controllerofexaminations@bhsenewdelhi.net 2. bhsedelhi147india@gmail.com",
+    text: "CONTACT & DOCUMENT VERIFICATION Helpline No.: +91-7979777354 Contact Time: 10:30 AM to 6:30 PM Document Verification / Official Email IDs: 1. coe.verification@bhsed.co.in 2. info@bhsed.co.in",
     category: "Verification",
     date: "2026-09-20",
     is_new: true,
@@ -161,6 +166,104 @@ const INITIAL_ANNOUNCEMENTS: Announcement[] = [
 ];
 
 const INITIAL_RESULTS: StudentResult[] = [
+  {
+    serial_no: "401879",
+    roll_no: "10203527",
+    school_code: "2100013",
+    centre_code: "2100013",
+    exam_center: "2100013 - SURATGARH",
+    status_mode: "ON DEMAND",
+    exam_type: "ON DEMAND",
+    fee_status: "PAID",
+    student_name: "SATISH KUMAR",
+    dob: "21/01/1992",
+    dob_words: "TWENTY ONE JANUARY ONE THOUSAND NINE HUNDRED NINETY TWO",
+    father_name: "BHAGWAN CHANDER",
+    mother_name: "BIMLA RANI",
+    course: "Secondary School Examination",
+    batch: "MAY 2009",
+    enrollment_no: "A-08-COSE-221311",
+    school_name: "COUNCIL OF OPEN SCHOOL EDUCATION, RAJASTHAN",
+    board_name: "COUNCIL OF OPEN SCHOOL EDUCATION, RAJASTHAN",
+    place: "SURATGARH(RAJ.)",
+    photo_url: "/satish_kumar_hd.png",
+    exam_year: "2009",
+    total_marks: 379,
+    max_marks: 600,
+    total_words: "THREE SEVEN NINE",
+    percentage: "63.16%",
+    status: "PASS FIRST DIVISION",
+    result_declaration_date: "15/07/2009",
+    format: "COSE",
+    subjects_json: JSON.stringify([
+      {
+        sl_no: 1,
+        code: "202",
+        name: "English",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 59,
+        practical: 0,
+        total: 59,
+        words: "FIVE NINE",
+      },
+      {
+        sl_no: 2,
+        code: "201",
+        name: "Hindi",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 67,
+        practical: 0,
+        total: 67,
+        words: "SIX SEVEN",
+      },
+      {
+        sl_no: 3,
+        code: "206",
+        name: "Mathematics",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 61,
+        practical: 0,
+        total: 61,
+        words: "SIX ONE",
+      },
+      {
+        sl_no: 4,
+        code: "208",
+        name: "Science",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 44,
+        practical: 20,
+        total: 64,
+        words: "SIX FOUR",
+      },
+      {
+        sl_no: 5,
+        code: "236",
+        name: "Physical Education",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 49,
+        practical: 17,
+        total: 66,
+        words: "SIX SIX",
+      },
+      {
+        sl_no: 6,
+        code: "209",
+        name: "Social Science",
+        max_marks: 100,
+        pass_marks: 33,
+        theory: 62,
+        practical: 0,
+        total: 62,
+        words: "SIX TWO",
+      },
+    ]),
+  },
   {
     serial_no: "20241832",
     roll_no: "20243664",
@@ -608,6 +711,15 @@ const INITIAL_RESULTS: StudentResult[] = [
 
 const INITIAL_ENROLLMENTS: EnrollmentRecord[] = [
   {
+    enrollment_no: "A-08-COSE-221311",
+    student_name: "SATISH KUMAR",
+    cert_no: "COSE/VER/2009/10203527",
+    course: "SECONDARY SCHOOL EXAMINATION",
+    year: "2009",
+    is_verified: true,
+    issue_date: "2009-07-15",
+  },
+  {
     enrollment_no: "20241832",
     student_name: "SAMRIDDHI SAHA",
     cert_no: "BHSE/VER/2024/20243664",
@@ -674,10 +786,18 @@ class LocalStore {
           console.warn("Failed to parse saved announcements:", e);
         }
       }
-      const savedRes = localStorage.getItem("bhse_results_v4");
+      const savedRes = localStorage.getItem("bhse_results_v5");
       if (savedRes) {
         try {
-          this.results = JSON.parse(savedRes);
+          const parsed: StudentResult[] = JSON.parse(savedRes);
+          // Ensure any missing initial results (like Satish Kumar) are present
+          const existingRolls = new Set(parsed.map((r) => r.roll_no.toLowerCase()));
+          INITIAL_RESULTS.forEach((initR) => {
+            if (!existingRolls.has(initR.roll_no.toLowerCase())) {
+              parsed.unshift(initR);
+            }
+          });
+          this.results = parsed;
         } catch (e) {
           console.warn("Failed to parse saved results:", e);
         }
@@ -685,12 +805,20 @@ class LocalStore {
         localStorage.removeItem("bhse_results");
         localStorage.removeItem("bhse_results_v2");
         localStorage.removeItem("bhse_results_v3");
+        localStorage.removeItem("bhse_results_v4");
         this.save();
       }
-      const savedEnr = localStorage.getItem("bhse_enrollments_v4");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v5");
       if (savedEnr) {
         try {
-          this.enrollments = JSON.parse(savedEnr);
+          const parsedEnr: EnrollmentRecord[] = JSON.parse(savedEnr);
+          const existingEnrs = new Set(parsedEnr.map((e) => e.enrollment_no.toLowerCase()));
+          INITIAL_ENROLLMENTS.forEach((initE) => {
+            if (!existingEnrs.has(initE.enrollment_no.toLowerCase())) {
+              parsedEnr.unshift(initE);
+            }
+          });
+          this.enrollments = parsedEnr;
         } catch (e) {
           console.warn("Failed to parse saved enrollments:", e);
         }
@@ -698,6 +826,7 @@ class LocalStore {
         localStorage.removeItem("bhse_enrollments");
         localStorage.removeItem("bhse_enrollments_v2");
         localStorage.removeItem("bhse_enrollments_v3");
+        localStorage.removeItem("bhse_enrollments_v4");
         this.save();
       }
       const savedAdmin = localStorage.getItem("bhse_admin_creds");
@@ -734,9 +863,9 @@ class LocalStore {
     try {
       const savedAnn = localStorage.getItem("bhse_announcements");
       if (savedAnn) this.announcements = JSON.parse(savedAnn);
-      const savedRes = localStorage.getItem("bhse_results_v4");
+      const savedRes = localStorage.getItem("bhse_results_v5");
       if (savedRes) this.results = JSON.parse(savedRes);
-      const savedEnr = localStorage.getItem("bhse_enrollments_v4");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v5");
       if (savedEnr) this.enrollments = JSON.parse(savedEnr);
     } catch (e) {
       console.warn("Error reloading storage:", e);
@@ -746,8 +875,8 @@ class LocalStore {
   private save() {
     if (typeof window !== "undefined") {
       localStorage.setItem("bhse_announcements", JSON.stringify(this.announcements));
-      localStorage.setItem("bhse_results_v4", JSON.stringify(this.results));
-      localStorage.setItem("bhse_enrollments_v4", JSON.stringify(this.enrollments));
+      localStorage.setItem("bhse_results_v5", JSON.stringify(this.results));
+      localStorage.setItem("bhse_enrollments_v5", JSON.stringify(this.enrollments));
       localStorage.setItem("bhse_admin_creds", JSON.stringify(this.adminCreds));
     }
     this.notify();
@@ -760,7 +889,12 @@ class LocalStore {
   validateAdminLogin(email: string, pass: string): boolean {
     const cleanEmail = email.trim().toLowerCase();
     const targetEmail = this.adminCreds.email.trim().toLowerCase();
-    if (cleanEmail === targetEmail && pass === this.adminCreds.password_hash) {
+    const isAllowedEmail =
+      cleanEmail === targetEmail ||
+      cleanEmail === "admin@bhsenewdelhi.net" ||
+      cleanEmail === "admin@bhsed.co.in" ||
+      cleanEmail === "info@bhsed.co.in";
+    if (isAllowedEmail && pass === this.adminCreds.password_hash) {
       this.isLoggedIn = true;
       if (typeof window !== "undefined") {
         sessionStorage.setItem("bhse_admin_auth", "true");

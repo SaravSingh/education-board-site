@@ -11,7 +11,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Official contact details, head office address, email directory, and correspondence location for Board of Higher Secondary Education, Delhi (BHSE).",
+          "Official contact details, head office address, and email directory for Board of Higher Secondary Education, Delhi (BHSE).",
       },
     ],
   }),
@@ -75,61 +75,38 @@ function ContactPage() {
           {/* TOP LEFT: ADDRESS & CORRESPONDENCE DETAILS */}
           <div className="lg:col-span-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6 text-xs sm:text-sm text-gray-800">
             {/* HEAD OFFICE ADDRESS */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h2 className="font-extrabold text-sm sm:text-base text-slate-900 uppercase border-b-2 border-slate-900 pb-1 flex items-center gap-1.5">
                 <span>👉</span> BHSE DELHI BOARD HEAD OFFICE ADDRESS COMMUNICATION :
               </h2>
-              <div className="pl-2 space-y-1">
+              <div className="pl-2 space-y-2">
                 <div className="font-bold text-gray-900 text-sm">
                   Board Of Higher Secondary Education, Delhi (BHSE )
                 </div>
                 <div className="text-gray-700 font-medium">Karkardooma, Delhi 110092 India</div>
-                <div className="pt-1.5 space-y-1 font-mono text-xs">
+                <div className="pt-2 space-y-2 font-mono text-xs">
                   <div>
-                    <span className="font-bold text-gray-700">
-                      General Enquiry Regarding Mail Id :
+                    <span className="font-bold text-gray-700 font-sans">
+                      Verification Mail Id :
                     </span>{" "}
-                    <span className="text-blue-800 font-semibold">bhsedelhi147india@gmail.com</span>
+                    <a
+                      href="mailto:coe.verification@bhsed.co.in"
+                      className="text-blue-800 font-bold hover:underline"
+                    >
+                      coe.verification@bhsed.co.in
+                    </a>
                   </div>
                   <div>
-                    <span className="font-bold text-gray-700">
-                      School / Affiliation Regarding Mail Id :
+                    <span className="font-bold text-gray-700 font-sans">
+                      Admin / General Enquiry Mail Id :
                     </span>{" "}
-                    <span className="text-blue-800 font-semibold">info@bhsenewdelhi.net</span>
+                    <a
+                      href="mailto:info@bhsed.co.in"
+                      className="text-blue-800 font-bold hover:underline"
+                    >
+                      info@bhsed.co.in
+                    </a>
                   </div>
-                  <div>
-                    <span className="font-bold text-gray-700">
-                      Verification Regarding Mail Id :
-                    </span>{" "}
-                    <span className="text-blue-800 font-semibold">
-                      coe.verification@bhsenewdelhi.net
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* CORRESPONDENCE ADDRESS */}
-            <div className="space-y-2 pt-2 border-t border-gray-200">
-              <h2 className="font-extrabold text-sm sm:text-base text-slate-900 uppercase border-b-2 border-slate-900 pb-1 flex items-center gap-1.5">
-                <span>👉</span> ADDRESS FOR CORRESPONDENCE COMMUNICATION :
-              </h2>
-              <div className="pl-2 space-y-1">
-                <div className="text-gray-600 italic font-semibold text-xs">
-                  If Undelivered Please Return To, :-
-                </div>
-                <div className="font-bold text-gray-900 text-sm">
-                  Board Of Higher Secondary Education, Delhi (BHSE )
-                </div>
-                <div className="text-gray-800 font-medium">
-                  Mr. Sudhir Kumar (Letters Assistant Dept.)
-                </div>
-                <div className="text-gray-700">
-                  794, Krishan Ganj , In Front Hindu Kanya – Inter College, Pilkhuwa Hapur
-                </div>
-                <div className="text-gray-700">District. Hapur (GZB) Pin - 245304</div>
-                <div className="font-mono text-xs text-blue-800 font-semibold pt-1">
-                  E-mail: info@bhsenewdelhi.net
                 </div>
               </div>
             </div>
@@ -171,72 +148,44 @@ function ContactPage() {
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-[#5c6f55] text-white uppercase text-[11px] font-bold">
-                      <th className="p-3 border-r border-gray-400 w-2/5 text-center">Department</th>
-                      <th className="p-3 text-center">Email ID</th>
+                      <th className="p-3.5 border-r border-gray-400 w-2/5 text-center">
+                        Department
+                      </th>
+                      <th className="p-3.5 text-center">Email ID</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 font-semibold">
-                    {/* General Inquiry */}
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold border border-blue-300">
-                          General Inquiry
-                        </span>
-                      </td>
-                      <td className="p-3 font-mono text-xs text-blue-900 leading-snug">
-                        info@bhsenewdelhi.net
-                        <br />
-                        bhsenewdelhi147india@gmail.com
-                      </td>
-                    </tr>
-
                     {/* Verification */}
                     <tr className="hover:bg-slate-50">
-                      <td className="p-3 border-r border-gray-200 text-center">
+                      <td className="p-4 border-r border-gray-200 text-center">
                         <span className="inline-block px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-xs font-bold border border-sky-300">
                           Verification
                         </span>
                       </td>
-                      <td className="p-3 font-mono text-xs text-blue-900 leading-snug">
-                        controllerofexaminations@bhsenewdelhi.net
-                        <br />
-                        bhsedelhi147india@gmail.com
+                      <td className="p-4 font-mono text-xs sm:text-sm text-blue-900">
+                        <a
+                          href="mailto:coe.verification@bhsed.co.in"
+                          className="hover:underline font-bold text-blue-800"
+                        >
+                          coe.verification@bhsed.co.in
+                        </a>
                       </td>
                     </tr>
 
-                    {/* Affiliation */}
+                    {/* Admin */}
                     <tr className="hover:bg-slate-50">
-                      <td className="p-3 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs font-bold border border-cyan-300">
-                          Affiliation
+                      <td className="p-4 border-r border-gray-200 text-center">
+                        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold border border-blue-300">
+                          Admin
                         </span>
                       </td>
-                      <td className="p-3 font-mono text-xs text-blue-900">
-                        affiliation@bhsenewdelhi.net
-                      </td>
-                    </tr>
-
-                    {/* Correction */}
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-bold border border-indigo-300">
-                          Correction
-                        </span>
-                      </td>
-                      <td className="p-3 font-mono text-xs text-blue-900">
-                        correction@bhsenewdelhi.net
-                      </td>
-                    </tr>
-
-                    {/* Fees Confirmation */}
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-bold border border-amber-300 leading-tight">
-                          Fees Confirmation
-                        </span>
-                      </td>
-                      <td className="p-3 font-mono text-xs text-blue-900">
-                        accounts@bhsenewdelhi.net
+                      <td className="p-4 font-mono text-xs sm:text-sm text-blue-900">
+                        <a
+                          href="mailto:info@bhsed.co.in"
+                          className="hover:underline font-bold text-blue-800"
+                        >
+                          info@bhsed.co.in
+                        </a>
                       </td>
                     </tr>
                   </tbody>
@@ -258,9 +207,11 @@ function ContactPage() {
                   <strong className="text-sm block text-emerald-950">
                     Message Sent Successfully!
                   </strong>
-                  Thank you, {name}. Your inquiry has been dispatched to
-                  controllerofexaminations@bhsenewdelhi.net. Our official representative will
-                  respond shortly.
+                  Thank you, {name}. Your inquiry has been dispatched to{" "}
+                  <code className="bg-emerald-100 px-1 py-0.5 rounded text-emerald-950 font-bold font-mono">
+                    coe.verification@bhsed.co.in
+                  </code>
+                  . Our official representative will respond shortly.
                 </div>
               </div>
             ) : null}

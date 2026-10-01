@@ -62,11 +62,12 @@ export const Header: React.FC<HeaderProps> = ({
             <span>List of Boards of School Education</span>
             <span className="hidden sm:inline">|</span>
             <span>Document Verification mail :-</span>
-            <span className="font-mono text-yellow-300 font-semibold">
-              controllerofexaminations@bhsenewdelhi.net
-            </span>
-            <span className="hidden md:inline">|</span>
-            <span className="font-mono hidden md:inline">bhsedelhi147india@gmail.com</span>
+            <a
+              href="mailto:coe.verification@bhsed.co.in"
+              className="font-mono text-yellow-300 font-semibold hover:underline"
+            >
+              coe.verification@bhsed.co.in
+            </a>
             <span>|</span>
           </div>
 
@@ -153,11 +154,9 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Right Block: URL, Email, Digital India Logo & Dynamic Live Clock */}
           <div className="flex flex-col items-center md:items-end text-center md:text-right shrink-0 gap-0.5">
             <div className="text-xs sm:text-sm font-bold text-[#09327e] font-mono">
-              www.bhsenewdelhi.net
+              www.bhsed.co.in
             </div>
-            <div className="text-[11px] text-slate-700 font-mono">
-              E-mail: bhsedelhi147india@gmail.com
-            </div>
+            <div className="text-[11px] text-slate-700 font-mono">E-mail: info@bhsed.co.in</div>
 
             <img
               src={digitalIndia}

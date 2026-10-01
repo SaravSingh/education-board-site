@@ -332,11 +332,23 @@ function Home() {
               Verification &amp; Helpline
             </h4>
             <p className="text-slate-400 leading-relaxed font-mono">
-              Email: controllerofexaminations@bhsenewdelhi.net
+              Email:{" "}
+              <a
+                href="mailto:coe.verification@bhsed.co.in"
+                className="text-slate-300 hover:text-white hover:underline"
+              >
+                coe.verification@bhsed.co.in
+              </a>
               <br />
-              Email: bhsedelhi147india@gmail.com
+              Email:{" "}
+              <a
+                href="mailto:info@bhsed.co.in"
+                className="text-slate-300 hover:text-white hover:underline"
+              >
+                info@bhsed.co.in
+              </a>
               <br />
-              Portal: www.bhsenewdelhi.net
+              Portal: www.bhsed.co.in
             </p>
           </div>
 

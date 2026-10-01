@@ -49,7 +49,7 @@ function RtiPage() {
       officialRole: "Secretary & Controller of Examinations",
       address: "Room No. 102, BHSE Secretariat, Karkardooma, Delhi — 110092",
       phone: "+91 11 2765 8901",
-      email: "faa.rti@bhsenewdelhi.net",
+      email: "faa.rti@bhsed.co.in",
       jurisdiction: "All first appeals against CPIO decisions under RTI Act Section 19(1)",
     },
     {
@@ -58,7 +58,7 @@ function RtiPage() {
       officialRole: "Joint Controller of Examinations",
       address: "RTI Cell, Board Building, North Delhi Office, Delhi — 110054",
       phone: "+91 11 2765 8902",
-      email: "cpio.rti@bhsenewdelhi.net",
+      email: "cpio.rti@bhsed.co.in",
       jurisdiction:
         "All RTI information queries, document verification, examination & affiliation records",
     },
@@ -68,7 +68,7 @@ function RtiPage() {
       officialRole: "Deputy Registrar (RTI & Legal Cell)",
       address: "RTI Counter, Ground Floor, BHSE Building, Delhi — 110092",
       phone: "+91 11 2765 8903",
-      email: "apio.rti@bhsenewdelhi.net",
+      email: "apio.rti@bhsed.co.in",
       jurisdiction:
         "Receipt of physical RTI application forms, postal orders, and initial processing",
     },
@@ -531,7 +531,7 @@ function RtiPage() {
                     <br />
                     Room No. 102, Secretarial Cell, Karkardooma, Delhi — 110092
                     <br />
-                    Email: <span className="font-mono text-blue-900">faa.rti@bhsenewdelhi.net</span>
+                    Email: <span className="font-mono text-blue-900">faa.rti@bhsed.co.in</span>
                   </p>
                 </div>
               </div>

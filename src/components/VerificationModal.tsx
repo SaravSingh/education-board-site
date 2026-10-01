@@ -52,10 +52,7 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, on
           <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-900 mb-4 flex items-start gap-2">
             <Mail className="w-4 h-4 shrink-0 text-emerald-700 mt-0.5" />
             <div>
-              <strong>Official Verification Email:</strong>{" "}
-              controllerofexaminations@bhsenewdelhi.net
-              <br />
-              Alternate Email: bhsedelhi147india@gmail.com
+              <strong>Official Verification Email:</strong> coe.verification@bhsed.co.in
             </div>
           </div>
 

@@ -31,7 +31,7 @@ function RegionalCentrePage() {
       address:
         "207, Main Mall Road, Near Vishwavidyalaya Metro Station, North Delhi, Delhi — 110054",
       phone: "+91 11 2765 8901 / 8902",
-      email: "delhi.regional@bhsenewdelhi.net",
+      email: "delhi.regional@bhsed.co.in",
       jurisdiction: "Delhi NCR, Haryana, Punjab, Himachal Pradesh, Jammu & Kashmir",
     },
     {
@@ -39,7 +39,7 @@ function RegionalCentrePage() {
       zone: "REGIONAL CENTRE - UTTAR PRADESH (AGRA & ALIGARH)",
       address: "14/A, MG Road, Near Civil Lines, Agra, Uttar Pradesh — 282002",
       phone: "+91 562 252 4110",
-      email: "up.regional@bhsenewdelhi.net",
+      email: "up.regional@bhsed.co.in",
       jurisdiction: "Uttar Pradesh (Western & Central Districts)",
     },
     {
@@ -47,7 +47,7 @@ function RegionalCentrePage() {
       zone: "REGIONAL CENTRE - BIHAR & EASTERN REGION (PATNA & KATIHAR)",
       address: "42, Exhibition Road, Near Gandhi Maidan, Patna, Bihar — 800001",
       phone: "+91 612 220 1890",
-      email: "bihar.regional@bhsenewdelhi.net",
+      email: "bihar.regional@bhsed.co.in",
       jurisdiction: "Bihar, Jharkhand, West Bengal, Odisha",
     },
     {
@@ -55,7 +55,7 @@ function RegionalCentrePage() {
       zone: "REGIONAL CENTRE - KARNATAKA & SOUTH INDIA (BANGALORE)",
       address: "88, Brigade Road, Ashok Nagar, Bengaluru, Karnataka — 560025",
       phone: "+91 80 4112 7654",
-      email: "south.regional@bhsenewdelhi.net",
+      email: "south.regional@bhsed.co.in",
       jurisdiction: "Karnataka, Tamil Nadu, Telangana, Andhra Pradesh, Kerala",
     },
     {
@@ -63,7 +63,7 @@ function RegionalCentrePage() {
       zone: "REGIONAL CENTRE - MADHYA PRADESH (TIKAMGARH & BHOPAL)",
       address: "19, Maharana Pratap Nagar Zone-1, Bhopal, Madhya Pradesh — 462011",
       phone: "+91 755 255 3421",
-      email: "mp.regional@bhsenewdelhi.net",
+      email: "mp.regional@bhsed.co.in",
       jurisdiction: "Madhya Pradesh, Chhattisgarh, Rajasthan",
     },
   ];

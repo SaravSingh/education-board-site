@@ -164,7 +164,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
               <span className="hidden sm:inline">|</span>
               <span className="hidden md:inline">Document Verification mail :-</span>
               <span className="font-mono text-cyan-300 font-semibold text-[10px] sm:text-xs">
-                controllerofexaminations@bhsenewdelhi.net
+                coe.verification@bhsed.co.in
               </span>
             </div>
             <div className="text-[10px] text-gray-400 font-mono hidden lg:block">
@@ -219,7 +219,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
             {/* Right Information & Dynamic Live Clock */}
             <div className="flex flex-col items-center md:items-end text-center md:text-right shrink-0 gap-0.5">
               <div className="text-xs sm:text-sm font-bold text-[#09327e] font-mono">
-                www.bhsenewdelhi.net
+                www.bhsed.co.in
               </div>
               <img
                 src={digitalIndia}
@@ -549,10 +549,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
                         <div className="pt-2 border-t border-gray-200">
                           <div className="bg-amber-50 border border-amber-200 rounded p-2.5 text-[11px] text-amber-900 font-semibold flex items-center gap-2">
                             <Award className="w-4 h-4 text-amber-600 shrink-0" />
-                            <span>
-                              Authorized Verification Cell:
-                              controllerofexaminations@bhsenewdelhi.net
-                            </span>
+                            <span>Authorized Verification Cell: coe.verification@bhsed.co.in</span>
                           </div>
                         </div>
                       </div>
@@ -619,7 +616,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
                       Karkardooma, Delhi-110092 (India)
                     </div>
                     <div className="text-[10px] text-slate-600 font-mono font-bold leading-tight">
-                      www.bhsenewdelhi.net / info@bhsenewdelhi.net
+                      www.bhsed.co.in / info@bhsed.co.in
                     </div>
                   </div>
 

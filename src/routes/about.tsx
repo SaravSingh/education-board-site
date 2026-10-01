@@ -262,9 +262,9 @@ function AboutPage() {
                 <Mail className="w-4 h-4 text-amber-700 shrink-0" />
                 <span>
                   <strong>E-mail:</strong>{" "}
-                  <code className="font-mono font-bold text-blue-900">info@bhsenewdelhi.net</code> /{" "}
+                  <code className="font-mono font-bold text-blue-900">info@bhsed.co.in</code> /{" "}
                   <code className="font-mono font-bold text-blue-900">
-                    controllerofexaminations@bhsenewdelhi.net
+                    coe.verification@bhsed.co.in
                   </code>
                 </span>
               </div>
@@ -272,7 +272,7 @@ function AboutPage() {
                 <Globe className="w-4 h-4 text-amber-700 shrink-0" />
                 <span>
                   <strong>Visit Us:</strong>{" "}
-                  <code className="font-mono font-bold text-emerald-800">www.bhsenewdelhi.net</code>
+                  <code className="font-mono font-bold text-emerald-800">www.bhsed.co.in</code>
                 </span>
               </div>
             </div>
