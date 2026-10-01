@@ -268,15 +268,6 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             <span>अंक विवरणिका (Marks Statement)</span>
           </button>
         </div>
-
-        {/* Print / Save PDF Button */}
-        <button
-          onClick={() => window.print()}
-          className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95 ml-auto sm:ml-0"
-        >
-          <Printer className="w-4 h-4 text-yellow-300" />
-          <span>Print / Save PDF (A4 100%)</span>
-        </button>
       </div>
 
       {/* ========================================================================= */}
