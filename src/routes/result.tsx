@@ -440,11 +440,25 @@ function ResultPage() {
 
                       <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
                         <button
-                          onClick={() => setStep(3)}
+                          onClick={() => {
+                            setDocTypeParam("MARKSHEET");
+                            setStep(3);
+                          }}
                           className="w-full bg-[#007bff] hover:bg-blue-700 text-white font-extrabold px-5 py-2.5 rounded text-xs uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                         >
                           <FileText className="w-4 h-4" />
                           <span>SHOW MARKSHEET</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setDocTypeParam("DEGREE");
+                            setStep(3);
+                          }}
+                          className="w-full bg-[#1b3f8b] hover:bg-[#102d68] text-white font-extrabold px-5 py-2.5 rounded text-xs uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                        >
+                          <Award className="w-4 h-4 text-yellow-300" />
+                          <span>SHOW DEGREE (CERTIFICATE)</span>
                         </button>
                       </div>
                     </div>
