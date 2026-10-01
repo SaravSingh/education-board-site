@@ -68,23 +68,33 @@ function ContactPage() {
         </div>
       </div>
 
-      {/* MAIN BODY CONTENT AREA (Matching Screenshot Pixel-Perfectly) */}
+      {/* MAIN BODY CONTENT AREA */}
       <main className="w-full max-w-7xl mx-auto px-4 py-8 flex-1 space-y-8">
-        {/* TOP ROW: HEAD OFFICE ADDRESS (LEFT) & GOOGLE MAPS IFRAME (RIGHT) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* TOP LEFT: ADDRESS & CORRESPONDENCE DETAILS */}
-          <div className="lg:col-span-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6 text-xs sm:text-sm text-gray-800">
-            {/* HEAD OFFICE ADDRESS */}
-            <div className="space-y-3">
+        {/* ROW 1: HEAD OFFICE DETAILS & EMAIL DIRECTORY (LEFT) + GOOGLE MAP (RIGHT) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* LEFT COLUMN: HEAD OFFICE ADDRESS + EMAIL CONTACT DIRECTORY */}
+          <div className="lg:col-span-6 flex flex-col justify-between gap-6">
+            {/* 1. HEAD OFFICE ADDRESS CARD */}
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4 text-xs sm:text-sm text-gray-800">
               <h2 className="font-extrabold text-sm sm:text-base text-slate-900 uppercase border-b-2 border-slate-900 pb-1 flex items-center gap-1.5">
-                <span>👉</span> BHSE DELHI BOARD HEAD OFFICE ADDRESS COMMUNICATION :
+                <span>👉</span> BHSE DELHI BOARD HEAD OFFICE ADDRESS :
               </h2>
-              <div className="pl-2 space-y-2">
+              <div className="pl-2 space-y-2.5">
                 <div className="font-bold text-gray-900 text-sm">
                   Board Of Higher Secondary Education, Delhi (BHSE )
                 </div>
-                <div className="text-gray-700 font-medium">Karkardooma, Delhi 110092 India</div>
-                <div className="pt-2 space-y-2 font-mono text-xs">
+                <div className="text-gray-700 font-medium">
+                  Karkardooma, Anand Vihar, Delhi — 110092 (India)
+                </div>
+                <div className="text-xs text-slate-600 font-semibold flex flex-wrap gap-x-4 gap-y-1 pt-1">
+                  <span>
+                    <strong>Office Hours:</strong> 10:30 AM to 6:30 PM (Mon – Sat)
+                  </span>
+                  <span>
+                    <strong>Helpline No.:</strong> +91-7979777354
+                  </span>
+                </div>
+                <div className="pt-2 border-t border-gray-100 space-y-1.5 font-mono text-xs">
                   <div>
                     <span className="font-bold text-gray-700 font-sans">
                       Verification Mail Id :
@@ -110,37 +120,15 @@ function ContactPage() {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* TOP RIGHT: GOOGLE MAPS IFRAME */}
-          <div className="lg:col-span-6 bg-white p-3 rounded-xl border border-gray-200 shadow-sm">
-            <div className="w-full h-[380px] rounded-lg overflow-hidden relative bg-slate-200 border border-gray-300">
-              <iframe
-                title="Board of Higher Secondary Education Delhi Location Map"
-                src="https://maps.google.com/maps?q=Karkardooma+Community+Complex+Anand+Vihar+Delhi+110092&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-full"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-
-        {/* BOTTOM ROW: EMAIL DIRECTORY TABLE (LEFT) & CONTACT FORM (RIGHT) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* BOTTOM LEFT: EMAIL CONTACT DIRECTORY TABLE */}
-          <div className="lg:col-span-6">
+            {/* 2. EMAIL CONTACT DIRECTORY TABLE (Directly below Address with zero empty gap) */}
             <div className="bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden">
               {/* Header Banner */}
-              <div className="bg-[#0d6efd] text-white p-4 text-center">
-                <h3 className="font-bold text-base sm:text-lg">
+              <div className="bg-[#0d6efd] text-white p-3.5 text-center">
+                <h3 className="font-bold text-sm sm:text-base">
                   Board Of Higher Secondary Education, Delhi
                 </h3>
-                <div className="text-xs text-blue-100 font-medium">Email Contact Directory</div>
+                <div className="text-[11px] text-blue-100 font-medium">Email Contact Directory</div>
               </div>
 
               {/* Table */}
@@ -148,21 +136,19 @@ function ContactPage() {
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-[#5c6f55] text-white uppercase text-[11px] font-bold">
-                      <th className="p-3.5 border-r border-gray-400 w-2/5 text-center">
-                        Department
-                      </th>
-                      <th className="p-3.5 text-center">Email ID</th>
+                      <th className="p-3 border-r border-gray-400 w-2/5 text-center">Department</th>
+                      <th className="p-3 text-center">Email ID</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 font-semibold">
                     {/* Verification */}
                     <tr className="hover:bg-slate-50">
-                      <td className="p-4 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-1 bg-sky-100 text-sky-800 rounded-full text-xs font-bold border border-sky-300">
+                      <td className="p-3.5 border-r border-gray-200 text-center">
+                        <span className="inline-block px-3 py-0.5 bg-sky-100 text-sky-800 rounded-full text-xs font-bold border border-sky-300">
                           Verification
                         </span>
                       </td>
-                      <td className="p-4 font-mono text-xs sm:text-sm text-blue-900">
+                      <td className="p-3.5 font-mono text-xs sm:text-sm text-blue-900">
                         <a
                           href="mailto:coe.verification@bhsed.co.in"
                           className="hover:underline font-bold text-blue-800"
@@ -174,12 +160,12 @@ function ContactPage() {
 
                     {/* Admin */}
                     <tr className="hover:bg-slate-50">
-                      <td className="p-4 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold border border-blue-300">
+                      <td className="p-3.5 border-r border-gray-200 text-center">
+                        <span className="inline-block px-3 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-bold border border-blue-300">
                           Admin
                         </span>
                       </td>
-                      <td className="p-4 font-mono text-xs sm:text-sm text-blue-900">
+                      <td className="p-3.5 font-mono text-xs sm:text-sm text-blue-900">
                         <a
                           href="mailto:info@bhsed.co.in"
                           className="hover:underline font-bold text-blue-800"
@@ -194,8 +180,62 @@ function ContactPage() {
             </div>
           </div>
 
-          {/* BOTTOM RIGHT: CONTACT US FORM */}
-          <div className="lg:col-span-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+          {/* RIGHT COLUMN: GOOGLE MAPS IFRAME (Full Height matching left column) */}
+          <div className="lg:col-span-6 bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+            <div className="w-full flex-1 min-h-[380px] rounded-lg overflow-hidden relative bg-slate-200 border border-gray-300">
+              <iframe
+                title="Board of Higher Secondary Education Delhi Location Map"
+                src="https://maps.google.com/maps?q=Karkardooma+Community+Complex+Anand+Vihar+Delhi+110092&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full min-h-[380px]"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+
+        {/* ROW 2: PUBLIC FACILITATION / HELPLINE NOTICE (LEFT) + CONTACT FORM (RIGHT) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT: STUDENT HELPDESK & VERIFICATION COUNTER */}
+          <div className="lg:col-span-5 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4 text-xs text-slate-700">
+            <h3 className="font-extrabold text-sm sm:text-base text-slate-900 uppercase border-b-2 border-slate-900 pb-1 flex items-center gap-1.5">
+              <span>🏛️</span> Public Facilitation &amp; Verification Desk
+            </h3>
+            <p className="leading-relaxed text-slate-600">
+              Students, institutions, and employers seeking mark sheet verification, migration
+              certificates, or enrollment confirmation may reach out via official communication
+              channels:
+            </p>
+            <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-2">
+              <div className="font-bold text-slate-800">Direct Verification Cell:</div>
+              <div className="font-mono text-blue-900 font-semibold">
+                <a href="mailto:coe.verification@bhsed.co.in" className="hover:underline">
+                  coe.verification@bhsed.co.in
+                </a>
+              </div>
+              <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-200">
+                Helpline Operating Hours: 10:30 AM to 6:30 PM (Mon to Sat)
+              </div>
+            </div>
+            <div className="bg-blue-50 p-3.5 rounded-lg border border-blue-200 space-y-2">
+              <div className="font-bold text-blue-950">Administrative &amp; General Inquiries:</div>
+              <div className="font-mono text-blue-900 font-semibold">
+                <a href="mailto:info@bhsed.co.in" className="hover:underline">
+                  info@bhsed.co.in
+                </a>
+              </div>
+              <div className="text-[11px] text-blue-800 pt-1 border-t border-blue-200">
+                Contact Board Secretariat for admission, curriculum, and institutional queries.
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT: CONTACT US FORM */}
+          <div className="lg:col-span-7 bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
             <h2 className="font-serif italic text-2xl sm:text-3xl font-bold text-gray-800 border-b border-gray-200 pb-2">
               CONTACT US
             </h2>
