@@ -1,32 +1,127 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100" height="100">
-  <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#a00000" stroke-width="4"/>
-  <circle cx="100" cy="100" r="88" fill="none" stroke="#a00000" stroke-width="2" stroke-dasharray="4 2"/>
-  <circle cx="100" cy="100" r="76" fill="#fff5f5" stroke="#a00000" stroke-width="2"/>
-  
-  <path id="textPathTop" d="M 28,100 A 72,72 0 1,1 172,100" fill="none"/>
-  
-  <text font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#a00000" text-anchor="middle">
-    <textPath href="#textPathTop" startOffset="50%">
-      BOARD OF HIGHER SECONDARY EDUCATION
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 38 380 390" width="100%" height="100%">
+  <defs>
+    <!-- Top Arc for Hindi Board Title -->
+    <path id="topHindiArc" d="M 124,195 A 126,126 0 1,1 376,195" fill="none"/>
+    
+    <!-- Bottom Inside Arc for • दिल्ली • -->
+    <path id="bottomDelhiArc" d="M 152,235 A 126,126 0 0,0 348,235" fill="none"/>
+
+    <!-- Motto Arc Outside the Circle -->
+    <path id="outsideMottoArc" d="M 115,250 A 168,168 0 0,0 385,250" fill="none"/>
+  </defs>
+
+  <!-- 1. SIDE RADIATING HORIZONTAL WINGS (STRIPES) -->
+  <g stroke="#d32027" stroke-width="3.2" stroke-linecap="round">
+    <!-- Left Wing Stripes -->
+    <line x1="78" y1="215" x2="130" y2="215" />
+    <line x1="82" y1="226" x2="136" y2="226" />
+    <line x1="88" y1="237" x2="143" y2="237" />
+    <line x1="94" y1="248" x2="152" y2="248" />
+    <line x1="102" y1="259" x2="162" y2="259" />
+    <line x1="111" y1="270" x2="173" y2="270" />
+    <line x1="122" y1="281" x2="186" y2="281" />
+
+    <!-- Right Wing Stripes -->
+    <line x1="422" y1="215" x2="370" y2="215" />
+    <line x1="418" y1="226" x2="364" y2="226" />
+    <line x1="412" y1="237" x2="357" y2="237" />
+    <line x1="406" y1="248" x2="348" y2="248" />
+    <line x1="398" y1="259" x2="338" y2="259" />
+    <line x1="389" y1="270" x2="327" y2="270" />
+    <line x1="378" y1="281" x2="314" y2="281" />
+  </g>
+
+  <!-- Left & Right Wing Outer Delicate Enclosure Bracket -->
+  <path d="M 78,215 C 78,250 110,283 122,281" fill="none" stroke="#d32027" stroke-width="1.8" opacity="0.6"/>
+  <path d="M 422,215 C 422,250 390,283 378,281" fill="none" stroke="#d32027" stroke-width="1.8" opacity="0.6"/>
+
+  <!-- 2. MAIN CIRCULAR SEAL -->
+  <!-- Outer Circular Base (Clean white solid background ensuring transparency contrast) -->
+  <circle cx="250" cy="195" r="145" fill="#ffffff" stroke="#d32027" stroke-width="5.5"/>
+  <circle cx="250" cy="195" r="139" fill="none" stroke="#d32027" stroke-width="1.8" stroke-dasharray="5 2.5" opacity="0.6"/>
+
+  <!-- Inner Circular Boundary -->
+  <circle cx="250" cy="195" r="104" fill="#ffffff" stroke="#d32027" stroke-width="3.8"/>
+
+  <!-- 3. CIRCULAR TEXT IN DEVANAGARI -->
+  <!-- Top Arc: बोर्ड ऑफ़ हायर सेकण्डरी एजुकेशन -->
+  <text fill="#d32027" font-family="'Noto Sans Devanagari', 'Mangal', 'Lohit Devanagari', 'Arial', sans-serif" font-size="19.5" font-weight="900" letter-spacing="1.2" text-anchor="middle">
+    <textPath href="#topHindiArc" startOffset="50%">
+      बोर्ड ऑफ़ हायर सेकण्डरी एजुकेशन
     </textPath>
   </text>
-  
-  <g transform="translate(100, 102) scale(0.85)">
-    <rect x="-35" y="25" width="70" height="10" fill="#a00000" rx="2"/>
-    <rect x="-30" y="20" width="60" height="5" fill="#a00000"/>
-    <circle cx="0" cy="25" r="5" fill="#ffffff" stroke="#a00000" stroke-width="1.5"/>
-    
-    <path d="M 0,-35 L -10,-10 L -25,-25 L -12,15 L 12,15 L 25,-25 L 10,-10 Z" fill="#b30000"/>
-    <path d="M -15,-30 Q 0,-50 15,-30 Q 0,-38 -15,-30 Z" fill="#ff9900"/>
-    <path d="M -8,-32 Q 0,-45 8,-32 Q 0,-36 -8,-32 Z" fill="#ffcc00"/>
-    
-    <path d="M -30,0 Q 0,-10 30,0 L 25,18 Q 0,8 -25,18 Z" fill="#a00000"/>
-    <path d="M -28,3 Q 0,-7 28,3 L 24,15 Q 0,5 -24,15 Z" fill="#ffffff"/>
-    <line x1="0" y1="-5" x2="0" y2="12" stroke="#a00000" stroke-width="2"/>
+
+  <!-- Bottom Inside Arc: • दिल्ली • -->
+  <text fill="#d32027" font-family="'Noto Sans Devanagari', 'Mangal', 'Arial', sans-serif" font-size="24" font-weight="900" letter-spacing="4" text-anchor="middle">
+    <textPath href="#bottomDelhiArc" startOffset="50%">
+      • दिल्ली •
+    </textPath>
+  </text>
+
+  <!-- 4. INNER SYMBOLISM (SUNBURST CORONA, SACRED DIYA, SCRIPTURE BOOK) -->
+  <!-- Radiating Zigzag Sunburst Corona / Crown -->
+  <path d="M 184,182 
+           L 188,160 L 198,168 
+           L 206,144 L 216,158 
+           L 226,124 L 236,146 
+           L 250,96 
+           L 264,146 L 274,124 
+           L 284,158 L 294,144 
+           L 302,168 L 312,160 
+           L 316,182 Z" 
+        fill="#ffffff" stroke="#d32027" stroke-width="3.6" stroke-linejoin="round"/>
+
+  <!-- Sacred Lamp (Diya / Kalash of Wisdom) -->
+  <g transform="translate(250, 160)">
+    <!-- Pedestal arch -->
+    <path d="M -16,12 C -16,5 16,5 16,12 Z" fill="#ffffff" stroke="#d32027" stroke-width="2.4" />
+    <!-- Diya Bowl -->
+    <ellipse cx="0" cy="5" rx="13" ry="6.5" fill="#ffffff" stroke="#d32027" stroke-width="2.8"/>
+    <!-- Golden Knowledge Flame -->
+    <path d="M 0,-18 C -7,-6 -5,3 0,5 C 5,3 7,-6 0,-18 Z" fill="#ffffff" stroke="#d32027" stroke-width="2.8"/>
+    <path d="M 0,-12 C -4,-4 -3,1 0,3 C 3,1 4,-4 0,-12 Z" fill="#d32027"/>
   </g>
-  
-  <rect x="55" y="152" width="90" height="22" rx="4" fill="#a00000"/>
-  <text x="100" y="167" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">
+
+  <!-- Open Holy Book / Scripture (Granth) -->
+  <g transform="translate(250, 212)">
+    <!-- Outer Book Boundary -->
+    <rect x="-65" y="-30" width="130" height="60" fill="none" stroke="#d32027" stroke-width="3" rx="2"/>
+    
+    <!-- Left Page (Solid Red) -->
+    <rect x="-63" y="-28" width="61" height="56" fill="#d32027" rx="1"/>
+    <!-- Left Page Inscriptions (Top block) -->
+    <line x1="-55" y1="-19" x2="-10" y2="-19" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="-55" y1="-12" x2="-10" y2="-12" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="-55" y1="-5"  x2="-14" y2="-5"  stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- Left Page Inscriptions (Bottom block) -->
+    <line x1="-55" y1="6"   x2="-10" y2="6"   stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="-55" y1="13"  x2="-10" y2="13"  stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="-55" y1="20"  x2="-16" y2="20"  stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+
+    <!-- Right Page (Solid Red) -->
+    <rect x="2" y="-28" width="61" height="56" fill="#d32027" rx="1"/>
+    <!-- Right Page Inscriptions (Top block) -->
+    <line x1="10" y1="-19" x2="55" y2="-19" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="10" y1="-12" x2="55" y2="-12" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="10" y1="-5"  x2="51" y2="-5"  stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- Right Page Inscriptions (Bottom block) -->
+    <line x1="10" y1="6"   x2="55" y2="6"   stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="10" y1="13"  x2="55" y2="13"  stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="10" y1="20"  x2="49" y2="20"  stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+
+    <!-- Center White Spine Crease -->
+    <line x1="0" y1="-30" x2="0" y2="30" stroke="#ffffff" stroke-width="3.5"/>
+  </g>
+
+  <!-- 5. BOTTOM OUTSIDE MOTTO: सर्वधन विद्याधनम् प्रधानम् -->
+  <text fill="#d32027" font-family="'Noto Sans Devanagari', 'Mangal', 'Arial', sans-serif" font-size="19" font-weight="900" letter-spacing="1.5" text-anchor="middle">
+    <textPath href="#outsideMottoArc" startOffset="50%">
+      सर्वधन विद्याधनम् प्रधानम्
+    </textPath>
+  </text>
+
+  <!-- 6. ESTABLISHMENT YEAR (Estd.- 1964) -->
+  <text x="250" y="414" fill="#212529" font-family="'Arial', 'Inter', sans-serif" font-size="26" font-weight="900" letter-spacing="1.2" text-anchor="middle">
     Estd.- 1964
   </text>
 </svg>
