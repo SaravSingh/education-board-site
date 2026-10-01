@@ -440,27 +440,15 @@ function ResultPage() {
                         </div>
                       </div>
 
-                      <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
+                      <div className="pt-2">
                         <button
                           onClick={() => {
-                            setAutoDownloadMarksheet(false);
                             setStep(3);
                           }}
-                          className="w-full sm:flex-1 bg-[#1b3f8b] hover:bg-[#102d68] text-white font-extrabold px-4 py-3 rounded-lg text-xs sm:text-sm uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-2"
+                          className="w-full bg-[#1b3f8b] hover:bg-[#102d68] text-white font-extrabold px-6 py-3 rounded text-sm uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-2"
                         >
-                          <FileText className="w-4 h-4 text-yellow-300" />
-                          <span>अंक विवरणिका देखें (View Marksheet)</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setAutoDownloadMarksheet(true);
-                            setStep(3);
-                          }}
-                          className="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-3 rounded-lg text-xs sm:text-sm uppercase transition shadow-md cursor-pointer flex items-center justify-center gap-2"
-                        >
-                          <Download className="w-4 h-4 text-yellow-300" />
-                          <span>डाउनलोड करें (Download A4 PDF)</span>
+                          <FileText className="w-5 h-5 text-yellow-300" />
+                          <span>अंक विवरणिका (Marks Statement)</span>
                         </button>
                       </div>
                     </div>
@@ -560,14 +548,7 @@ function ResultPage() {
             */}
 
             {/* RENDER OFFICIAL MARKSHEET (100% FAITHFUL BHSE DELHI FORMAT) */}
-            <CoseMarksheetDegree
-              student={selectedResult}
-              onBack={() => {
-                setAutoDownloadMarksheet(false);
-                setStep(2);
-              }}
-              autoDownload={autoDownloadMarksheet}
-            />
+            <CoseMarksheetDegree student={selectedResult} onBack={() => setStep(2)} />
           </div>
         )}
       </main>

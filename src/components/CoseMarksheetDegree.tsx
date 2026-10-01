@@ -269,51 +269,14 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         </div>
 
-        {/* Actions: Download PDF (A4), Download Image (HD), & Print */}
-        <div className="flex items-center gap-2 ml-auto sm:ml-0">
-          <button
-            id="bhse-download-pdf-btn"
-            onClick={handleDownloadPdf}
-            disabled={isGeneratingPdf}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95"
-            title="Download official marksheet in exact A4 sheet fit size (PDF)"
-          >
-            {isGeneratingPdf ? (
-              <>
-                <Loader2 className="w-4 h-4 text-white animate-spin" />
-                <span>Generating A4 PDF...</span>
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4 text-yellow-300" />
-                <span>Download PDF (A4 Size)</span>
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={handleDownloadImage}
-            disabled={isGeneratingImg}
-            className="px-3 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-blue-400 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95"
-            title="Download high-resolution image format (JPG)"
-          >
-            {isGeneratingImg ? (
-              <Loader2 className="w-4 h-4 text-white animate-spin" />
-            ) : (
-              <ImageIcon className="w-4 h-4 text-yellow-300" />
-            )}
-            <span>Download Image (HD)</span>
-          </button>
-
-          <button
-            onClick={() => window.print()}
-            className="px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95"
-            title="Print or Save via Browser System Print Dialog"
-          >
-            <Printer className="w-4 h-4 text-yellow-300" />
-            <span>Print (A4)</span>
-          </button>
-        </div>
+        {/* Print / Save PDF Button */}
+        <button
+          onClick={() => window.print()}
+          className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-md cursor-pointer flex items-center gap-2 active:scale-95 ml-auto sm:ml-0"
+        >
+          <Printer className="w-4 h-4 text-yellow-300" />
+          <span>Print / Save PDF (A4 100%)</span>
+        </button>
       </div>
 
       {/* ========================================================================= */}
