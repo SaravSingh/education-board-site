@@ -93,11 +93,8 @@ export const Header: React.FC<HeaderProps> = ({
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 py-1">
           {/* Left Block: Approved by NCERT Stamp + Official Emblem Seal (Clickable to Home) */}
-          <Link
-            to="/"
-            className="flex flex-col items-center md:items-start shrink-0 group cursor-pointer"
-          >
-            <div className="text-red-700 font-extrabold text-xs tracking-tight mb-1 font-serif uppercase group-hover:underline">
+          <Link to="/" className="flex flex-col items-center shrink-0 group cursor-pointer">
+            <div className="text-red-700 font-extrabold text-xs tracking-tight mb-1 font-serif uppercase group-hover:underline text-center">
               Approved by NCERT
             </div>
             <img
@@ -105,6 +102,9 @@ export const Header: React.FC<HeaderProps> = ({
               alt="Board Emblem Seal"
               className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain group-hover:scale-105 transition transform drop-shadow-xs"
             />
+            <div className="text-slate-800 font-bold text-xs tracking-wide mt-1 text-center">
+              Estd.- 1964
+            </div>
           </Link>
 
           {/* Center Block: Official Hindi & English Titles (Clickable to Home) */}
