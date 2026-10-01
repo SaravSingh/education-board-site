@@ -295,12 +295,12 @@
     justify-content: space-between !important;
     position: relative !important;
     width: 210mm !important;
-    height: 296.5mm !important;
+    height: 296mm !important;
     max-width: 210mm !important;
-    max-height: 296.5mm !important;
-    min-height: 296.5mm !important;
+    max-height: 296mm !important;
+    min-height: 296mm !important;
     margin: 0 auto !important;
-    padding: 6mm 8mm !important;
+    padding: 4mm 6mm !important;
     background-color: #ffffff !important;
     box-shadow: none !important;
     border: none !important;
