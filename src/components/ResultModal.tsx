@@ -304,7 +304,10 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
             <button className="px-3 py-2 hover:bg-blue-900 uppercase tracking-wide transition border-r border-blue-800/40 cursor-pointer text-gray-200">
               CONTACT US
             </button>
-            <button className="px-3 py-2 hover:bg-blue-900 uppercase tracking-wide transition border-r border-blue-800/40 cursor-pointer text-gray-200">
+            <button
+              onClick={() => window.open("/digilocker", "_blank")}
+              className="px-3 py-2 hover:bg-blue-900 uppercase tracking-wide transition border-r border-blue-800/40 cursor-pointer text-gray-200"
+            >
               DIGI LOCKER
             </button>
             <button className="px-3 py-2 hover:bg-blue-900 uppercase tracking-wide transition cursor-pointer text-gray-200">

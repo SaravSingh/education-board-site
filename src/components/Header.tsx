@@ -435,14 +435,13 @@ export const Header: React.FC<HeaderProps> = ({
             CONTACT US
           </Link>
 
-          <a
-            href="https://digilocker.gov.in"
+          <Link
+            to="/digilocker"
             target="_blank"
-            rel="noopener noreferrer"
             className="px-2.5 sm:px-3 lg:px-3.5 py-2.5 hover:bg-blue-900 uppercase tracking-wide border-r border-blue-800/40 cursor-pointer inline-block text-cyan-300"
           >
             DIGI LOCKER
-          </a>
+          </Link>
 
           <button
             onClick={() =>
