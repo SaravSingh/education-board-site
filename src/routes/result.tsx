@@ -554,7 +554,11 @@ function ResultPage() {
             */}
 
             {/* RENDER OFFICIAL MARKSHEET (100% FAITHFUL BHSE DELHI FORMAT) */}
-            <CoseMarksheetDegree student={selectedResult} onBack={() => setStep(2)} />
+            <CoseMarksheetDegree
+              student={selectedResult}
+              onBack={() => setStep(2)}
+              isInternetCopy={true}
+            />
           </div>
         )}
       </main>

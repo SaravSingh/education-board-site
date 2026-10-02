@@ -162,6 +162,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     | "MIGRATION"
     | "TRANSCRIPT"
   >("COSE_MARKSHEET");
+  const [adminInternetCopy, setAdminInternetCopy] = useState(false);
 
   // Enrollments state
   const [enrollments, setEnrollments] = useState<EnrollmentRecord[]>(dbStore.getEnrollments());
@@ -1639,7 +1640,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
               </div>
 
               {/* Action Buttons Toolbar */}
-              <div className="flex items-center gap-2 shrink-0 justify-end print:hidden border-t lg:border-t-0 pt-2 lg:pt-0 border-slate-200">
+              <div className="flex flex-wrap items-center gap-2 shrink-0 justify-end print:hidden border-t lg:border-t-0 pt-2 lg:pt-0 border-slate-200">
+                {(docTab === "COSE_MARKSHEET" || docTab === "COSE_DEGREE") && (
+                  <button
+                    type="button"
+                    onClick={() => setAdminInternetCopy((prev) => !prev)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border cursor-pointer active:scale-95 ${
+                      adminInternetCopy
+                        ? "bg-amber-100 text-amber-900 border-amber-300 shadow-2xs font-extrabold"
+                        : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
+                    }`}
+                    title="Toggle between Internet Result Copy watermark and clean official marksheet"
+                  >
+                    <span>{adminInternetCopy ? "📄 Watermark: Internet Copy" : "📜 Watermark: Clean Official"}</span>
+                  </button>
+                )}
+
                 <button
                   onClick={() => handleEditStudent(detailStudent)}
                   className="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs rounded-lg transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-95 border border-amber-500/40 print:hidden"
@@ -1665,6 +1681,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 <CoseMarksheetDegree
                   student={detailStudent}
                   defaultDocType={docTab === "COSE_DEGREE" ? "DEGREE" : "MARKSHEET"}
+                  isInternetCopy={adminInternetCopy}
                 />
               )}
 

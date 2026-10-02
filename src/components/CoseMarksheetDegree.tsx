@@ -5,8 +5,6 @@ import {
   ArrowLeft,
   Award,
   FileText,
-  Download,
-  Loader2,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -15,6 +13,7 @@ interface CoseMarksheetDegreeProps {
   onBack?: () => void;
   defaultDocType?: "MARKSHEET" | "DEGREE";
   autoDownload?: boolean;
+  isInternetCopy?: boolean;
 }
 
 // Convert any image URL to an inline base64 Data URL to guarantee zero canvas tainting
@@ -38,6 +37,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   onBack,
   defaultDocType = "MARKSHEET",
   autoDownload = false,
+  isInternetCopy = true,
 }) => {
   const [docType, setDocType] = useState<"MARKSHEET" | "DEGREE">(defaultDocType);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
@@ -291,33 +291,12 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             </button>
           )}
 
-          {/* Download PDF (A4 Sheet) */}
-          <button
-            type="button"
-            onClick={handleDownloadPdf}
-            disabled={isGeneratingPdf}
-            className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-1.5 cursor-pointer transition border border-emerald-600 disabled:opacity-50"
-            title="Download authentic Marksheet as A4 PDF"
-          >
-            {isGeneratingPdf ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Generating...</span>
-              </>
-            ) : (
-              <>
-                <Download className="w-3.5 h-3.5 text-white" />
-                <span>Download PDF (A4)</span>
-              </>
-            )}
-          </button>
-
           {/* Print Button for A4 Sheet */}
           <button
             type="button"
             onClick={() => window.print()}
-            className="px-3.5 py-1.5 bg-[#1b3f8b] hover:bg-[#122e6e] active:scale-95 text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-1.5 cursor-pointer transition border border-[#1b3f8b]"
-            title="Print Marksheet on A4 Sheet"
+            className="px-4 py-2 bg-[#1b3f8b] hover:bg-[#122e6e] active:scale-95 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-2 cursor-pointer transition border border-[#1b3f8b]"
+            title="Print Marksheet on A4 Sheet (or Save as PDF)"
           >
             <Printer className="w-4 h-4 text-yellow-300" />
             <span>Print (A4 Sheet)</span>
@@ -427,6 +406,46 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
               />
             </div>
 
+            {/* Diagonal "Internet Result Copy" Watermark (Guru Kashi University Style) */}
+            {isInternetCopy && (
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 select-none overflow-hidden"
+                aria-hidden="true"
+              >
+                <div
+                  className="text-center font-serif select-none pointer-events-none"
+                  style={{
+                    transform: "rotate(-30deg)",
+                    color: "rgba(30, 41, 59, 0.16)",
+                    WebkitPrintColorAdjust: "exact",
+                    printColorAdjust: "exact",
+                  }}
+                >
+                  <div
+                    className="font-serif font-black tracking-wide whitespace-nowrap"
+                    style={{
+                      fontSize: "76px",
+                      lineHeight: "1.1",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    Internet Result
+                  </div>
+                  <div
+                    className="font-serif font-black tracking-wide whitespace-nowrap"
+                    style={{
+                      fontSize: "72px",
+                      lineHeight: "1.1",
+                      letterSpacing: "0.04em",
+                      marginTop: "12px",
+                    }}
+                  >
+                    Copy
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Outer Dark Blue Border Frame Container */}
             <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-3 sm:p-4 flex flex-col justify-between">
               {/* TOP HEADER SECTION */}
@@ -509,6 +528,11 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                   <div className="text-[#0028a5] font-bold text-[11px] sm:text-[12.5px] mt-0.5">
                     प्रमाणपत्र-सह-अंकपत्र / Certificate-cum-Mark Sheet
                   </div>
+                  {isInternetCopy && (
+                    <div className="text-[#0028a5] font-black text-[11px] sm:text-[12.5px] tracking-wider mt-0.5 select-none">
+                      (Internet Result Copy)
+                    </div>
+                  )}
                 </div>
               </div>
 

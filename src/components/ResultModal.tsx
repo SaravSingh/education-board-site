@@ -571,7 +571,11 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
 
           {/* STEP 3: OFFICIAL MARKSHEET VIEW (100% Faithful BHSE DELHI FORMAT) */}
           {step === 3 && selectedResult && (
-            <CoseMarksheetDegree student={selectedResult} onBack={() => setStep(2)} />
+            <CoseMarksheetDegree
+              student={selectedResult}
+              onBack={() => setStep(2)}
+              isInternetCopy={true}
+            />
           )}
         </div>
       </div>
