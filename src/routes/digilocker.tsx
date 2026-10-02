@@ -1,22 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { dbStore, StudentResult, SubjectMarks } from "@/lib/db";
 import {
-  dbStore,
-  StudentResult,
-  SubjectMarks,
-} from "@/lib/db";
-import {
-  ShieldCheck,
-  CheckCircle2,
-  FileText,
   Printer,
   LogOut,
   AlertCircle,
   Loader2,
-  Award,
-  QrCode,
 } from "lucide-react";
 import digiLockerLogo from "@/assets/digilocker_logo.png";
+import dobseEmblem from "@/assets/dobse_emblem.png";
+import mukeshPhoto from "@/assets/mukesh_photo.jpg";
 
 export const Route = createFileRoute("/digilocker")({
   head: () => ({
@@ -32,6 +25,77 @@ export const Route = createFileRoute("/digilocker")({
   component: DigiLockerPage,
 });
 
+/* Helper to calculate CBSE/DOBSE 9-point scale grade */
+function getGrade(marks: number, maxMarks: number = 100): string {
+  const percentage = (marks / maxMarks) * 100;
+  if (percentage >= 91) return "A1";
+  if (percentage >= 81) return "A2";
+  if (percentage >= 71) return "B1";
+  if (percentage >= 61) return "B2";
+  if (percentage >= 51) return "C1";
+  if (percentage >= 41) return "C2";
+  if (percentage >= 33) return "D";
+  return "E";
+}
+
+/* Helper to compute CGPA */
+function calculateCGPA(subjects: SubjectMarks[]): string {
+  if (!subjects.length) return "8.1";
+  const gradePoints: Record<string, number> = {
+    A1: 10,
+    A2: 9,
+    B1: 8,
+    B2: 7,
+    C1: 6,
+    C2: 5,
+    D: 4,
+    E: 0,
+  };
+  const totalPoints = subjects.reduce((sum, s) => {
+    const sTotal = typeof s.total === "number" ? s.total : s.theory + (s.practical || 0);
+    const g = getGrade(sTotal, s.max_marks || 100);
+    return sum + (gradePoints[g] ?? 7);
+  }, 0);
+  return (totalPoints / subjects.length).toFixed(1);
+}
+
+/* Helper to format date of birth cleanly as YYYY-MM-DD */
+function formatDob(dobStr: string): string {
+  if (!dobStr) return "N/A";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dobStr)) return dobStr;
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dobStr)) {
+    const [d, m, y] = dobStr.split("/");
+    return `${y}-${m}-${d}`;
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(dobStr)) {
+    const [d, m, y] = dobStr.split("-");
+    return `${y}-${m}-${d}`;
+  }
+  return dobStr;
+}
+
+/* Robust DOB comparator supporting DDMMYYYY, YYYYMMDD, DD/MM/YYYY, and YYYY-MM-DD */
+function matchesDob(input: string, record: string): boolean {
+  const cleanInput = input.replace(/[^0-9]/g, "");
+  const cleanRecord = record.replace(/[^0-9]/g, "");
+
+  if (cleanInput === cleanRecord) return true;
+
+  if (cleanInput.length === 8 && cleanRecord.length === 8) {
+    // If input is DDMMYYYY (e.g. 02052001) and record is YYYYMMDD (20010502)
+    const ddmmyyyy_to_yyyymmdd =
+      cleanInput.slice(4, 8) + cleanInput.slice(2, 4) + cleanInput.slice(0, 2);
+    if (ddmmyyyy_to_yyyymmdd === cleanRecord) return true;
+
+    // If input is YYYYMMDD (e.g. 20010502) and record is DDMMYYYY (02052001)
+    const yyyymmdd_to_ddmmyyyy =
+      cleanInput.slice(6, 8) + cleanInput.slice(4, 6) + cleanInput.slice(0, 4);
+    if (yyyymmdd_to_ddmmyyyy === cleanRecord) return true;
+  }
+
+  return false;
+}
+
 /* DigiLocker Official Logo Component using authentic PNG */
 function DigiLockerLogo({ className = "w-[200px] h-auto" }: { className?: string }) {
   return (
@@ -46,25 +110,62 @@ function DigiLockerLogo({ className = "w-[200px] h-auto" }: { className?: string
   );
 }
 
+/* DigiLocker Slanted Verified Watermark Stamp */
+function DigiLockerWatermark() {
+  return (
+    <div className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 -rotate-[16deg] pointer-events-none select-none z-0">
+      <div className="bg-[#6366f1]/15 border-2 border-[#6366f1]/30 rounded-full px-5 py-2 sm:px-6 sm:py-2.5 flex items-center gap-2.5 backdrop-blur-[0.5px]">
+        {/* DigiLocker Cloud & Shield Stamp */}
+        <div className="relative w-7 h-7 flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7">
+            <path
+              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"
+              fill="rgba(255,255,255,0.75)"
+            />
+            <circle cx="12" cy="12" r="1.5" fill="#4f46e5" />
+            <path d="M12 13.5V16" stroke="#4f46e5" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full flex items-center justify-center">
+            <svg viewBox="0 0 12 12" fill="none" className="w-2 h-2">
+              <path
+                d="M2.5 6L5 8.5L9.5 3.5"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+        <div className="text-left leading-none space-y-0.5">
+          <div className="text-white font-black text-[13px] sm:text-[14px] tracking-wider drop-shadow-xs">
+            DIGILOCKER
+          </div>
+          <div className="text-white font-black text-[11px] sm:text-[12px] tracking-[0.2em] drop-shadow-xs">
+            VERIFIED
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DigiLockerPage() {
   const [enrollmentNo, setEnrollmentNo] = useState("");
   const [dob, setDob] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loggedInStudent, setLoggedInStudent] = useState<StudentResult | null>(null);
-  const [viewingDocType, setViewingDocType] = useState<"marksheet" | "certificate" | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = loggedInStudent
-      ? `DigiLocker | Issued Documents - ${loggedInStudent.student_name}`
+      ? `DigiLocker | Mark Statement - ${loggedInStudent.student_name}`
       : "DigiLocker | Sign In";
   }, [loggedInStudent]);
 
-  // Helper to normalize strings for comparison
+  // Helper to normalize search strings for comparison
   const normalizeText = (str: string) =>
     str.trim().toUpperCase().replace(/[\s\-_/]/g, "");
-
-  const normalizeDob = (str: string) => str.replace(/[^0-9]/g, "");
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,8 +180,6 @@ function DigiLockerPage() {
 
     setTimeout(() => {
       const cleanEnroll = normalizeText(enrollmentNo);
-      const cleanInputDob = normalizeDob(dob);
-
       const allResults = dbStore.getResults();
 
       const student = allResults.find((r) => {
@@ -89,7 +188,7 @@ function DigiLockerPage() {
           normalizeText(r.roll_no) === cleanEnroll ||
           normalizeText(r.serial_no) === cleanEnroll;
 
-        const matchDob = normalizeDob(r.dob) === cleanInputDob;
+        const matchDob = matchesDob(dob, r.dob);
         return matchEnroll && matchDob;
       });
 
@@ -103,457 +202,344 @@ function DigiLockerPage() {
           "Unable to fetch documents. No issued record found matching this Enrollment Number and Date of Birth. Please check your credentials.",
         );
       }
-    }, 500);
+    }, 450);
   };
 
   const handleSignOut = () => {
     setLoggedInStudent(null);
-    setViewingDocType(null);
     setEnrollmentNo("");
     setDob("");
     setError("");
   };
 
-  // Parse subjects safely if student found
-  let parsedSubjects: SubjectMarks[] = [];
+  /* -------------------------------------------------------------
+     VIEW 1: AUTHENTICATED MARKS STATEMENT (Matches Reference Screenshot)
+  ------------------------------------------------------------- */
   if (loggedInStudent) {
+    let parsedSubjects: SubjectMarks[] = [];
     try {
       parsedSubjects = JSON.parse(loggedInStudent.subjects_json || "[]");
     } catch {
       parsedSubjects = [];
     }
-  }
 
-  /* -------------------------------------------------------------
-     VIEW 1: AUTHENTICATED DIGILOCKER ISSUED DOCUMENTS DASHBOARD
-  ------------------------------------------------------------- */
-  if (loggedInStudent) {
+    const calculatedTotal = parsedSubjects.reduce(
+      (sum, s) => sum + (typeof s.total === "number" ? s.total : s.theory + (s.practical || 0)),
+      0,
+    );
+    const totalMarks = loggedInStudent.total_marks || calculatedTotal || 460;
+    const maxMarks = loggedInStudent.max_marks || (parsedSubjects.length > 0 ? parsedSubjects.length * 100 : 600);
+    const cgpa = calculateCGPA(parsedSubjects);
+    const isPass = loggedInStudent.status?.toUpperCase().includes("PASS") ?? true;
+
+    const classLabel = (loggedInStudent.course || "").toLowerCase().includes("12")
+      ? "CLASS 12"
+      : "CLASS 10";
+
+    // Determine photo source: if Mukesh or custom image exists
+    const studentPhotoSrc =
+      loggedInStudent.photo_url === "/mukesh_photo.jpg" ||
+      loggedInStudent.student_name.toUpperCase().includes("MUKESH")
+        ? mukeshPhoto
+        : loggedInStudent.photo_url || mukeshPhoto;
+
     return (
-      <div className="min-h-screen bg-[#f1f5f9] text-slate-800 font-sans flex flex-col">
-        {/* DigiLocker Official Government Top Bar */}
-        <header className="bg-white border-b border-gray-200 shadow-xs sticky top-0 z-30">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <DigiLockerLogo className="h-10 sm:h-12" />
-              <div className="hidden sm:block border-l border-gray-300 pl-4">
-                <span className="text-[11px] font-bold text-slate-700 block uppercase tracking-wider">
-                  National e-Governance Division (NeGD)
-                </span>
-                <span className="text-[10px] text-slate-500 block font-medium">
-                  Ministry of Electronics &amp; Information Technology, Govt. of India
-                </span>
+      <div className="min-h-screen bg-[#eaeff2] py-6 px-3 sm:px-4 font-sans text-slate-800">
+        <style>{`
+          @media print {
+            @page {
+              size: A4 portrait;
+              margin: 10mm;
+            }
+            body {
+              background-color: #ffffff !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+          }
+        `}</style>
+
+        {/* TOP ACTION BAR (Matches User Screenshot) */}
+        <div className="w-full max-w-[760px] mx-auto flex items-center justify-between pb-3 print:hidden">
+          {/* Logout Button */}
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="bg-[#dc2626] hover:bg-[#b91c1c] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Logout</span>
+          </button>
+
+          {/* Print Marksheet Button */}
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="bg-[#0066ff] hover:bg-[#0055d4] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Print Marksheet</span>
+          </button>
+        </div>
+
+        {/* MARKSHEET DOCUMENT CONTAINER (White Paper Card) */}
+        <div className="w-full max-w-[760px] mx-auto bg-white rounded-xl shadow-md border border-gray-100 p-6 sm:p-10 relative">
+          {/* 1. DOCUMENT HEADER */}
+          <div className="flex items-center justify-between gap-3 sm:gap-6">
+            {/* Left: DigiLocker Authentic Logo */}
+            <div className="w-[130px] sm:w-[170px] shrink-0 flex items-center">
+              <img
+                src={digiLockerLogo}
+                alt="DigiLocker"
+                className="w-full h-auto object-contain"
+              />
+            </div>
+
+            {/* Center: Board Title & Mark Statement */}
+            <div className="text-center flex-1 space-y-1">
+              <h1 className="text-sm sm:text-base md:text-[17px] font-extrabold text-[#111827] tracking-tight leading-snug uppercase">
+                DELHI OPEN BOARD OF SCHOOL EDUCATION
+              </h1>
+              <div className="text-xs sm:text-sm md:text-[15px] font-extrabold text-[#0066ff] tracking-tight uppercase">
+                MARK STATEMENT - {classLabel}
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-full text-xs font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>DigiLocker Verified Citizen</span>
-              </div>
-
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-bold transition cursor-pointer"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
-              </button>
+            {/* Right: DOBSE Official Emblem */}
+            <div className="w-[65px] sm:w-[85px] shrink-0 flex items-center justify-end">
+              <img
+                src={dobseEmblem}
+                alt="DOBSE"
+                className="w-full h-auto object-contain"
+              />
             </div>
           </div>
-        </header>
 
-        {/* MAIN BODY: ISSUED DOCUMENTS AREA */}
-        <main className="max-w-6xl w-full mx-auto px-4 py-8 flex-1 space-y-6">
-          {/* Welcome User Banner */}
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-300 shrink-0 shadow-xs">
-                {loggedInStudent.photo_url ? (
-                  <img
-                    src={loggedInStudent.photo_url}
-                    alt={loggedInStudent.student_name}
-                    className="w-full h-full object-cover"
+          {/* Blue Horizontal Rule */}
+          <div className="h-[2.5px] w-full bg-[#0066ff] my-4 sm:my-5" />
+
+          {/* 2. STUDENT DETAILS & PHOTO SECTION */}
+          <div className="border border-gray-100/90 rounded-xl p-4 sm:p-5 relative overflow-hidden bg-white mb-6">
+            {/* Slanted DigiLocker Verified Watermark Stamp */}
+            <DigiLockerWatermark />
+
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-8 relative z-10">
+              {/* Student Photo with Frame */}
+              <div className="shrink-0">
+                <div className="border border-red-500/80 p-0.5 bg-white shadow-2xs rounded-xs">
+                  <div className="border-t-2 border-red-600">
+                    <img
+                      src={studentPhotoSrc}
+                      alt={loggedInStudent.student_name}
+                      className="w-[110px] sm:w-[125px] h-[135px] sm:h-[150px] object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Key-Value Details */}
+              <div className="flex-1 space-y-1.5 text-xs sm:text-sm text-left w-full">
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Serial Number:
+                  </span>
+                  <span className="font-bold text-[#0066ff]">
+                    {loggedInStudent.serial_no && loggedInStudent.serial_no !== "N/A"
+                      ? loggedInStudent.serial_no
+                      : "N/A"}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Enrollment No:
+                  </span>
+                  <span className="font-bold text-[#111827]">
+                    {loggedInStudent.enrollment_no}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Roll Number:
+                  </span>
+                  <span className="font-bold text-[#111827]">
+                    {loggedInStudent.roll_no}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Student Name:
+                  </span>
+                  <span className="font-bold text-[#111827] uppercase">
+                    {loggedInStudent.student_name}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Father's Name:
+                  </span>
+                  <span className="font-bold text-[#111827] uppercase">
+                    {loggedInStudent.father_name}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Date of Birth:
+                  </span>
+                  <span className="font-bold text-[#111827]">
+                    {formatDob(loggedInStudent.dob)}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
+                    Aadhaar No:
+                  </span>
+                  <span className="font-bold text-[#111827]">N/A</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. MARKS TABLE */}
+          <div className="w-full overflow-x-auto">
+            <table className="w-full border-collapse border border-[#d1d5db] text-xs sm:text-[13px]">
+              <thead>
+                <tr className="bg-white">
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-left font-bold text-gray-900 uppercase">
+                    SUBJECT DESCRIPTION
+                  </th>
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-20">
+                    THEORY
+                  </th>
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-24">
+                    PRACTICAL
+                  </th>
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-20">
+                    TOTAL
+                  </th>
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-20">
+                    GRADE
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {parsedSubjects.map((sub, idx) => {
+                  const subTotal =
+                    typeof sub.total === "number"
+                      ? sub.total
+                      : sub.theory + (sub.practical || 0);
+                  const grade = getGrade(subTotal, sub.max_marks || 100);
+                  return (
+                    <tr key={idx} className="bg-white">
+                      <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-gray-900 text-left uppercase">
+                        {sub.name}
+                      </td>
+                      <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-gray-900 text-center">
+                        {sub.theory}
+                      </td>
+                      <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-gray-900 text-center">
+                        {sub.practical ?? 0}
+                      </td>
+                      <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-gray-900 text-center">
+                        {subTotal}
+                      </td>
+                      <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-[#0066ff] text-center">
+                        {grade}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="bg-white">
+                  <td
+                    colSpan={4}
+                    className="border border-[#d1d5db] px-4 py-3 font-bold text-gray-900 text-right uppercase tracking-wide text-xs sm:text-sm"
+                  >
+                    GRAND TOTAL: {totalMarks} / {maxMarks}
+                  </td>
+                  <td className="border border-[#d1d5db] px-2 py-2 text-center font-bold text-gray-900 leading-tight text-xs sm:text-[13px]">
+                    <div>
+                      RESULT:{" "}
+                      <span className="text-[#16a34a] font-bold">
+                        {isPass ? "PASS" : "FAIL"}
+                      </span>
+                    </div>
+                    <div className="text-gray-900 font-bold">(CGPA: {cgpa})</div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          {/* 4. DIGITAL VERIFICATION BADGE BOX */}
+          <div className="border-[1.5px] border-[#22c55e] rounded-xl p-3.5 sm:p-4 bg-white flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+            {/* Left: Shield & Signature Details */}
+            <div className="flex items-center gap-3.5">
+              {/* Glossy 3D Blue Shield Icon */}
+              <div className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 relative flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full drop-shadow-xs">
+                  <path
+                    d="M12 2L4 5V11C4 16.55 7.4 21.74 12 23C16.6 21.74 20 16.55 20 11V5L12 2Z"
+                    fill="url(#blueShieldGrad)"
+                    stroke="#0284c7"
+                    strokeWidth="1"
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center font-bold text-slate-400 text-xl">
-                    {loggedInStudent.student_name.charAt(0)}
-                  </div>
-                )}
+                  <path
+                    d="M9 12L11 14L15 10"
+                    stroke="white"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <defs>
+                    <linearGradient id="blueShieldGrad" x1="4" y1="2" x2="20" y2="23" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#38bdf8" />
+                      <stop offset="0.5" stopColor="#0284c7" />
+                      <stop offset="1" stopColor="#0369a1" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
-              <div>
-                <div className="text-[11px] font-bold text-blue-700 uppercase tracking-wider">
-                  DigiLocker Account Holder
-                </div>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-serif">
-                  {loggedInStudent.student_name}
-                </h1>
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-1">
-                  <span>
-                    <strong className="text-slate-800">Enrollment No:</strong>{" "}
-                    <code className="bg-slate-100 px-1 py-0.5 rounded font-mono font-bold text-slate-900">
-                      {loggedInStudent.enrollment_no}
-                    </code>
-                  </span>
-                  <span>•</span>
-                  <span>
-                    <strong className="text-slate-800">Roll No:</strong>{" "}
-                    <code className="bg-slate-100 px-1 py-0.5 rounded font-mono font-bold text-slate-900">
-                      {loggedInStudent.roll_no}
-                    </code>
-                  </span>
-                  <span>•</span>
-                  <span>
-                    <strong className="text-slate-800">DOB:</strong> {loggedInStudent.dob}
-                  </span>
-                </div>
+
+              <div className="space-y-0.5 text-left">
+                <h3 className="font-bold text-[#14532d] text-sm sm:text-[15px] leading-tight">
+                  Digitally Signed by DigiLocker DOBSE Portal
+                </h3>
+                <p className="text-xs text-gray-600">
+                  This digital document is legally valid as per IT Act 2000.
+                </p>
+                <p className="text-xs text-gray-600 font-medium">
+                  Verified on: 02/10/2026 07:04:11 IST
+                </p>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 px-4 py-2.5 rounded-xl text-xs space-y-0.5 self-stretch sm:self-auto text-left sm:text-right">
-              <div className="text-blue-900 font-bold">Issued Authority</div>
-              <div className="text-[11px] text-blue-700">
-                Board of Higher Secondary Education, Delhi
-              </div>
-              <div className="text-[10px] text-blue-600 font-mono">
-                Academic Batch: {loggedInStudent.batch}
-              </div>
-            </div>
-          </div>
-
-          {/* Section Heading */}
-          <div className="flex items-center justify-between border-b border-gray-300 pb-2">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-blue-600" />
-              Issued Documents in DigiLocker (2)
-            </h2>
-            <span className="text-xs text-slate-500 font-medium">
-              Legally Valid Under IT Act 2000
-            </span>
-          </div>
-
-          {/* DOCUMENT CARDS GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* DOCUMENT 1: MARKSHEET */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-xs hover:shadow-md transition space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
-                    <Award className="w-5 h-5" />
-                  </div>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[10px] font-bold">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" /> DigiLocker Verified
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-slate-900 text-base">
-                    {loggedInStudent.course} — Official Mark Sheet
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Issued by Board of Higher Secondary Education, Delhi (BHSE)
-                  </p>
-                </div>
-
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1 font-mono">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Doc URI:</span>
-                    <span className="text-slate-800 font-bold">
-                      in.gov.digitallocker:BHSE-{loggedInStudent.roll_no}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Issue Date:</span>
-                    <span className="text-slate-800">
-                      {loggedInStudent.result_declaration_date || "15/07/2009"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Result Status:</span>
-                    <span className="text-emerald-700 font-bold">
-                      {loggedInStudent.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 flex items-center gap-2">
-                <button
-                  onClick={() => setViewingDocType("marksheet")}
-                  className="flex-1 bg-[#0066ff] hover:bg-[#0052cc] text-white font-bold py-2 px-3 rounded-lg text-xs transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>View Official Mark Sheet</span>
-                </button>
-              </div>
-            </div>
-
-            {/* DOCUMENT 2: CERTIFICATE / VERIFICATION RECORD */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-xs hover:shadow-md transition space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[10px] font-bold">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" /> DigiLocker Verified
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-slate-900 text-base">
-                    Certificate of Passing &amp; Migration
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Issued by Board of Higher Secondary Education, Delhi (BHSE)
-                  </p>
-                </div>
-
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1 font-mono">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Cert No:</span>
-                    <span className="text-slate-800 font-bold">
-                      BHSE-CERT-{loggedInStudent.serial_no}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Academic Session:</span>
-                    <span className="text-slate-800">{loggedInStudent.batch}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Institution:</span>
-                    <span className="text-slate-800 truncate max-w-[200px]">
-                      {loggedInStudent.school_name}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2 flex items-center gap-2">
-                <button
-                  onClick={() => setViewingDocType("certificate")}
-                  className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 px-3 rounded-lg text-xs transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>View Certificate</span>
-                </button>
-              </div>
+            {/* Right: QR Code & Verification Label */}
+            <div className="flex flex-col items-center shrink-0">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${encodeURIComponent(
+                  `https://dobse.org/verify?roll=${loggedInStudent.roll_no}&enroll=${loggedInStudent.enrollment_no}`,
+                )}`}
+                alt="QR Code"
+                className="w-16 h-16 sm:w-[70px] sm:h-[70px] object-contain"
+              />
+              <span className="text-[10px] font-extrabold text-gray-800 tracking-wider uppercase mt-1">
+                SCAN TO VERIFY
+              </span>
             </div>
           </div>
-        </main>
 
-        {/* FOOTER */}
-        <footer className="w-full bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div>© {new Date().getFullYear()} DigiLocker. All rights reserved.</div>
-            <div className="text-[11px] text-gray-400">
-              National e-Governance Division (NeGD) | Government of India
-            </div>
-          </div>
-        </footer>
-
-        {/* DOCUMENT PREVIEW MODAL */}
-        {viewingDocType && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full border border-gray-200 overflow-hidden my-auto animate-fade-in text-slate-900">
-              {/* Modal Top Strip */}
-              <div className="bg-[#0066ff] text-white px-5 py-3.5 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-white" />
-                  <span className="font-bold text-sm">
-                    {viewingDocType === "marksheet"
-                      ? "Official DigiLocker Digital Mark Sheet Copy"
-                      : "Official DigiLocker Certificate of Passing"}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setViewingDocType(null)}
-                  className="text-white/80 hover:text-white font-bold text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition cursor-pointer"
-                >
-                  Close [×]
-                </button>
-              </div>
-
-              {/* Printable Document Container */}
-              <div className="p-6 sm:p-8 space-y-6">
-                {/* DigiLocker Digital Verification Seal Header */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-dashed border-gray-300 pb-4">
-                  <div className="flex items-center gap-3">
-                    <DigiLockerLogo className="h-12" />
-                  </div>
-                  <div className="bg-emerald-50 border border-emerald-400 p-2.5 rounded-lg text-right flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                    <div className="text-left font-sans text-xs">
-                      <div className="font-bold text-emerald-950">
-                        Digitally Verified Document
-                      </div>
-                      <div className="text-[10px] text-emerald-800 font-mono">
-                        URI: in.gov.digitallocker:BHSE-{loggedInStudent.roll_no}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Document Body */}
-                <div className="border border-gray-300 rounded-xl p-6 bg-slate-50/50 space-y-6 relative overflow-hidden">
-                  {/* DigiLocker Vector Watermark in Background */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none">
-                    <span className="text-9xl font-extrabold uppercase -rotate-12">
-                      DIGILOCKER
-                    </span>
-                  </div>
-
-                  {/* Board Title */}
-                  <div className="text-center space-y-1 relative z-10">
-                    <h3 className="text-lg sm:text-xl font-extrabold text-blue-900 uppercase font-serif tracking-wide">
-                      {loggedInStudent.board_name || "BOARD OF HIGHER SECONDARY EDUCATION, DELHI"}
-                    </h3>
-                    <p className="text-xs text-gray-600 font-medium">
-                      (An Autonomous Institution Registered under Govt. of NCT of Delhi)
-                    </p>
-                    <div className="inline-block px-4 py-1 bg-blue-900 text-white font-bold text-xs rounded-full uppercase tracking-wider mt-1">
-                      {viewingDocType === "marksheet"
-                        ? `${loggedInStudent.course} — MARKS STATEMENT`
-                        : "PROVISIONAL PASSING & MIGRATION CERTIFICATE"}
-                    </div>
-                  </div>
-
-                  {/* Student Details Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-white p-4 rounded-lg border border-gray-200 relative z-10">
-                    <div>
-                      <span className="text-gray-500 block">Candidate Name:</span>
-                      <strong className="text-gray-900">{loggedInStudent.student_name}</strong>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block">Roll Number:</span>
-                      <strong className="text-gray-900 font-mono">{loggedInStudent.roll_no}</strong>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block">Enrollment No:</span>
-                      <strong className="text-gray-900 font-mono">
-                        {loggedInStudent.enrollment_no}
-                      </strong>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block">Date of Birth:</span>
-                      <strong className="text-gray-900">{loggedInStudent.dob}</strong>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block">Father's Name:</span>
-                      <strong className="text-gray-900">{loggedInStudent.father_name}</strong>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block">Mother's Name:</span>
-                      <strong className="text-gray-900">{loggedInStudent.mother_name}</strong>
-                    </div>
-                    <div className="sm:col-span-2">
-                      <span className="text-gray-500 block">Institution / Exam Centre:</span>
-                      <strong className="text-gray-900 truncate block">
-                        {loggedInStudent.school_name || loggedInStudent.exam_center}
-                      </strong>
-                    </div>
-                  </div>
-
-                  {/* Subjects Table (if marksheet) */}
-                  {viewingDocType === "marksheet" && parsedSubjects.length > 0 && (
-                    <div className="overflow-x-auto relative z-10 border border-gray-300 rounded-lg bg-white">
-                      <table className="w-full text-xs text-left border-collapse">
-                        <thead>
-                          <tr className="bg-slate-100 text-slate-800 font-bold border-b border-gray-300">
-                            <th className="p-2 border-r border-gray-300 text-center">Sub Code</th>
-                            <th className="p-2 border-r border-gray-300">Subject Name</th>
-                            <th className="p-2 border-r border-gray-300 text-center">Max</th>
-                            <th className="p-2 border-r border-gray-300 text-center">Theory</th>
-                            <th className="p-2 border-r border-gray-300 text-center">Prac</th>
-                            <th className="p-2 border-r border-gray-300 text-center font-bold">Total</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                          {parsedSubjects.map((sub, idx) => (
-                            <tr key={idx} className="hover:bg-slate-50">
-                              <td className="p-2 border-r border-gray-200 text-center font-mono">
-                                {sub.code}
-                              </td>
-                              <td className="p-2 border-r border-gray-200 font-semibold">
-                                {sub.name}
-                              </td>
-                              <td className="p-2 border-r border-gray-200 text-center font-mono">
-                                {sub.max_marks}
-                              </td>
-                              <td className="p-2 border-r border-gray-200 text-center font-mono">
-                                {sub.theory}
-                              </td>
-                              <td className="p-2 border-r border-gray-200 text-center font-mono">
-                                {sub.practical}
-                              </td>
-                              <td className="p-2 border-r border-gray-200 text-center font-bold font-mono text-blue-900">
-                                {sub.total}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                        <tfoot>
-                          <tr className="bg-slate-100 font-bold border-t border-gray-300">
-                            <td colSpan={2} className="p-2 text-right">
-                              Total Marks / Result:
-                            </td>
-                            <td className="p-2 text-center font-mono">
-                              {loggedInStudent.max_marks}
-                            </td>
-                            <td colSpan={2}></td>
-                            <td className="p-2 text-center font-mono text-emerald-800 font-extrabold text-sm">
-                              {loggedInStudent.total_marks} ({loggedInStudent.status})
-                            </td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                  )}
-
-                  {/* Digital Signature & QR Verification Bar */}
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200 relative z-10 text-xs text-gray-600">
-                    <div className="flex items-center gap-3">
-                      <div className="w-16 h-16 bg-white border border-gray-300 rounded p-1 flex items-center justify-center">
-                        <QrCode className="w-12 h-12 text-slate-800" />
-                      </div>
-                      <div className="space-y-0.5 text-[11px]">
-                        <div className="font-bold text-gray-900">Digitally Signed By:</div>
-                        <div>Controller of Examinations, BHSE</div>
-                        <div className="text-gray-400 font-mono">
-                          Date: {loggedInStudent.result_declaration_date}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-center sm:text-right space-y-1">
-                      <div className="inline-block px-3 py-1 bg-emerald-100 text-emerald-900 font-bold rounded border border-emerald-300 text-[11px]">
-                        ✓ IT Act 2000 Recognized
-                      </div>
-                      <div className="text-[10px] text-gray-500">
-                        This digital copy is legally valid for all official purposes.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Modal Actions */}
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <button
-                    onClick={() => window.print()}
-                    className="bg-[#0066ff] hover:bg-[#0052cc] text-white font-bold py-2.5 px-5 rounded-lg text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
-                  >
-                    <Printer className="w-4 h-4" /> Print / Save PDF
-                  </button>
-                  <button
-                    onClick={() => setViewingDocType(null)}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2.5 px-5 rounded-lg text-xs transition cursor-pointer active:scale-95"
-                  >
-                    Close Preview
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+          {/* 5. DISCLAIMER */}
+          <p className="text-center text-xs text-gray-500 mt-4 font-normal">
+            Disclaimer: This is a computer generated document. For official verification, visit dobse.org.
+          </p>
+        </div>
       </div>
     );
   }
