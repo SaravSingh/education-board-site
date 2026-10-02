@@ -1007,11 +1007,11 @@ class LocalStore {
             if (!existingRolls.has(initR.roll_no.toLowerCase())) {
               parsed.unshift(initR);
             } else {
-              const idx = parsed.findIndex(
+              const target = parsed.find(
                 (p) => p.roll_no.toLowerCase() === initR.roll_no.toLowerCase(),
               );
-              if (idx !== -1) {
-                parsed[idx].course = initR.course;
+              if (target) {
+                target.course = initR.course;
               }
             }
           });
@@ -1037,11 +1037,11 @@ class LocalStore {
             if (!existingEnrs.has(initE.enrollment_no.toLowerCase())) {
               parsedEnr.unshift(initE);
             } else {
-              const idx = parsedEnr.findIndex(
+              const targetEnr = parsedEnr.find(
                 (p) => p.enrollment_no.toLowerCase() === initE.enrollment_no.toLowerCase(),
               );
-              if (idx !== -1) {
-                parsedEnr[idx].course = initE.course;
+              if (targetEnr) {
+                targetEnr.course = initE.course;
               }
             }
           });

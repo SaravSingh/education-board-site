@@ -263,6 +263,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
       }, 500);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [autoDownload, handleDownloadPdf]);
 
   return (
