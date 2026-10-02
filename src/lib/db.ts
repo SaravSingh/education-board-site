@@ -356,7 +356,7 @@ const INITIAL_RESULTS: StudentResult[] = [
     dob_words: "FOURTEENTH JANUARY TWO THOUSAND TEN",
     father_name: "SRINJOY SAHA",
     mother_name: "SANGHAMITRA MUKHERJEE",
-    course: "10TH (General)",
+    course: "12TH (Senior Secondary)",
     batch: "SESSION: 2025-26",
     enrollment_no: "20264034",
     school_name: "CENTRE CODE - 105-G NASIK (MS)",
@@ -813,7 +813,7 @@ const INITIAL_ENROLLMENTS: EnrollmentRecord[] = [
     enrollment_no: "20264034",
     student_name: "DHIRODUTTA SAHA",
     cert_no: "BHSE/VER/2026/20268068",
-    course: "CLASS X",
+    course: "CLASS XII",
     year: "2026",
     is_verified: true,
     issue_date: "2026-06-22",
@@ -876,15 +876,22 @@ class LocalStore {
           console.warn("Failed to parse saved announcements:", e);
         }
       }
-      const savedRes = localStorage.getItem("bhse_results_v6");
+      const savedRes = localStorage.getItem("bhse_results_v7");
       if (savedRes) {
         try {
           const parsed: StudentResult[] = JSON.parse(savedRes);
-          // Ensure any missing initial results (like Satish Kumar or Karimsaheb) are present
+          // Ensure any missing initial results are present, and sync updated initial course values
           const existingRolls = new Set(parsed.map((r) => r.roll_no.toLowerCase()));
           INITIAL_RESULTS.forEach((initR) => {
             if (!existingRolls.has(initR.roll_no.toLowerCase())) {
               parsed.unshift(initR);
+            } else {
+              const idx = parsed.findIndex(
+                (p) => p.roll_no.toLowerCase() === initR.roll_no.toLowerCase(),
+              );
+              if (idx !== -1) {
+                parsed[idx].course = initR.course;
+              }
             }
           });
           this.results = parsed;
@@ -897,9 +904,10 @@ class LocalStore {
         localStorage.removeItem("bhse_results_v3");
         localStorage.removeItem("bhse_results_v4");
         localStorage.removeItem("bhse_results_v5");
+        localStorage.removeItem("bhse_results_v6");
         this.save();
       }
-      const savedEnr = localStorage.getItem("bhse_enrollments_v6");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v7");
       if (savedEnr) {
         try {
           const parsedEnr: EnrollmentRecord[] = JSON.parse(savedEnr);
@@ -907,6 +915,13 @@ class LocalStore {
           INITIAL_ENROLLMENTS.forEach((initE) => {
             if (!existingEnrs.has(initE.enrollment_no.toLowerCase())) {
               parsedEnr.unshift(initE);
+            } else {
+              const idx = parsedEnr.findIndex(
+                (e) => e.enrollment_no.toLowerCase() === initE.enrollment_no.toLowerCase(),
+              );
+              if (idx !== -1) {
+                parsedEnr[idx].course = initE.course;
+              }
             }
           });
           this.enrollments = parsedEnr;
@@ -919,6 +934,7 @@ class LocalStore {
         localStorage.removeItem("bhse_enrollments_v3");
         localStorage.removeItem("bhse_enrollments_v4");
         localStorage.removeItem("bhse_enrollments_v5");
+        localStorage.removeItem("bhse_enrollments_v6");
         this.save();
       }
       const savedAdmin = localStorage.getItem("bhse_admin_creds");
@@ -955,9 +971,9 @@ class LocalStore {
     try {
       const savedAnn = localStorage.getItem("bhse_announcements");
       if (savedAnn) this.announcements = JSON.parse(savedAnn);
-      const savedRes = localStorage.getItem("bhse_results_v6");
+      const savedRes = localStorage.getItem("bhse_results_v7");
       if (savedRes) this.results = JSON.parse(savedRes);
-      const savedEnr = localStorage.getItem("bhse_enrollments_v6");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v7");
       if (savedEnr) this.enrollments = JSON.parse(savedEnr);
     } catch (e) {
       console.warn("Error reloading storage:", e);
@@ -967,8 +983,8 @@ class LocalStore {
   private save() {
     if (typeof window !== "undefined") {
       localStorage.setItem("bhse_announcements", JSON.stringify(this.announcements));
-      localStorage.setItem("bhse_results_v6", JSON.stringify(this.results));
-      localStorage.setItem("bhse_enrollments_v6", JSON.stringify(this.enrollments));
+      localStorage.setItem("bhse_results_v7", JSON.stringify(this.results));
+      localStorage.setItem("bhse_enrollments_v7", JSON.stringify(this.enrollments));
       localStorage.setItem("bhse_admin_creds", JSON.stringify(this.adminCreds));
     }
     this.notify();

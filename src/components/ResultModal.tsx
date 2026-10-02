@@ -485,6 +485,12 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
                               {selectedResult.dob}
                             </div>
                             <div>
+                              <span className="text-gray-500 font-bold">Class :</span>{" "}
+                              <strong className="text-slate-900 font-bold">
+                                {selectedResult.course || "12TH (Senior Secondary)"}
+                              </strong>
+                            </div>
+                            <div>
                               <span className="text-gray-500 font-bold">Batch / Session :</span>{" "}
                               {selectedResult.batch}
                             </div>

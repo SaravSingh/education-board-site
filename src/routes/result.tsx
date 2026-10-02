@@ -369,7 +369,7 @@ function ResultPage() {
                         type="button"
                         onClick={() => {
                           setSelectYear("2026");
-                          setSelectClass("10th");
+                          setSelectClass("12th");
                           setRollNoInput("20268068");
                           setCaptchaInput(captchaCode);
                         }}
@@ -426,6 +426,12 @@ function ResultPage() {
                           <div>
                             <span className="text-gray-500 font-bold">DOB :</span>{" "}
                             {selectedResult.dob}
+                          </div>
+                          <div>
+                            <span className="text-gray-500 font-bold">Class :</span>{" "}
+                            <strong className="text-slate-900 font-bold">
+                              {selectedResult.course || "12TH (Senior Secondary)"}
+                            </strong>
                           </div>
                           <div>
                             <span className="text-gray-500 font-bold">Batch / Session :</span>{" "}
