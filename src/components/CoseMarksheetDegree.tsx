@@ -43,6 +43,26 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isGeneratingImg, setIsGeneratingImg] = useState(false);
 
+  const [scale, setScale] = useState(1);
+  const [viewMode, setViewMode] = useState<"fit" | "full">("fit");
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (typeof window === "undefined") return;
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 820) {
+        const containerWidth = Math.min(screenWidth - 24, 794);
+        const newScale = Math.max(0.35, Math.min(containerWidth / 794, 1));
+        setScale(newScale);
+      } else {
+        setScale(1);
+      }
+    };
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
+
   let subjects: SubjectMarks[] = [];
   try {
     subjects = JSON.parse(student.subjects_json || "[]");
@@ -248,7 +268,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   return (
     <div className="w-full flex flex-col items-center">
       {/* Top Action Bar (Hidden in Print) */}
-      <div className="w-full max-w-[800px] mb-4 bg-white/95 backdrop-blur-xs p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-3 print:hidden">
+      <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
         {onBack && (
           <button
             onClick={onBack}
@@ -259,404 +279,453 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         )}
 
-        {/* Marks Statement Title Badge */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-300">
-          <button
-            type="button"
-            className="px-4 py-1.5 bg-[#1b3f8b] text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-2 cursor-default"
-          >
-            <FileText className="w-3.5 h-3.5 text-yellow-300" />
-            <span>अंक विवरणिका (Marks Statement)</span>
-          </button>
+        <div className="flex items-center gap-2">
+          {/* Mobile Screen-Fit / Zoom Toggle (Only on mobile screens < 820px) */}
+          {scale < 1 && (
+            <button
+              type="button"
+              onClick={() => setViewMode(viewMode === "fit" ? "full" : "fit")}
+              className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0028a5] text-xs font-bold rounded-lg border border-blue-200 flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+            >
+              <span>{viewMode === "fit" ? "🔍 Zoom 100%" : "📱 Fit to Screen"}</span>
+            </button>
+          )}
+
+          {/* Marks Statement Title Badge */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-300">
+            <button
+              type="button"
+              className="px-4 py-1.5 bg-[#1b3f8b] text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-2 cursor-default"
+            >
+              <FileText className="w-3.5 h-3.5 text-yellow-300" />
+              <span>अंक विवरणिका (Marks Statement)</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 100% FAITHFUL OFFICIAL BHSE DELHI MARKSHEET (CERTIFICATE-CUM-MARK SHEET)  */}
-      {/* ========================================================================= */}
-      <div
-        id="bhse-degree-document"
-        className="bhse-certificate-document relative w-full max-w-[794px] aspect-[210/297] min-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
-        style={{ boxSizing: "border-box" }}
-      >
-        {/* Authentic Continuous Security Micro-Pattern Watermark (Zero Gaps) */}
-        <div
-          className="bhse-bg-watermark absolute inset-0 pointer-events-none z-0 opacity-80"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjEzIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDx0ZXh0IHg9IjAiIHk9IjEwLjIiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOC4yIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjYTI5Y2Q2IiB0ZXh0TGVuZ3RoPSIyNDAiIGxlbmd0aEFkanVzdD0ic3BhY2luZyI+Qk9BUkQgT0YgSElHSEVSIFNFQ09OREFSWSBFRFVDQVRJT04gREVMSEkmIzE2MDs8L3RleHQ+Cjwvc3ZnPg==")',
-            backgroundRepeat: "repeat",
-            backgroundSize: "240px 13px",
-            WebkitPrintColorAdjust: "exact",
-            printColorAdjust: "exact",
-          }}
-        />
-
-        {/* Large Central Board Emblem Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
-          <img
-            src="/bhse_emblem_blue.png"
-            alt="Watermark"
-            crossOrigin="anonymous"
-            className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
-          />
+      {/* Mobile view tip when zoomed */}
+      {scale < 1 && viewMode === "full" && (
+        <div className="text-center text-[11px] text-slate-500 font-medium mb-1.5 print:hidden">
+          👉 Swipe horizontally to view full marksheet
         </div>
+      )}
 
-        {/* Outer Dark Blue Border Frame Container */}
-        <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-3 sm:p-4 flex flex-col justify-between">
-          {/* TOP HEADER SECTION */}
-          <div>
-            {/* Top Reference Numbers */}
-            <div className="flex justify-between items-center text-[9.5px] sm:text-[10.5px] font-bold text-[#0028a5] mb-0.5 px-1">
-              <div className="w-1/3" />
-              <div className="text-center font-bold">Government of India (TM-1, No. 1791977)</div>
-              <div className="w-1/3 text-right font-bold">Govt. of Delhi Regd. No. 275 (India)</div>
+      {/* Responsive Marksheet Container */}
+      <div
+        className={`w-full flex justify-center items-start ${
+          viewMode === "full" && scale < 1
+            ? "overflow-x-auto py-2 px-1"
+            : "overflow-hidden py-1 px-1"
+        }`}
+        style={{
+          height: viewMode === "fit" && scale < 1 ? `${Math.round(1123 * scale) + 8}px` : "auto",
+        }}
+      >
+        <div
+          className="transition-transform duration-200 ease-out origin-top flex justify-center"
+          style={{
+            transform: viewMode === "fit" && scale < 1 ? `scale(${scale})` : "none",
+            width: "794px",
+            minWidth: "794px",
+            maxWidth: "794px",
+            height: "1123px",
+            minHeight: "1123px",
+          }}
+        >
+          <div
+            id="bhse-degree-document"
+            className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+            style={{ boxSizing: "border-box" }}
+          >
+            {/* Authentic Continuous Security Micro-Pattern Watermark (Zero Gaps) */}
+            <div
+              className="bhse-bg-watermark absolute inset-0 pointer-events-none z-0 opacity-80"
+              style={{
+                backgroundImage:
+                  'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjkiIHZpZXdCb3g9IjAgMCAyMDggOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSIwIiB5PSI3LjQiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzliYjJkZCIgdGV4dExlbmd0aD0iMjA4IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiPkJPQVJEIE9GIEhJR0hFUiBTRUNPTkRBUlkgRURVQ0FUSU9OIERFTEhJJiMxNjA7PC90ZXh0Pjwvc3ZnPg==")',
+                backgroundRepeat: "repeat",
+                backgroundSize: "208px 9px",
+                WebkitPrintColorAdjust: "exact",
+                printColorAdjust: "exact",
+              }}
+            />
+
+            {/* Large Central Board Emblem Watermark */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
+              <img
+                src="/bhse_emblem_blue.png"
+                alt="Watermark"
+                crossOrigin="anonymous"
+                className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
+              />
             </div>
 
-            {/* Main Board Heading in Hindi */}
-            <h1 className="text-center font-bold text-[#0028a5] text-[18px] sm:text-[23px] leading-tight font-serif tracking-normal whitespace-nowrap">
-              बोर्ड ऑफ हायर सेकण्डरी एज्यूकेशन, दिल्ली
-            </h1>
-
-            {/* Main Board Heading in English */}
-            <h2 className="text-center font-black text-[#0028a5] text-[15px] sm:text-[19.5px] leading-tight font-serif tracking-tight whitespace-nowrap mt-0.5 mb-1">
-              BOARD OF HIGHER SECONDARY EDUCATION, DELHI
-            </h2>
-
-            {/* Row: Enrollment No (Left) | Emblem Seal (Center) | Roll No (Right) */}
-            <div className="grid grid-cols-12 items-center my-0.5 px-1">
-              {/* Left: Enrollment No */}
-              <div className="col-span-4 text-left text-[11px] sm:text-[12.5px] text-[#0028a5] font-bold leading-tight">
-                <div>रजि. क्रमांक :</div>
-                <div className="flex items-baseline">
-                  <span>Enrollment No. :&nbsp;</span>
-                  <span className="font-mono text-black font-bold text-xs sm:text-[13px]">
-                    {student.enrollment_no}
-                  </span>
-                </div>
-              </div>
-
-              {/* Center: Blue Emblem Seal */}
-              <div className="col-span-4 flex justify-center items-center">
-                <img
-                  src="/bhse_emblem_blue.png"
-                  alt="BHSE Emblem Seal"
-                  crossOrigin="anonymous"
-                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-                />
-              </div>
-
-              {/* Right: Roll No */}
-              <div className="col-span-4 text-left pl-6 sm:pl-12 text-[11px] sm:text-[12.5px] text-[#0028a5] font-bold leading-tight">
-                <div>रोल नं. :</div>
-                <div className="flex items-baseline">
-                  <span>Roll No. :&nbsp;</span>
-                  <span className="font-mono text-black font-bold text-xs sm:text-[13px]">
-                    {student.roll_no}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Ministry Recognition Text */}
-            <div className="text-center text-[9px] sm:text-[9.5px] text-[#0028a5] font-bold leading-tight my-1">
+            {/* Outer Dark Blue Border Frame Container */}
+            <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-3 sm:p-4 flex flex-col justify-between">
+              {/* TOP HEADER SECTION */}
               <div>
-                मान्यता – परिपत्र संख्या : एफ 46-1/68एस. यू / Recognition No. F-46-1/68 S.U.
-              </div>
-              <div>भारत सरकार / Government of India</div>
-              <div>(शिक्षा विभाग / Department of Education)</div>
-            </div>
-
-            {/* Examination Title Header */}
-            <div className="text-center my-1">
-              <div className="text-[#0028a5] font-bold text-[13px] sm:text-[15px] leading-tight">
-                {isClass12
-                  ? "सीनीयर सेकण्डरी स्कूल सर्टिफिकेट परीक्षा (10+2)"
-                  : "सेकण्डरी स्कूल सर्टिफिकेट परीक्षा (हाई स्कूल)"}
-              </div>
-              <div className="text-[#0028a5] font-black text-[13px] sm:text-[15px] leading-tight mt-0.5">
-                {isClass12
-                  ? "Senior Secondary School Certificate Examination (10+2)"
-                  : "Secondary School Certificate Examination (High School)"}{" "}
-                <span className="font-mono font-bold text-black ml-1.5 text-xs sm:text-[14px]">
-                  {student.exam_year || "2026"}
-                </span>
-              </div>
-              <div className="text-[#0028a5] font-bold text-[11px] sm:text-[12.5px] mt-0.5">
-                प्रमाणपत्र-सह-अंकपत्र / Certificate-cum-Mark Sheet
-              </div>
-            </div>
-          </div>
-
-          {/* STUDENT PARTICULARS & PASSPORT PHOTO */}
-          <div className="flex justify-between items-start gap-2 my-1 px-1 text-[11.5px] sm:text-[12.5px] text-[#0028a5] font-semibold leading-relaxed">
-            {/* Particulars Stack */}
-            <div className="flex-1 space-y-1">
-              <div>
-                <div className="leading-tight">यह प्रमाणित किया जाता है कि</div>
-                <div className="leading-tight flex items-baseline">
-                  <span className="w-32 sm:w-36 shrink-0 font-medium">This is to certify that</span>
-                  <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
-                    {student.student_name}
-                  </span>
+                {/* Top Reference Numbers */}
+                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] mb-1 px-1">
+                  <div className="text-left font-bold">Government of India (TM-1, No. 1791977)</div>
+                  <div className="text-right font-bold">Govt. of Delhi Regd. No. 275 (India)</div>
                 </div>
-              </div>
 
-              <div>
-                <div className="leading-tight">आत्मज/आत्मजा श्री</div>
-                <div className="leading-tight flex items-baseline">
-                  <span className="w-32 sm:w-36 shrink-0 font-medium">Son/Daughter of Shri</span>
-                  <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
-                    {student.father_name}
-                  </span>
-                </div>
-              </div>
+                {/* Main Board Heading in Hindi */}
+                <h1 className="text-center font-bold text-[#0028a5] text-[18px] sm:text-[23px] leading-tight font-serif tracking-normal whitespace-nowrap">
+                  बोर्ड ऑफ हायर सेकण्डरी एज्यूकेशन, दिल्ली
+                </h1>
 
-              <div>
-                <div className="leading-tight">एवम् श्रीमति</div>
-                <div className="leading-tight flex items-baseline">
-                  <span className="w-32 sm:w-36 shrink-0 font-medium">and Smt.</span>
-                  <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
-                    {student.mother_name}
-                  </span>
-                </div>
-              </div>
+                {/* Main Board Heading in English */}
+                <h2 className="text-center font-black text-[#0028a5] text-[15px] sm:text-[19.5px] leading-tight font-serif tracking-tight whitespace-nowrap mt-0.5 mb-1">
+                  BOARD OF HIGHER SECONDARY EDUCATION, DELHI
+                </h2>
 
-              <div>
-                <div className="leading-tight">जिनकी जन्मतिथि</div>
-                <div className="leading-tight flex items-baseline">
-                  <span className="w-32 sm:w-36 shrink-0 font-medium">born on</span>
-                  <span className="font-mono font-bold text-black text-[11px] sm:text-[12.5px] tracking-wider uppercase whitespace-nowrap">
-                    {student.dob_words} ({student.dob})
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div className="leading-tight">
-                  ने बोर्ड द्वारा अप्रैल/मई में आयोजित {isClass12 ? "सीनीयर सेकण्डरी" : "सेकण्डरी"}{" "}
-                  परीक्षा,
-                </div>
-                <div className="leading-tight flex items-baseline">
-                  <span>
-                    passed the {isClass12 ? "Senior Secondary" : "Secondary"} School Certificate
-                    Examination,
-                  </span>
-                  <span className="font-mono font-bold text-black ml-2 text-xs sm:text-[13px]">
-                    {student.exam_year || "2026"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-baseline pt-0.5">
-                <span className="w-32 sm:w-36 shrink-0" />
-                <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wide uppercase whitespace-nowrap">
-                  {student.school_name || "CERNRE CODE - 105-G NASIK (MS)"}
-                </span>
-              </div>
-
-              <div>
-                <div className="leading-tight">School from with following marks detail:</div>
-                <div className="leading-tight">विद्यालय से निम्न विवरणानुसार उत्तीर्ण की :-</div>
-              </div>
-            </div>
-
-            {/* Passport Photo */}
-            <div className="shrink-0 flex flex-col items-center pt-0.5">
-              <div className="border border-black p-[2px] bg-white">
-                <img
-                  src={student.photo_url || "/students/dhirodutta_saha.jpg"}
-                  alt={student.student_name}
-                  crossOrigin="anonymous"
-                  className="w-[105px] h-[132px] sm:w-[115px] sm:h-[144px] object-cover block grayscale contrast-105"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* MARKS TABLE */}
-          <div className="w-full my-1">
-            <table className="w-full border-collapse border border-[#0028a5] text-center text-xs sm:text-[12px] text-[#0028a5]">
-              <thead>
-                <tr className="font-bold border-b border-[#0028a5] text-[10px] sm:text-[10.5px]">
-                  <th className="py-1 px-1 border-r border-[#0028a5] w-[7%]">
-                    संख्या
-                    <br />
-                    Sr. No.
-                  </th>
-                  <th className="py-1 px-2 border-r border-[#0028a5] text-left w-[33%]">
-                    विषय
-                    <br />
-                    Subjects
-                  </th>
-                  <th className="py-1 px-1 border-r border-[#0028a5] w-[14%]">
-                    अधिकतम अंक
-                    <br />
-                    Maximum Marks
-                  </th>
-                  <th className="py-0.5 px-0.5 border-r border-[#0028a5] w-[28%]" colSpan={3}>
-                    प्राप्तांक Marks Obtained
-                    <div className="grid grid-cols-3 border-t border-[#0028a5] mt-0.5 pt-0.5 text-[9.5px] sm:text-[10px]">
-                      <span>लि. Theory</span>
-                      <span className="border-l border-[#0028a5]">प्रै. Practical</span>
-                      <span className="border-l border-[#0028a5]">कुल Total</span>
-                    </div>
-                  </th>
-                  <th className="py-1 px-1 border-[#0028a5] w-[18%]">
-                    संस्थागत/व्यक्तिगत
-                    <br />
-                    Regular/Private
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {subjects.map((sub, idx) => {
-                  const hasPractical = sub.practical && sub.practical > 0;
-                  return (
-                    <tr
-                      key={idx}
-                      className="border-b border-[#0028a5] font-mono font-bold text-black text-xs sm:text-[12px] h-[25px]"
-                    >
-                      <td className="border-r border-[#0028a5] text-center text-[#0028a5] font-sans">
-                        {idx + 1}.
-                      </td>
-                      <td className="border-r border-[#0028a5] text-left px-2 font-mono tracking-wider">
-                        {sub.name}
-                      </td>
-                      <td className="border-r border-[#0028a5] text-center font-mono">
-                        {sub.max_marks || 100}
-                      </td>
-                      <td className="border-r border-[#0028a5] text-center w-[9.3%]">
-                        {sub.theory}
-                      </td>
-                      <td className="border-r border-[#0028a5] text-center w-[9.3%]">
-                        {hasPractical ? sub.practical : "XX"}
-                      </td>
-                      <td className="border-r border-[#0028a5] text-center w-[9.3%]">
-                        {sub.total}
-                      </td>
-
-                      {/* Rightmost Column for Regular/Private & Positional Grade */}
-                      {idx === 0 && (
-                        <td
-                          rowSpan={3}
-                          className="border-b border-[#0028a5] text-center font-mono font-bold text-black text-xs sm:text-sm tracking-widest uppercase align-middle"
-                        >
-                          {student.status_mode || "PRIVATE"}
-                        </td>
-                      )}
-                      {idx === 3 && (
-                        <td
-                          rowSpan={1}
-                          className="border-b border-[#0028a5] text-center font-sans font-bold text-[#0028a5] text-[9.5px] sm:text-[10px] leading-tight align-middle"
-                        >
-                          <div>स्थितीय ग्रेड</div>
-                          <div>Positional Grade</div>
-                        </td>
-                      )}
-                      {idx === 4 && (
-                        <td
-                          rowSpan={Math.max(1, subjects.length - 4)}
-                          className="text-center font-mono font-bold text-black text-xs sm:text-[12.5px] leading-tight align-middle"
-                        >
-                          <div>I.D</div>
-                          <div>FIRST</div>
-                          <div>DIV.</div>
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-
-                {/* Total Row */}
-                <tr className="border-b border-[#0028a5] font-bold text-xs sm:text-[12px]">
-                  <td
-                    colSpan={5}
-                    className="border-r border-[#0028a5] text-right pr-4 py-1 text-[#0028a5] font-sans"
-                  >
-                    कुल प्राप्तांक / Total Obtained Marks
-                  </td>
-                  <td className="border-r border-[#0028a5] text-center font-mono font-bold text-black py-1">
-                    {student.total_marks}
-                  </td>
-                  <td className="p-0 border-[#0028a5]">
-                    <div className="grid grid-cols-2 text-center items-center h-full">
-                      <span className="text-[9.5px] sm:text-[10.5px] font-bold text-[#0028a5] border-r border-[#0028a5] py-1 leading-tight font-sans">
-                        परिणाम
-                        <br />
-                        Result
-                      </span>
-                      <span className="font-mono font-bold text-black text-xs sm:text-sm py-1">
-                        PASS
+                {/* Row: Enrollment No (Left) | Emblem Seal (Center) | Roll No (Right) */}
+                <div className="grid grid-cols-12 items-center my-0.5 px-1">
+                  {/* Left: Enrollment No */}
+                  <div className="col-span-4 text-left text-[11px] sm:text-[12.5px] text-[#0028a5] font-bold leading-tight">
+                    <div>रजि. क्रमांक :</div>
+                    <div className="flex items-baseline">
+                      <span>Enrollment No. :&nbsp;</span>
+                      <span className="font-mono text-black font-bold text-xs sm:text-[13px]">
+                        {student.enrollment_no}
                       </span>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                  </div>
 
-          {/* FOOTER & SIGNATURE SECTION */}
-          <div>
-            <div className="flex justify-between items-end my-1 px-1 text-xs sm:text-[12px] text-[#0028a5]">
-              {/* Left: Meanings & Date */}
-              <div className="space-y-1">
-                <div className="text-[9.5px] sm:text-[10.5px] font-bold leading-tight">
-                  <div>आद्यक्षरों का अर्थ</div>
-                  <div>कोड का अर्थ एवं विश्लेषणात्मक विवरण पीछे दिया गया है।</div>
-                  <div className="italic text-[9px] sm:text-[9.5px]">
-                    Meanings of codes and its' explanations are given overleaf.
+                  {/* Center: Blue Emblem Seal */}
+                  <div className="col-span-4 flex justify-center items-center">
+                    <img
+                      src="/bhse_emblem_blue.png"
+                      alt="BHSE Emblem Seal"
+                      crossOrigin="anonymous"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                    />
+                  </div>
+
+                  {/* Right: Roll No */}
+                  <div className="col-span-4 text-left pl-6 sm:pl-12 text-[11px] sm:text-[12.5px] text-[#0028a5] font-bold leading-tight">
+                    <div>रोल नं. :</div>
+                    <div className="flex items-baseline">
+                      <span>Roll No. :&nbsp;</span>
+                      <span className="font-mono text-black font-bold text-xs sm:text-[13px]">
+                        {student.roll_no}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="pt-2 text-xs sm:text-[12px] font-bold leading-tight">
-                  <div>दिल्ली</div>
-                  <div>Delhi</div>
-                  <div className="mt-1">दिनांक :</div>
-                  <div className="flex items-baseline">
-                    <span>Dated :</span>
-                    <span className="font-mono font-bold text-black ml-2 text-xs sm:text-[13px]">
-                      {student.result_declaration_date
-                        ? student.result_declaration_date.replace(/-/g, "/")
-                        : "22/06/2026"}
+                {/* Ministry Recognition Text */}
+                <div className="text-center text-[9px] sm:text-[9.5px] text-[#0028a5] font-bold leading-tight my-1">
+                  <div>
+                    मान्यता – परिपत्र संख्या : एफ 46-1/68एस. यू / Recognition No. F-46-1/68 S.U.
+                  </div>
+                  <div>भारत सरकार / Government of India</div>
+                  <div>(शिक्षा विभाग / Department of Education)</div>
+                </div>
+
+                {/* Examination Title Header */}
+                <div className="text-center my-1">
+                  <div className="text-[#0028a5] font-bold text-[13px] sm:text-[15px] leading-tight">
+                    {isClass12
+                      ? "सीनीयर सेकण्डरी स्कूल सर्टिफिकेट परीक्षा (10+2)"
+                      : "सेकण्डरी स्कूल सर्टिफिकेट परीक्षा (हाई स्कूल)"}
+                  </div>
+                  <div className="text-[#0028a5] font-black text-[13px] sm:text-[15px] leading-tight mt-0.5">
+                    {isClass12
+                      ? "Senior Secondary School Certificate Examination (10+2)"
+                      : "Secondary School Certificate Examination (High School)"}{" "}
+                    <span className="font-mono font-bold text-black ml-1.5 text-xs sm:text-[14px]">
+                      {student.exam_year || "2026"}
                     </span>
                   </div>
+                  <div className="text-[#0028a5] font-bold text-[11px] sm:text-[12.5px] mt-0.5">
+                    प्रमाणपत्र-सह-अंकपत्र / Certificate-cum-Mark Sheet
+                  </div>
                 </div>
               </div>
 
-              {/* Right: Controller Signature */}
-              <div className="flex flex-col items-center text-center">
-                <img
-                  src="/bhse_controller_signature.png"
-                  alt="Controller Signature"
-                  crossOrigin="anonymous"
-                  className="h-8 sm:h-9 object-contain mb-0.5"
-                />
-                <div className="font-bold text-xs sm:text-[12.5px] text-[#0028a5] leading-tight">
-                  (ओमप्रकाश गुप्ता)
-                </div>
-                <div className="font-bold text-[10.5px] sm:text-[11.5px] text-[#0028a5] leading-tight">
-                  परीक्षा नियंत्रक
-                </div>
-                <div className="font-bold text-[10.5px] sm:text-[11.5px] text-[#0028a5] leading-tight">
-                  Controller of Examination
-                </div>
-              </div>
-            </div>
+              {/* STUDENT PARTICULARS & PASSPORT PHOTO */}
+              <div className="flex justify-between items-start gap-2 my-1 px-1 text-[11.5px] sm:text-[12.5px] text-[#0028a5] font-semibold leading-relaxed">
+                {/* Particulars Stack */}
+                <div className="flex-1 space-y-1">
+                  <div>
+                    <div className="leading-tight">यह प्रमाणित किया जाता है कि</div>
+                    <div className="leading-tight flex items-baseline">
+                      <span className="w-32 sm:w-36 shrink-0 font-medium">
+                        This is to certify that
+                      </span>
+                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
+                        {student.student_name}
+                      </span>
+                    </div>
+                  </div>
 
-            {/* Bottom Legal Notice */}
-            <div className="text-center text-[8.5px] sm:text-[9.5px] font-bold text-[#0028a5] leading-tight pt-1">
-              <div>
-                भारत सरकार एवं राज्य सरकारों द्वारा मान्यता प्राप्त / Recognised by the Government
-                of India and State Governments.
+                  <div>
+                    <div className="leading-tight">आत्मज/आत्मजा श्री</div>
+                    <div className="leading-tight flex items-baseline">
+                      <span className="w-32 sm:w-36 shrink-0 font-medium">
+                        Son/Daughter of Shri
+                      </span>
+                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
+                        {student.father_name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="leading-tight">एवम् श्रीमति</div>
+                    <div className="leading-tight flex items-baseline">
+                      <span className="w-32 sm:w-36 shrink-0 font-medium">and Smt.</span>
+                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
+                        {student.mother_name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="leading-tight">जिनकी जन्मतिथि</div>
+                    <div className="leading-tight flex items-baseline">
+                      <span className="w-32 sm:w-36 shrink-0 font-medium">born on</span>
+                      <span className="font-mono font-bold text-black text-[11px] sm:text-[12.5px] tracking-wider uppercase whitespace-nowrap">
+                        {student.dob_words} ({student.dob})
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="leading-tight">
+                      ने बोर्ड द्वारा अप्रैल/मई में आयोजित{" "}
+                      {isClass12 ? "सीनीयर सेकण्डरी" : "सेकण्डरी"} परीक्षा,
+                    </div>
+                    <div className="leading-tight flex items-baseline">
+                      <span>
+                        passed the {isClass12 ? "Senior Secondary" : "Secondary"} School Certificate
+                        Examination,
+                      </span>
+                      <span className="font-mono font-bold text-black ml-2 text-xs sm:text-[13px]">
+                        {student.exam_year || "2026"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-baseline pt-0.5">
+                    <span className="w-32 sm:w-36 shrink-0" />
+                    <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wide uppercase whitespace-nowrap">
+                      {student.school_name || "CENTRE CODE- 105-G NASIK (MS)"}
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="leading-tight">School from with following marks detail:</div>
+                    <div className="leading-tight">
+                      विद्यालय से निम्न विवरणानुसार उत्तीर्ण की :-
+                    </div>
+                  </div>
+                </div>
+
+                {/* Passport Photo */}
+                <div className="shrink-0 flex flex-col items-center pt-0.5">
+                  <div className="border border-black p-[2px] bg-white">
+                    <img
+                      src={student.photo_url || "/students/dhirodutta_saha.jpg"}
+                      alt={student.student_name}
+                      crossOrigin="anonymous"
+                      className="w-[105px] h-[132px] sm:w-[115px] sm:h-[144px] object-cover block grayscale contrast-105"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="my-0.5">मान्यता परिपत्र सं. एफ-४६-१/६८-एस यू / No. F-46-1/68-SU</div>
-              <div>
-                *का चिन्ह जिस विषय के आगे लगा है, वह विषय पूरक परीक्षा में उत्तीर्ण किया जाता है।
+
+              {/* MARKS TABLE */}
+              <div className="w-full my-1">
+                <table className="w-full border-collapse border border-[#0028a5] text-center text-xs sm:text-[12px] text-[#0028a5]">
+                  <thead>
+                    <tr className="font-bold border-b border-[#0028a5] text-[10px] sm:text-[10.5px]">
+                      <th className="py-1 px-1 border-r border-[#0028a5] w-[7%]">
+                        संख्या
+                        <br />
+                        Sr. No.
+                      </th>
+                      <th className="py-1 px-2 border-r border-[#0028a5] text-left w-[33%]">
+                        विषय
+                        <br />
+                        Subjects
+                      </th>
+                      <th className="py-1 px-1 border-r border-[#0028a5] w-[14%]">
+                        अधिकतम अंक
+                        <br />
+                        Maximum Marks
+                      </th>
+                      <th className="py-0.5 px-0.5 border-r border-[#0028a5] w-[28%]" colSpan={3}>
+                        प्राप्तांक Marks Obtained
+                        <div className="grid grid-cols-3 border-t border-[#0028a5] mt-0.5 pt-0.5 text-[9.5px] sm:text-[10px]">
+                          <span>लि. Theory</span>
+                          <span className="border-l border-[#0028a5]">प्रै. Practical</span>
+                          <span className="border-l border-[#0028a5]">कुल Total</span>
+                        </div>
+                      </th>
+                      <th className="py-1 px-1 border-[#0028a5] w-[18%]">
+                        संस्थागत/व्यक्तिगत
+                        <br />
+                        Regular/Private
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subjects.map((sub, idx) => {
+                      const hasPractical = sub.practical && sub.practical > 0;
+                      return (
+                        <tr
+                          key={idx}
+                          className="border-b border-[#0028a5] font-mono font-bold text-black text-xs sm:text-[12px] h-[25px]"
+                        >
+                          <td className="border-r border-[#0028a5] text-center text-[#0028a5] font-sans">
+                            {idx + 1}.
+                          </td>
+                          <td className="border-r border-[#0028a5] text-left px-2 font-mono tracking-wider">
+                            {sub.name}
+                          </td>
+                          <td className="border-r border-[#0028a5] text-center font-mono">
+                            {sub.max_marks || 100}
+                          </td>
+                          <td className="border-r border-[#0028a5] text-center w-[9.3%]">
+                            {sub.theory}
+                          </td>
+                          <td className="border-r border-[#0028a5] text-center w-[9.3%]">
+                            {hasPractical ? sub.practical : "XX"}
+                          </td>
+                          <td className="border-r border-[#0028a5] text-center w-[9.3%]">
+                            {sub.total}
+                          </td>
+
+                          {/* Rightmost Column for Regular/Private & Positional Grade */}
+                          {idx === 0 && (
+                            <td
+                              rowSpan={3}
+                              className="border-b border-[#0028a5] text-center font-mono font-bold text-black text-xs sm:text-sm tracking-widest uppercase align-middle"
+                            >
+                              {student.status_mode || "PRIVATE"}
+                            </td>
+                          )}
+                          {idx === 3 && (
+                            <td
+                              rowSpan={1}
+                              className="border-b border-[#0028a5] text-center font-sans font-bold text-[#0028a5] text-[9.5px] sm:text-[10px] leading-tight align-middle"
+                            >
+                              <div>स्थितीय ग्रेड</div>
+                              <div>Positional Grade</div>
+                            </td>
+                          )}
+                          {idx === 4 && (
+                            <td
+                              rowSpan={Math.max(1, subjects.length - 4)}
+                              className="text-center font-mono font-bold text-black text-xs sm:text-[12.5px] leading-tight align-middle"
+                            >
+                              <div>I.D</div>
+                              <div>FIRST</div>
+                              <div>DIV.</div>
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })}
+
+                    {/* Total Row */}
+                    <tr className="border-b border-[#0028a5] font-bold text-xs sm:text-[12px]">
+                      <td
+                        colSpan={5}
+                        className="border-r border-[#0028a5] text-right pr-4 py-1 text-[#0028a5] font-sans"
+                      >
+                        कुल प्राप्तांक / Total Obtained Marks
+                      </td>
+                      <td className="border-r border-[#0028a5] text-center font-mono font-bold text-black py-1">
+                        {student.total_marks}
+                      </td>
+                      <td className="p-0 border-[#0028a5]">
+                        <div className="grid grid-cols-2 text-center items-center h-full">
+                          <span className="text-[9.5px] sm:text-[10.5px] font-bold text-[#0028a5] border-r border-[#0028a5] py-1 leading-tight font-sans">
+                            परिणाम
+                            <br />
+                            Result
+                          </span>
+                          <span className="font-mono font-bold text-black text-xs sm:text-sm py-1">
+                            PASS
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+
+              {/* FOOTER & SIGNATURE SECTION */}
               <div>
-                *against a subject that the candidate passed in the subjet at the Compartment
-                Examination.
+                <div className="flex justify-between items-end my-1 px-1 text-xs sm:text-[12px] text-[#0028a5]">
+                  {/* Left: Meanings & Date */}
+                  <div className="space-y-1">
+                    <div className="text-[9.5px] sm:text-[10.5px] font-bold leading-tight">
+                      <div>आद्यक्षरों का अर्थ</div>
+                      <div>कोड का अर्थ एवं विश्लेषणात्मक विवरण पीछे दिया गया है।</div>
+                      <div className="italic text-[9px] sm:text-[9.5px]">
+                        Meanings of codes and its' explanations are given overleaf.
+                      </div>
+                    </div>
+
+                    <div className="pt-2 text-xs sm:text-[12px] font-bold leading-tight">
+                      <div>दिल्ली</div>
+                      <div>Delhi</div>
+                      <div className="mt-1">दिनांक :</div>
+                      <div className="flex items-baseline">
+                        <span>Dated :</span>
+                        <span className="font-mono font-bold text-black ml-2 text-xs sm:text-[13px]">
+                          {student.result_declaration_date
+                            ? student.result_declaration_date.replace(/-/g, "/")
+                            : "22/06/2026"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Controller Signature */}
+                  <div className="flex flex-col items-center text-center">
+                    <img
+                      src="/bhse_controller_signature.png"
+                      alt="Controller Signature"
+                      crossOrigin="anonymous"
+                      className="h-8 sm:h-9 object-contain mb-0.5"
+                    />
+                    <div className="font-bold text-xs sm:text-[12.5px] text-[#0028a5] leading-tight">
+                      (ओमप्रकाश गुप्ता)
+                    </div>
+                    <div className="font-bold text-[10.5px] sm:text-[11.5px] text-[#0028a5] leading-tight">
+                      परीक्षा नियंत्रक
+                    </div>
+                    <div className="font-bold text-[10.5px] sm:text-[11.5px] text-[#0028a5] leading-tight">
+                      Controller of Examination
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Legal Notice */}
+                <div className="text-center text-[8.5px] sm:text-[9.5px] font-bold text-[#0028a5] leading-tight pt-1">
+                  <div>
+                    भारत सरकार एवं राज्य सरकारों द्वारा मान्यता प्राप्त / Recognised by the
+                    Government of India and State Governments.
+                  </div>
+                  <div className="my-0.5">
+                    मान्यता परिपत्र सं. एफ-४६-१/६८-एस यू / No. F-46-1/68-SU
+                  </div>
+                  <div>
+                    *का चिन्ह जिस विषय के आगे लगा है, वह विषय पूरक परीक्षा में उत्तीर्ण किया जाता
+                    है।
+                  </div>
+                  <div>
+                    *against a subject that the candidate passed in the subjet at the Compartment
+                    Examination.
+                  </div>
+                </div>
               </div>
             </div>
           </div>
