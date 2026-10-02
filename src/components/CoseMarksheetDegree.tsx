@@ -406,46 +406,6 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
               />
             </div>
 
-            {/* Diagonal "Internet Result Copy" Watermark (Guru Kashi University Style) */}
-            {isInternetCopy && (
-              <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 select-none overflow-hidden"
-                aria-hidden="true"
-              >
-                <div
-                  className="text-center font-serif select-none pointer-events-none"
-                  style={{
-                    transform: "rotate(-30deg)",
-                    color: "rgba(30, 41, 59, 0.16)",
-                    WebkitPrintColorAdjust: "exact",
-                    printColorAdjust: "exact",
-                  }}
-                >
-                  <div
-                    className="font-serif font-black tracking-wide whitespace-nowrap"
-                    style={{
-                      fontSize: "76px",
-                      lineHeight: "1.1",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    Internet Result
-                  </div>
-                  <div
-                    className="font-serif font-black tracking-wide whitespace-nowrap"
-                    style={{
-                      fontSize: "72px",
-                      lineHeight: "1.1",
-                      letterSpacing: "0.04em",
-                      marginTop: "12px",
-                    }}
-                  >
-                    Copy
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Outer Dark Blue Border Frame Container */}
             <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-3 sm:p-4 flex flex-col justify-between">
               {/* TOP HEADER SECTION */}
@@ -529,7 +489,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                     प्रमाणपत्र-सह-अंकपत्र / Certificate-cum-Mark Sheet
                   </div>
                   {isInternetCopy && (
-                    <div className="text-[#0028a5] font-black text-[11px] sm:text-[12.5px] tracking-wider mt-0.5 select-none">
+                    <div className="bhse-internet-header text-[#0028a5] font-black text-[11px] sm:text-[12.5px] tracking-wider mt-0.5 select-none">
                       (Internet Result Copy)
                     </div>
                   )}
@@ -818,6 +778,61 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                 </div>
               </div>
             </div>
+
+            {/* Authentic Vector Diagonal "Internet Result Copy" Watermark (Guru Kashi University Style) */}
+            {isInternetCopy && (
+              <svg
+                className="bhse-internet-watermark pointer-events-none select-none"
+                viewBox="0 0 794 1123"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "none",
+                  zIndex: 40,
+                  WebkitPrintColorAdjust: "exact",
+                  printColorAdjust: "exact",
+                }}
+              >
+                <g transform="translate(397, 560) rotate(-30)">
+                  <text
+                    x="0"
+                    y="-18"
+                    textAnchor="middle"
+                    fontFamily="'Times New Roman', Times, Georgia, serif"
+                    fontSize="76"
+                    fontWeight="900"
+                    fill="#334155"
+                    fillOpacity="0.22"
+                    stroke="#1e293b"
+                    strokeWidth="0.75"
+                    strokeOpacity="0.28"
+                    letterSpacing="3"
+                  >
+                    Internet Result
+                  </text>
+                  <text
+                    x="0"
+                    y="72"
+                    textAnchor="middle"
+                    fontFamily="'Times New Roman', Times, Georgia, serif"
+                    fontSize="72"
+                    fontWeight="900"
+                    fill="#334155"
+                    fillOpacity="0.22"
+                    stroke="#1e293b"
+                    strokeWidth="0.75"
+                    strokeOpacity="0.28"
+                    letterSpacing="3"
+                  >
+                    Copy
+                  </text>
+                </g>
+              </svg>
+            )}
           </div>
         </div>
       </div>
