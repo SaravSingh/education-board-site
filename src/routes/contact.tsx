@@ -2,7 +2,18 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { AdminLoginModal } from "@/components/AdminLoginModal";
-import { Home as HomeIcon, ChevronRight, Send, CheckCircle2, RefreshCw, Loader2 } from "lucide-react";
+import { dbStore } from "@/lib/db";
+import {
+  Home as HomeIcon,
+  ChevronRight,
+  Send,
+  CheckCircle2,
+  RefreshCw,
+  Loader2,
+  Mail,
+  AlertCircle,
+  ExternalLink,
+} from "lucide-react";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -26,14 +37,43 @@ function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<
+    "idle" | "success" | "activation_needed" | "error"
+  >("idle");
+  const [lastSubmission, setLastSubmission] = useState<{
+    name: string;
+    email: string;
+    message: string;
+  } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
 
     setIsSubmitting(true);
+    setSubmissionStatus("idle");
+
+    const payload = {
+      name: name.trim(),
+      email: email.trim(),
+      message: message.trim(),
+    };
+    setLastSubmission(payload);
+
+    // Persist inquiry in local storage store so it is safely archived
+    try {
+      dbStore.saveInquiry({
+        id: "inq_" + Date.now(),
+        name: payload.name,
+        email: payload.email,
+        message: payload.message || "(No message entered)",
+        submitted_at: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+        status: "PENDING_ACTIVATION",
+      });
+    } catch (err) {
+      console.warn("Could not save inquiry in local database:", err);
+    }
 
     try {
       // Direct form submission to Ashokarora.enb@gmail.com
@@ -44,35 +84,35 @@ function ContactPage() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          message: message.trim(),
-          _subject: `New BHSE Delhi Website Inquiry from ${name.trim()}`,
+          name: payload.name,
+          email: payload.email,
+          message: payload.message || "(No message entered)",
+          _subject: `New BHSE Delhi Website Inquiry from ${payload.name}`,
           _template: "table",
           _captcha: "false",
         }),
       });
 
-      if (res.ok) {
-        setIsSubmitted(true);
+      const data = await res.json().catch(() => null);
+
+      if (data && (data.success === "true" || data.success === true)) {
+        setSubmissionStatus("success");
         setName("");
         setEmail("");
         setMessage("");
+      } else if (
+        data &&
+        typeof data.message === "string" &&
+        data.message.toLowerCase().includes("activation")
+      ) {
+        // FormSubmit requires a 1-time email confirmation by Ashokarora.enb@gmail.com
+        setSubmissionStatus("activation_needed");
       } else {
-        throw new Error("Form submission error");
+        setSubmissionStatus("error");
       }
     } catch (err) {
       console.error("Form submit error:", err);
-      // Fallback: direct mailto trigger so the inquiry is never missed
-      const sub = encodeURIComponent(`New BHSE Delhi Inquiry from ${name.trim()}`);
-      const body = encodeURIComponent(
-        `Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}`
-      );
-      window.location.href = `mailto:Ashokarora.enb@gmail.com?subject=${sub}&body=${body}`;
-      setIsSubmitted(true);
-      setName("");
-      setEmail("");
-      setMessage("");
+      setSubmissionStatus("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -82,8 +122,19 @@ function ContactPage() {
     setName("");
     setEmail("");
     setMessage("");
-    setIsSubmitted(false);
+    setSubmissionStatus("idle");
+    setLastSubmission(null);
   };
+
+  const recipientEmail = "Ashokarora.enb@gmail.com";
+  const inquirySubject = encodeURIComponent(
+    `New BHSE Delhi Inquiry from ${lastSubmission?.name || name || "Website Visitor"}`
+  );
+  const inquiryBody = encodeURIComponent(
+    `Name: ${lastSubmission?.name || name}\nEmail: ${lastSubmission?.email || email}\n\nMessage / Inquiry Details:\n${lastSubmission?.message || message}`
+  );
+  const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipientEmail}&su=${inquirySubject}&body=${inquiryBody}`;
+  const mailtoUrl = `mailto:${recipientEmail}?subject=${inquirySubject}&body=${inquiryBody}`;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans w-full overflow-x-hidden">
@@ -241,6 +292,23 @@ function ContactPage() {
                         </a>
                       </td>
                     </tr>
+
+                    {/* Direct Inquiry Desk */}
+                    <tr className="hover:bg-slate-50">
+                      <td className="p-3.5 border-r border-gray-200 text-center">
+                        <span className="inline-block px-3 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold border border-emerald-300">
+                          Inquiry Desk
+                        </span>
+                      </td>
+                      <td className="p-3.5 font-mono text-xs sm:text-sm text-blue-900">
+                        <a
+                          href="mailto:Ashokarora.enb@gmail.com"
+                          className="hover:underline font-bold text-blue-800"
+                        >
+                          Ashokarora.enb@gmail.com
+                        </a>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -290,6 +358,17 @@ function ContactPage() {
                 </div>
               </div>
             </div>
+            <div className="bg-emerald-50 p-3.5 rounded-lg border border-emerald-200 space-y-2">
+              <div className="font-bold text-emerald-950">Direct Board Inquiry Mail:</div>
+              <div className="font-mono text-emerald-900 font-semibold">
+                <a href="mailto:Ashokarora.enb@gmail.com" className="hover:underline font-bold">
+                  Ashokarora.enb@gmail.com
+                </a>
+              </div>
+              <div className="text-[11px] text-emerald-800 pt-1 border-t border-emerald-200">
+                Official contact inbox for student inquiries, admission, examination, and verification questions.
+              </div>
+            </div>
             <div className="bg-blue-50 p-3.5 rounded-lg border border-blue-200 space-y-2">
               <div className="font-bold text-blue-950">Administrative &amp; General Inquiries:</div>
               <div className="font-mono text-blue-900 font-semibold">
@@ -298,7 +377,7 @@ function ContactPage() {
                 </a>
               </div>
               <div className="text-[11px] text-blue-800 pt-1 border-t border-blue-200">
-                Contact Board Secretariat for admission, curriculum, and institutional queries.
+                Contact Board Secretariat for administrative, curriculum, and institutional queries.
               </div>
             </div>
           </div>
@@ -309,21 +388,106 @@ function ContactPage() {
               CONTACT US
             </h2>
 
-            {isSubmitted ? (
-              <div className="bg-emerald-50 border-2 border-emerald-500 text-emerald-900 p-4 rounded-lg text-xs font-semibold flex items-start gap-2 shadow-sm animate-fade-in">
+            {/* STATUS: SUCCESS */}
+            {submissionStatus === "success" && (
+              <div className="bg-emerald-50 border-2 border-emerald-500 text-emerald-950 p-4 rounded-lg text-xs font-semibold flex items-start gap-3 shadow-sm animate-fade-in">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
+                <div className="space-y-1">
                   <strong className="text-sm block text-emerald-950 font-bold">
-                    Message Sent Successfully!
+                    Inquiry Sent Successfully!
                   </strong>
-                  Thank you! Your inquiry has been sent directly to{" "}
-                  <code className="bg-emerald-100 px-1 py-0.5 rounded text-emerald-950 font-bold font-mono">
-                    Ashokarora.enb@gmail.com
-                  </code>
-                  . We will review and respond to your email shortly.
+                  <div>
+                    Thank you! Your inquiry details have been forwarded directly to{" "}
+                    <code className="bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-950 font-bold font-mono">
+                      Ashokarora.enb@gmail.com
+                    </code>
+                    . Our administration will review and respond to your email shortly.
+                  </div>
                 </div>
               </div>
-            ) : null}
+            )}
+
+            {/* STATUS: ACTIVATION NEEDED */}
+            {submissionStatus === "activation_needed" && (
+              <div className="bg-amber-50 border-2 border-amber-500 text-amber-950 p-4 rounded-lg text-xs space-y-3 shadow-sm animate-fade-in">
+                <div className="flex items-start gap-2.5">
+                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1.5 flex-1">
+                    <strong className="text-sm block text-amber-950 font-bold">
+                      One-Time Activation Email Sent to Ashokarora.enb@gmail.com
+                    </strong>
+                    <p className="text-amber-900 leading-relaxed font-medium">
+                      The mail delivery service has dispatched a one-time confirmation email to{" "}
+                      <strong className="font-mono text-amber-950 font-bold bg-amber-100 px-1 py-0.5 rounded">
+                        Ashokarora.enb@gmail.com
+                      </strong>
+                      . Please open your Gmail inbox (or Spam/Promotions folder) and click{" "}
+                      <strong>"Activate Form"</strong> once. After that single confirmation, all
+                      future inquiries will land in your inbox automatically!
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-amber-200 space-y-2">
+                  <p className="font-bold text-amber-950">
+                    ⚡ Send this inquiry to Ashokarora.enb@gmail.com right now:
+                  </p>
+                  <div className="flex flex-wrap gap-2.5">
+                    <a
+                      href={gmailComposeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-1.5 rounded text-xs shadow-sm transition active:scale-95 cursor-pointer"
+                    >
+                      <Mail className="w-3.5 h-3.5" /> Send Directly via Gmail Compose
+                    </a>
+                    <a
+                      href={mailtoUrl}
+                      className="inline-flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold px-3.5 py-1.5 rounded text-xs shadow-sm transition active:scale-95 cursor-pointer"
+                    >
+                      <Send className="w-3.5 h-3.5" /> Send via Default Mail App
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* STATUS: ERROR / FALLBACK */}
+            {submissionStatus === "error" && (
+              <div className="bg-blue-50 border-2 border-blue-500 text-blue-950 p-4 rounded-lg text-xs space-y-3 shadow-sm animate-fade-in">
+                <div className="flex items-start gap-2.5">
+                  <Mail className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1 flex-1">
+                    <strong className="text-sm block text-blue-950 font-bold">
+                      Deliver Inquiry to Ashokarora.enb@gmail.com
+                    </strong>
+                    <p className="text-blue-900 leading-relaxed font-medium">
+                      Your inquiry details have been saved. Click below to deliver it directly to{" "}
+                      <strong className="font-mono text-blue-950 font-bold">
+                        Ashokarora.enb@gmail.com
+                      </strong>
+                      :
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2.5">
+                  <a
+                    href={gmailComposeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-1.5 rounded text-xs shadow-sm transition active:scale-95 cursor-pointer"
+                  >
+                    <Mail className="w-3.5 h-3.5" /> Open in Gmail Compose
+                  </a>
+                  <a
+                    href={mailtoUrl}
+                    className="inline-flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold px-3.5 py-1.5 rounded text-xs shadow-sm transition active:scale-95 cursor-pointer"
+                  >
+                    <Send className="w-3.5 h-3.5" /> Open in Default Mail App
+                  </a>
+                </div>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-semibold text-gray-700">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -390,6 +554,25 @@ function ContactPage() {
                 >
                   Reset
                 </button>
+              </div>
+
+              {/* DIRECT EMAIL INFO FOOTNOTE */}
+              <div className="pt-2 flex flex-wrap items-center justify-between text-[11px] text-gray-500 border-t border-gray-100 gap-2">
+                <span>
+                  Inquiries delivered to:{" "}
+                  <a
+                    href="mailto:Ashokarora.enb@gmail.com"
+                    className="font-mono text-blue-800 font-bold hover:underline"
+                  >
+                    Ashokarora.enb@gmail.com
+                  </a>
+                </span>
+                <a
+                  href={`mailto:Ashokarora.enb@gmail.com?subject=BHSE%20Delhi%20Inquiry`}
+                  className="text-blue-700 hover:underline font-semibold flex items-center gap-1"
+                >
+                  <Mail className="w-3 h-3" /> Direct Email
+                </a>
               </div>
             </form>
           </div>

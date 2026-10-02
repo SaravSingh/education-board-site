@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   dbStore,
   Announcement,
   StudentResult,
   EnrollmentRecord,
+  InquiryRecord,
   SubjectMarks,
   numberToWords,
   numberToIndividualDigitWords,
@@ -23,6 +24,7 @@ import {
   Save,
   Edit3,
   Eye,
+  Mail,
   CreditCard,
   Building,
   X,
@@ -53,8 +55,18 @@ interface AdminPanelProps {
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   const [activeTab, setActiveTab] = useState<
-    "dashboard" | "students" | "add_student" | "announcements" | "enrollments" | "stats"
+    "dashboard" | "students" | "add_student" | "announcements" | "enrollments" | "stats" | "inquiries"
   >("dashboard");
+
+  // Inquiries state
+  const [inquiries, setInquiries] = useState<InquiryRecord[]>(dbStore.getInquiries());
+
+  useEffect(() => {
+    const unsub = dbStore.subscribe(() => {
+      setInquiries(dbStore.getInquiries());
+    });
+    return unsub;
+  }, []);
 
   // Announcements state
   const [announcements, setAnnouncements] = useState<Announcement[]>(dbStore.getAnnouncements());
@@ -540,6 +552,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 </div>
                 <span className="bg-slate-800 text-emerald-400 font-mono text-[10px] px-1.5 py-0.5 rounded ml-1.5">
                   {enrollments.length}
+                </span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("inquiries")}
+                className={`shrink-0 md:w-full text-left px-3 sm:px-3.5 py-2 rounded-lg font-bold text-xs flex items-center justify-between transition cursor-pointer ${
+                  activeTab === "inquiries"
+                    ? "bg-amber-500 text-slate-950 shadow-md"
+                    : "bg-slate-900 hover:bg-slate-800 text-slate-300"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 shrink-0" /> Inquiries
+                </div>
+                <span className="bg-slate-800 text-sky-400 font-mono text-[10px] px-1.5 py-0.5 rounded ml-1.5">
+                  {inquiries.length}
                 </span>
               </button>
 
@@ -1448,6 +1476,83 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* TAB 5.5: WEBSITE INQUIRIES */}
+          {activeTab === "inquiries" && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-700 pb-3">
+                <div>
+                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Mail className="w-5 h-5 text-amber-400" /> Website Inquiries &amp; Messages
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Inquiries submitted through the Contact Us form (forwarded to Ashokarora.enb@gmail.com).
+                  </p>
+                </div>
+                <span className="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-full font-mono">
+                  Total: {inquiries.length}
+                </span>
+              </div>
+
+              {inquiries.length === 0 ? (
+                <div className="bg-slate-900 border border-slate-800 p-8 rounded-xl text-center space-y-2">
+                  <Mail className="w-10 h-10 text-slate-600 mx-auto" />
+                  <p className="text-sm font-semibold text-slate-300">No Inquiries Received Yet</p>
+                  <p className="text-xs text-slate-500">
+                    Submissions from the Contact Us form will appear here and route to Ashokarora.enb@gmail.com.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {inquiries.map((inq) => (
+                    <div
+                      key={inq.id}
+                      className="bg-slate-900 border border-slate-800 rounded-lg p-4 space-y-2.5 hover:border-slate-700 transition"
+                    >
+                      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800/80 pb-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-white text-sm">{inq.name}</span>
+                          <a
+                            href={`mailto:${inq.email}`}
+                            className="text-xs text-sky-400 hover:underline font-mono"
+                          >
+                            &lt;{inq.email}&gt;
+                          </a>
+                        </div>
+                        <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                          <Clock className="w-3.5 h-3.5 text-slate-500" />
+                          <span>{inq.submitted_at}</span>
+                          <button
+                            onClick={() => {
+                              if (confirm("Delete this inquiry record?")) {
+                                dbStore.deleteInquiry(inq.id);
+                                setInquiries(dbStore.getInquiries());
+                              }
+                            }}
+                            className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-slate-800 ml-2 cursor-pointer"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-200 whitespace-pre-wrap leading-relaxed bg-slate-950/60 p-3 rounded border border-slate-800/60">
+                        {inq.message}
+                      </p>
+                      <div className="flex items-center gap-2 pt-1 text-[11px]">
+                        <a
+                          href={`mailto:${inq.email}?subject=${encodeURIComponent(`Reply from BHSE Delhi regarding your inquiry`)}`}
+                          className="inline-flex items-center gap-1 text-amber-400 hover:underline font-semibold"
+                        >
+                          <Mail className="w-3 h-3" /> Reply to Sender
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

@@ -64,6 +64,15 @@ export interface EnrollmentRecord {
   issue_date: string;
 }
 
+export interface InquiryRecord {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  submitted_at: string;
+  status: "SENT" | "PENDING_ACTIVATION" | "DIRECT_MAIL";
+}
+
 export interface AdminCredentials {
   email: string;
   password_hash: string;
@@ -862,6 +871,7 @@ class LocalStore {
   private announcements: Announcement[] = INITIAL_ANNOUNCEMENTS;
   private results: StudentResult[] = INITIAL_RESULTS;
   private enrollments: EnrollmentRecord[] = INITIAL_ENROLLMENTS;
+  private inquiries: InquiryRecord[] = [];
   private adminCreds: AdminCredentials = DEFAULT_ADMIN_CREDS;
   private isLoggedIn: boolean = false;
   private listeners: Set<StoreListener> = new Set();
@@ -920,7 +930,7 @@ class LocalStore {
               parsedEnr.unshift(initE);
             } else {
               const idx = parsedEnr.findIndex(
-                (e) => e.enrollment_no.toLowerCase() === initE.enrollment_no.toLowerCase(),
+                (p) => p.enrollment_no.toLowerCase() === initE.enrollment_no.toLowerCase(),
               );
               if (idx !== -1) {
                 parsedEnr[idx].course = initE.course;
@@ -939,6 +949,14 @@ class LocalStore {
         localStorage.removeItem("bhse_enrollments_v5");
         localStorage.removeItem("bhse_enrollments_v6");
         this.save();
+      }
+      const savedInq = localStorage.getItem("bhse_inquiries_v1");
+      if (savedInq) {
+        try {
+          this.inquiries = JSON.parse(savedInq);
+        } catch (e) {
+          console.warn("Failed to parse saved inquiries:", e);
+        }
       }
       const savedAdmin = localStorage.getItem("bhse_admin_creds");
       if (savedAdmin) {
@@ -978,6 +996,8 @@ class LocalStore {
       if (savedRes) this.results = JSON.parse(savedRes);
       const savedEnr = localStorage.getItem("bhse_enrollments_v7");
       if (savedEnr) this.enrollments = JSON.parse(savedEnr);
+      const savedInq = localStorage.getItem("bhse_inquiries_v1");
+      if (savedInq) this.inquiries = JSON.parse(savedInq);
     } catch (e) {
       console.warn("Error reloading storage:", e);
     }
@@ -988,6 +1008,7 @@ class LocalStore {
       localStorage.setItem("bhse_announcements_v2", JSON.stringify(this.announcements));
       localStorage.setItem("bhse_results_v7", JSON.stringify(this.results));
       localStorage.setItem("bhse_enrollments_v7", JSON.stringify(this.enrollments));
+      localStorage.setItem("bhse_inquiries_v1", JSON.stringify(this.inquiries));
       localStorage.setItem("bhse_admin_creds", JSON.stringify(this.adminCreds));
     }
     this.notify();
@@ -1141,6 +1162,26 @@ class LocalStore {
     this.enrollments = this.enrollments.filter(
       (e) => e.enrollment_no.toUpperCase() !== enrNo.toUpperCase(),
     );
+    this.save();
+  }
+
+  getInquiries(): InquiryRecord[] {
+    return this.inquiries;
+  }
+
+  saveInquiry(inq: InquiryRecord): InquiryRecord {
+    const idx = this.inquiries.findIndex((i) => i.id === inq.id);
+    if (idx >= 0) {
+      this.inquiries[idx] = inq;
+    } else {
+      this.inquiries.unshift(inq);
+    }
+    this.save();
+    return inq;
+  }
+
+  deleteInquiry(id: string) {
+    this.inquiries = this.inquiries.filter((i) => i.id !== id);
     this.save();
   }
 }
