@@ -80,16 +80,26 @@ function ContactPage() {
                 <span>👉</span> BHSE DELHI BOARD HEAD OFFICE ADDRESS :
               </h2>
               <div className="pl-2 space-y-2.5">
-                <div className="font-bold text-gray-900 text-sm">
+                <div className="font-bold text-gray-900 text-sm sm:text-base">
                   Board Of Higher Secondary Education, Delhi (BHSE )
                 </div>
                 <div className="text-gray-700 font-medium">
-                  Karkardooma, Anand Vihar, Delhi — 110092 (India)
+                  Karkardooma, Delhi 110092 India
                 </div>
-                <div className="text-xs text-slate-600 font-semibold flex flex-wrap gap-x-4 gap-y-1 pt-1">
-                  <span>
-                    <strong>Office Hours:</strong> 10:30 AM to 6:30 PM (Mon – Sat)
-                  </span>
+                <div className="pt-1 space-y-1.5 text-xs sm:text-sm">
+                  <div>
+                    <span className="font-bold text-gray-800">Helpline No.: </span>
+                    <a
+                      href="tel:+917979777354"
+                      className="font-bold text-blue-800 hover:underline font-mono"
+                    >
+                      +91 7979777354
+                    </a>
+                  </div>
+                  <div>
+                    <span className="font-bold text-gray-800">Contact Time: </span>
+                    <span className="text-slate-800 font-semibold">10:30 AM to 6:30 PM</span>
+                  </div>
                 </div>
                 <div className="pt-2 border-t border-gray-100 space-y-1.5 font-mono text-xs">
                   <div>
@@ -182,7 +192,7 @@ function ContactPage() {
             <div className="w-full flex-1 min-h-[380px] rounded-lg overflow-hidden relative bg-slate-200 border border-gray-300">
               <iframe
                 title="Board of Higher Secondary Education Delhi Location Map"
-                src="https://maps.google.com/maps?q=Karkardooma+Community+Complex+Anand+Vihar+Delhi+110092&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                src="https://maps.google.com/maps?q=Karkardooma+Delhi+110092+India&t=&z=14&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -214,8 +224,16 @@ function ContactPage() {
                   coe.verification@bhsed.co.in
                 </a>
               </div>
-              <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-200">
-                Helpline Operating Hours: 10:30 AM to 6:30 PM (Mon to Sat)
+              <div className="text-[11px] text-slate-700 pt-1.5 border-t border-slate-200 space-y-0.5">
+                <div>
+                  <strong className="text-slate-800">Helpline No.:</strong>{" "}
+                  <a href="tel:+917979777354" className="text-blue-800 font-bold hover:underline font-mono">
+                    +91 7979777354
+                  </a>
+                </div>
+                <div>
+                  <strong className="text-slate-800">Contact Time:</strong> 10:30 AM to 6:30 PM
+                </div>
               </div>
             </div>
             <div className="bg-blue-50 p-3.5 rounded-lg border border-blue-200 space-y-2">
