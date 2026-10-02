@@ -6,6 +6,8 @@ import {
   LogOut,
   AlertCircle,
   Loader2,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import digiLockerLogo from "@/assets/digilocker_logo.png";
 import logoEmblem from "@/assets/logo_emblem.svg";
@@ -153,6 +155,7 @@ function DigiLockerWatermark() {
 function DigiLockerPage() {
   const [enrollmentNo, setEnrollmentNo] = useState("");
   const [dob, setDob] = useState("");
+  const [showDob, setShowDob] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loggedInStudent, setLoggedInStudent] = useState<StudentResult | null>(null);
@@ -209,6 +212,7 @@ function DigiLockerPage() {
     setLoggedInStudent(null);
     setEnrollmentNo("");
     setDob("");
+    setShowDob(false);
     setError("");
   };
 
@@ -642,14 +646,30 @@ function DigiLockerPage() {
               <label className="block text-xs font-semibold text-[#374151]">
                 Password (Date of Birth)
               </label>
-              <input
-                type="text"
-                required
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-                placeholder="DDMMYYYY"
-                className="w-full px-3.5 py-2.5 border border-[#d1d5db] rounded-lg text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:border-transparent bg-[#fbfbfb] shadow-2xs transition"
-              />
+              <div className="relative">
+                <input
+                  type={showDob ? "text" : "password"}
+                  required
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  placeholder="DDMMYYYY"
+                  autoComplete="current-password"
+                  className="w-full pl-3.5 pr-10 py-2.5 border border-[#d1d5db] rounded-lg text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:border-transparent bg-[#fbfbfb] shadow-2xs transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowDob(!showDob)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer p-0.5"
+                  aria-label={showDob ? "Hide Date of Birth" : "Show Date of Birth"}
+                  title={showDob ? "Hide Date of Birth" : "Show Date of Birth"}
+                >
+                  {showDob ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Error Message */}
