@@ -279,7 +279,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
           </button>
         )}
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Mobile Screen-Fit / Zoom Toggle (Only on mobile screens < 820px) */}
           {scale < 1 && (
             <button
@@ -291,15 +291,24 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             </button>
           )}
 
+          {/* Print Button for A4 Sheet */}
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="px-3.5 py-1.5 bg-[#1b3f8b] hover:bg-[#122e6e] active:scale-95 text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-1.5 cursor-pointer transition border border-[#1b3f8b]"
+            title="Print Marksheet on A4 Sheet"
+          >
+            <Printer className="w-4 h-4 text-yellow-300" />
+            <span>Print (A4 Sheet)</span>
+          </button>
+
           {/* Marks Statement Title Badge */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-300">
-            <button
-              type="button"
-              className="px-4 py-1.5 bg-[#1b3f8b] text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-2 cursor-default"
-            >
-              <FileText className="w-3.5 h-3.5 text-yellow-300" />
-              <span>अंक विवरणिका (Marks Statement)</span>
-            </button>
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300">
+            <span className="px-3 py-1 bg-white text-slate-800 font-bold text-xs rounded-md shadow-2xs flex items-center gap-1.5 cursor-default">
+              <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
+              <span className="hidden sm:inline">अंक विवरणिका (Marks Statement)</span>
+              <span className="sm:hidden">अंक विवरणिका</span>
+            </span>
           </div>
         </div>
       </div>
@@ -313,7 +322,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
 
       {/* Responsive Marksheet Container */}
       <div
-        className={`w-full flex justify-center items-start ${
+        className={`w-full flex justify-center items-start print:block print:p-0 print:m-0 print:overflow-visible ${
           viewMode === "full" && scale < 1
             ? "overflow-x-auto py-2 px-1"
             : "overflow-hidden py-1 px-1"
@@ -323,7 +332,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         }}
       >
         <div
-          className="transition-transform duration-200 ease-out origin-top flex justify-center"
+          className="transition-transform duration-200 ease-out origin-top flex justify-center print:transform-none! print:w-[210mm] print:h-[296.5mm] print:m-0"
           style={{
             transform: viewMode === "fit" && scale < 1 ? `scale(${scale})` : "none",
             width: "794px",

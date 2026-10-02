@@ -244,6 +244,7 @@
     overflow: visible !important;
     box-shadow: none !important;
     background: transparent !important;
+    transform: none !important;
   }
 
   #root,
