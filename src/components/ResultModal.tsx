@@ -104,8 +104,13 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
       return;
     }
 
-    if (captchaInput.trim() && captchaInput.trim().toLowerCase() !== captchaCode.toLowerCase()) {
-      setErrorMsg("ReCAPTCHA verification failed. Please try again.");
+    if (!captchaInput.trim()) {
+      setErrorMsg("Please enter the ReCAPTCHA code.");
+      return;
+    }
+
+    if (captchaInput.trim().toLowerCase() !== captchaCode.toLowerCase()) {
+      setErrorMsg("ReCAPTCHA verification failed. Please enter the correct code.");
       generateCaptcha();
       return;
     }
@@ -411,6 +416,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
                       <div className="sm:w-2/3 flex items-center gap-2">
                         <input
                           type="text"
+                          required
                           value={captchaInput}
                           onChange={(e) => setCaptchaInput(e.target.value)}
                           placeholder="Code"
