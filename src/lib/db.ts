@@ -52,6 +52,7 @@ export interface StudentResult {
   place?: string; // "SURATGARH(RAJ.)"
   board_name?: string; // "COUNCIL OF OPEN SCHOOL EDUCATION, RAJASTHAN"
   format?: "COSE" | "BHSE";
+  aadhaar_no?: string;
 }
 
 export interface EnrollmentRecord {

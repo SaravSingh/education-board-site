@@ -224,24 +224,46 @@ function DigiLockerPage() {
     }
 
     const calculatedTotal = parsedSubjects.reduce(
-      (sum, s) => sum + (typeof s.total === "number" ? s.total : s.theory + (s.practical || 0)),
+      (sum, s) =>
+        sum + (typeof s.total === "number" ? s.total : Number(s.theory || 0) + Number(s.practical || 0)),
       0,
     );
-    const totalMarks = loggedInStudent.total_marks || calculatedTotal || 460;
-    const maxMarks = loggedInStudent.max_marks || (parsedSubjects.length > 0 ? parsedSubjects.length * 100 : 600);
-    const cgpa = calculateCGPA(parsedSubjects);
-    const isPass = loggedInStudent.status?.toUpperCase().includes("PASS") ?? true;
+    const totalMarks = loggedInStudent.total_marks || calculatedTotal;
+    const maxMarks =
+      loggedInStudent.max_marks ||
+      (parsedSubjects.length > 0
+        ? parsedSubjects.reduce((sum, s) => sum + (s.max_marks || 100), 0)
+        : 600);
 
-    const classLabel = (loggedInStudent.course || "").toLowerCase().includes("12")
-      ? "CLASS 12"
-      : "CLASS 10";
+    const cgpa = loggedInStudent.percentage
+      ? (parseFloat(loggedInStudent.percentage.replace("%", "").trim()) / 9.5).toFixed(1)
+      : calculateCGPA(parsedSubjects);
 
-    // Determine photo source: if Mukesh or custom image exists
-    const studentPhotoSrc =
-      loggedInStudent.photo_url === "/mukesh_photo.jpg" ||
-      loggedInStudent.student_name.toUpperCase().includes("MUKESH")
-        ? mukeshPhoto
-        : loggedInStudent.photo_url || mukeshPhoto;
+    const isPass = loggedInStudent.status
+      ? loggedInStudent.status.toUpperCase().includes("PASS")
+      : true;
+
+    const classLabel = (function getDynamicClassLabel(course?: string): string {
+      if (!course) return "CLASS 10";
+      const c = course.toUpperCase();
+      if (c.includes("12TH") || c.includes("12") || c.includes("XII") || c.includes("SENIOR SECONDARY")) {
+        return "CLASS 12";
+      }
+      if (c.includes("10TH") || c.includes("10") || c.includes("X") || c.includes("SECONDARY")) {
+        return "CLASS 10";
+      }
+      return course.toUpperCase();
+    })(loggedInStudent.course);
+
+    const boardTitle =
+      loggedInStudent.board_name ||
+      (loggedInStudent.school_name && loggedInStudent.school_name.includes("BOARD")
+        ? loggedInStudent.school_name
+        : "DELHI OPEN BOARD OF SCHOOL EDUCATION");
+
+    const portalName = boardTitle.includes("COSE") ? "COSE Portal" : "DOBSE Portal";
+
+    const studentPhotoSrc = loggedInStudent.photo_url || mukeshPhoto;
 
     return (
       <div className="min-h-screen bg-[#eaeff2] py-6 px-3 sm:px-4 font-sans text-slate-800">
@@ -298,7 +320,7 @@ function DigiLockerPage() {
             {/* Center: Board Title & Mark Statement */}
             <div className="text-center flex-1 space-y-1">
               <h1 className="text-sm sm:text-base md:text-[17px] font-extrabold text-[#111827] tracking-tight leading-snug uppercase">
-                DELHI OPEN BOARD OF SCHOOL EDUCATION
+                {boardTitle}
               </h1>
               <div className="text-xs sm:text-sm md:text-[15px] font-extrabold text-[#0066ff] tracking-tight uppercase">
                 MARK STATEMENT - {classLabel}
@@ -331,6 +353,9 @@ function DigiLockerPage() {
                     <img
                       src={studentPhotoSrc}
                       alt={loggedInStudent.student_name}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = mukeshPhoto;
+                      }}
                       className="w-[110px] sm:w-[125px] h-[135px] sm:h-[150px] object-cover"
                     />
                   </div>
@@ -344,7 +369,7 @@ function DigiLockerPage() {
                     Serial Number:
                   </span>
                   <span className="font-bold text-[#0066ff]">
-                    {loggedInStudent.serial_no && loggedInStudent.serial_no !== "N/A"
+                    {loggedInStudent.serial_no && loggedInStudent.serial_no.trim() !== ""
                       ? loggedInStudent.serial_no
                       : "N/A"}
                   </span>
@@ -355,7 +380,7 @@ function DigiLockerPage() {
                     Enrollment No:
                   </span>
                   <span className="font-bold text-[#111827]">
-                    {loggedInStudent.enrollment_no}
+                    {loggedInStudent.enrollment_no || "N/A"}
                   </span>
                 </div>
 
@@ -364,7 +389,7 @@ function DigiLockerPage() {
                     Roll Number:
                   </span>
                   <span className="font-bold text-[#111827]">
-                    {loggedInStudent.roll_no}
+                    {loggedInStudent.roll_no || "N/A"}
                   </span>
                 </div>
 
@@ -373,7 +398,7 @@ function DigiLockerPage() {
                     Student Name:
                   </span>
                   <span className="font-bold text-[#111827] uppercase">
-                    {loggedInStudent.student_name}
+                    {loggedInStudent.student_name || "N/A"}
                   </span>
                 </div>
 
@@ -382,7 +407,7 @@ function DigiLockerPage() {
                     Father's Name:
                   </span>
                   <span className="font-bold text-[#111827] uppercase">
-                    {loggedInStudent.father_name}
+                    {loggedInStudent.father_name || "N/A"}
                   </span>
                 </div>
 
@@ -399,7 +424,11 @@ function DigiLockerPage() {
                   <span className="font-bold text-[#1f2937] w-32 sm:w-36 shrink-0">
                     Aadhaar No:
                   </span>
-                  <span className="font-bold text-[#111827]">N/A</span>
+                  <span className="font-bold text-[#111827]">
+                    {loggedInStudent.aadhaar_no && loggedInStudent.aadhaar_no.trim() !== ""
+                      ? loggedInStudent.aadhaar_no
+                      : "N/A"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -432,7 +461,7 @@ function DigiLockerPage() {
                   const subTotal =
                     typeof sub.total === "number"
                       ? sub.total
-                      : sub.theory + (sub.practical || 0);
+                      : (Number(sub.theory) || 0) + (Number(sub.practical) || 0);
                   const grade = getGrade(subTotal, sub.max_marks || 100);
                   return (
                     <tr key={idx} className="bg-white">
@@ -467,7 +496,7 @@ function DigiLockerPage() {
                     <div>
                       RESULT:{" "}
                       <span className="text-[#16a34a] font-bold">
-                        {isPass ? "PASS" : "FAIL"}
+                        {isPass ? "PASS" : loggedInStudent.status || "FAIL"}
                       </span>
                     </div>
                     <div className="text-gray-900 font-bold">(CGPA: {cgpa})</div>
@@ -509,13 +538,13 @@ function DigiLockerPage() {
 
               <div className="space-y-0.5 text-left">
                 <h3 className="font-bold text-[#14532d] text-sm sm:text-[15px] leading-tight">
-                  Digitally Signed by DigiLocker DOBSE Portal
+                  Digitally Signed by DigiLocker {portalName}
                 </h3>
                 <p className="text-xs text-gray-600">
                   This digital document is legally valid as per IT Act 2000.
                 </p>
                 <p className="text-xs text-gray-600 font-medium">
-                  Verified on: 02/10/2026 07:04:11 IST
+                  Verified on: {new Date().toLocaleDateString("en-GB")} 07:04:11 IST
                 </p>
               </div>
             </div>
@@ -524,7 +553,11 @@ function DigiLockerPage() {
             <div className="flex flex-col items-center shrink-0">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${encodeURIComponent(
-                  `https://dobse.org/verify?roll=${loggedInStudent.roll_no}&enroll=${loggedInStudent.enrollment_no}`,
+                  `https://dobse.org/verify?roll=${encodeURIComponent(
+                    loggedInStudent.roll_no,
+                  )}&enroll=${encodeURIComponent(loggedInStudent.enrollment_no)}&name=${encodeURIComponent(
+                    loggedInStudent.student_name,
+                  )}&status=${encodeURIComponent(isPass ? "PASS" : loggedInStudent.status || "FAIL")}`,
                 )}`}
                 alt="QR Code"
                 className="w-16 h-16 sm:w-[70px] sm:h-[70px] object-contain"
