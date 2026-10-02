@@ -90,9 +90,6 @@ function ContactPage() {
                   <span>
                     <strong>Office Hours:</strong> 10:30 AM to 6:30 PM (Mon – Sat)
                   </span>
-                  <span>
-                    <strong>Helpline No.:</strong> +91-7979777354
-                  </span>
                 </div>
                 <div className="pt-2 border-t border-gray-100 space-y-1.5 font-mono text-xs">
                   <div>

@@ -13,7 +13,6 @@ import {
   Download,
   HelpCircle,
   Mail,
-  Phone,
   MapPin,
   Printer,
 } from "lucide-react";
@@ -48,7 +47,6 @@ function RtiPage() {
       name: "Dr. A.K. Sharma",
       officialRole: "Secretary & Controller of Examinations",
       address: "Room No. 102, BHSE Secretariat, Karkardooma, Delhi — 110092",
-      phone: "+91 11 2765 8901",
       email: "faa.rti@bhsed.co.in",
       jurisdiction: "All first appeals against CPIO decisions under RTI Act Section 19(1)",
     },
@@ -57,7 +55,6 @@ function RtiPage() {
       name: "Shri R.P. Verma",
       officialRole: "Joint Controller of Examinations",
       address: "RTI Cell, Board Building, North Delhi Office, Delhi — 110054",
-      phone: "+91 11 2765 8902",
       email: "cpio.rti@bhsed.co.in",
       jurisdiction:
         "All RTI information queries, document verification, examination & affiliation records",
@@ -67,7 +64,6 @@ function RtiPage() {
       name: "Smt. Meena Gupta",
       officialRole: "Deputy Registrar (RTI & Legal Cell)",
       address: "RTI Counter, Ground Floor, BHSE Building, Delhi — 110092",
-      phone: "+91 11 2765 8903",
       email: "apio.rti@bhsed.co.in",
       jurisdiction:
         "Receipt of physical RTI application forms, postal orders, and initial processing",
@@ -392,12 +388,6 @@ function RtiPage() {
                           <MapPin className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                           <span>
                             <strong>Office Address:</strong> {off.address}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-blue-600 shrink-0" />
-                          <span>
-                            <strong>Direct Helpline:</strong> {off.phone}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">

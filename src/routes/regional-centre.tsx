@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { AdminLoginModal } from "@/components/AdminLoginModal";
 import azadiMahotsav from "@/assets/azadi_mahotsav.svg";
 import swachhBharat from "@/assets/swachh_bharat.svg";
-import { Home as HomeIcon, ChevronRight, Building2, MapPin, Mail, Phone } from "lucide-react";
+import { Home as HomeIcon, ChevronRight, Building2, MapPin, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/regional-centre")({
   head: () => ({
@@ -30,7 +30,6 @@ function RegionalCentrePage() {
       zone: "HEAD OFFICE & REGIONAL CENTRE - NORTH DELHI",
       address:
         "207, Main Mall Road, Near Vishwavidyalaya Metro Station, North Delhi, Delhi — 110054",
-      phone: "+91 11 2765 8901 / 8902",
       email: "delhi.regional@bhsed.co.in",
       jurisdiction: "Delhi NCR, Haryana, Punjab, Himachal Pradesh, Jammu & Kashmir",
     },
@@ -38,7 +37,6 @@ function RegionalCentrePage() {
       id: 2,
       zone: "REGIONAL CENTRE - UTTAR PRADESH (AGRA & ALIGARH)",
       address: "14/A, MG Road, Near Civil Lines, Agra, Uttar Pradesh — 282002",
-      phone: "+91 562 252 4110",
       email: "up.regional@bhsed.co.in",
       jurisdiction: "Uttar Pradesh (Western & Central Districts)",
     },
@@ -46,7 +44,6 @@ function RegionalCentrePage() {
       id: 3,
       zone: "REGIONAL CENTRE - BIHAR & EASTERN REGION (PATNA & KATIHAR)",
       address: "42, Exhibition Road, Near Gandhi Maidan, Patna, Bihar — 800001",
-      phone: "+91 612 220 1890",
       email: "bihar.regional@bhsed.co.in",
       jurisdiction: "Bihar, Jharkhand, West Bengal, Odisha",
     },
@@ -54,7 +51,6 @@ function RegionalCentrePage() {
       id: 4,
       zone: "REGIONAL CENTRE - KARNATAKA & SOUTH INDIA (BANGALORE)",
       address: "88, Brigade Road, Ashok Nagar, Bengaluru, Karnataka — 560025",
-      phone: "+91 80 4112 7654",
       email: "south.regional@bhsed.co.in",
       jurisdiction: "Karnataka, Tamil Nadu, Telangana, Andhra Pradesh, Kerala",
     },
@@ -62,7 +58,6 @@ function RegionalCentrePage() {
       id: 5,
       zone: "REGIONAL CENTRE - MADHYA PRADESH (TIKAMGARH & BHOPAL)",
       address: "19, Maharana Pratap Nagar Zone-1, Bhopal, Madhya Pradesh — 462011",
-      phone: "+91 755 255 3421",
       email: "mp.regional@bhsed.co.in",
       jurisdiction: "Madhya Pradesh, Chhattisgarh, Rajasthan",
     },
@@ -176,12 +171,6 @@ function RegionalCentrePage() {
                       <MapPin className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                       <span>
                         <strong>Address:</strong> {centre.address}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-700">
-                      <Phone className="w-4 h-4 text-blue-600 shrink-0" />
-                      <span>
-                        <strong>Phone:</strong> {centre.phone}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-700">

@@ -142,14 +142,14 @@ export function numberToIndividualDigitWords(num: number): string {
 const INITIAL_ANNOUNCEMENTS: Announcement[] = [
   {
     id: "ann_1",
-    text: "TO WHOM IT MAY CONCERN BOARD OF HIGHER SECONDARY EDUCATION, DELHI (BHSE) OFFICIAL HELPLINE NOTICE: The Board of Higher Secondary Education, Delhi (BHSE) has issued its official Helpline Number for providing assistance to students, candidates, institutions.",
-    category: "Helpline",
+    text: "TO WHOM IT MAY CONCERN: BOARD OF HIGHER SECONDARY EDUCATION, DELHI (BHSE) OFFICIAL NOTICE - Official assistance is provided to students, candidates, and institutions through our designated email portals.",
+    category: "Notice",
     date: "2026-09-22",
     is_new: true,
   },
   {
     id: "ann_2",
-    text: "CONTACT & DOCUMENT VERIFICATION Helpline No.: +91-7979777354 Contact Time: 10:30 AM to 6:30 PM Document Verification / Official Email IDs: 1. coe.verification@bhsed.co.in 2. info@bhsed.co.in",
+    text: "CONTACT & DOCUMENT VERIFICATION: Contact Time: 10:30 AM to 6:30 PM. Official Verification / Official Email IDs: 1. coe.verification@bhsed.co.in 2. info@bhsed.co.in",
     category: "Verification",
     date: "2026-09-20",
     is_new: true,
@@ -868,13 +868,16 @@ class LocalStore {
 
   constructor() {
     if (typeof window !== "undefined") {
-      const savedAnn = localStorage.getItem("bhse_announcements");
+      const savedAnn = localStorage.getItem("bhse_announcements_v2");
       if (savedAnn) {
         try {
           this.announcements = JSON.parse(savedAnn);
         } catch (e) {
           console.warn("Failed to parse saved announcements:", e);
         }
+      } else {
+        localStorage.removeItem("bhse_announcements");
+        this.save();
       }
       const savedRes = localStorage.getItem("bhse_results_v7");
       if (savedRes) {
@@ -969,7 +972,7 @@ class LocalStore {
   private reloadFromStorage() {
     if (typeof window === "undefined") return;
     try {
-      const savedAnn = localStorage.getItem("bhse_announcements");
+      const savedAnn = localStorage.getItem("bhse_announcements_v2");
       if (savedAnn) this.announcements = JSON.parse(savedAnn);
       const savedRes = localStorage.getItem("bhse_results_v7");
       if (savedRes) this.results = JSON.parse(savedRes);
@@ -982,7 +985,7 @@ class LocalStore {
 
   private save() {
     if (typeof window !== "undefined") {
-      localStorage.setItem("bhse_announcements", JSON.stringify(this.announcements));
+      localStorage.setItem("bhse_announcements_v2", JSON.stringify(this.announcements));
       localStorage.setItem("bhse_results_v7", JSON.stringify(this.results));
       localStorage.setItem("bhse_enrollments_v7", JSON.stringify(this.enrollments));
       localStorage.setItem("bhse_admin_creds", JSON.stringify(this.adminCreds));

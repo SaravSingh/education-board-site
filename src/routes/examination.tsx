@@ -13,7 +13,7 @@ export const Route = createFileRoute("/examination")({
       {
         name: "description",
         content:
-          "Latest examination notifications, revised date sheets, helpline numbers, and result announcement notices for Secondary (10th) and Senior Secondary (12th) examinations.",
+          "Latest examination notifications, revised date sheets, student support information, and result announcement notices for Secondary (10th) and Senior Secondary (12th) examinations.",
       },
     ],
   }),
@@ -27,12 +27,12 @@ function ExaminationPage() {
   const newsItems = [
     {
       id: 1,
-      text: "TO WHOM IT MAY CONCERN BOARD OF HIGHER SECONDARY EDUCATION, DELHI (BHSE) OFFICIAL HELPLINE NOTICE The Board of Higher Secondary Education, Delhi (BHSE) has issued its official Helpline Number for providing assistance to students, candidates, institution",
+      text: "TO WHOM IT MAY CONCERN: BOARD OF HIGHER SECONDARY EDUCATION, DELHI (BHSE) OFFICIAL NOTICE - Official assistance is provided to students, candidates, and institutions through our designated email portals.",
       isHighlight: true,
     },
     {
       id: 2,
-      text: "Helpline No.: +91-7979777354, Contact Time: 10:30 AM to 6:30 PM",
+      text: "Official Verification & Student Support: Contact Hours 10:30 AM to 6:30 PM (Mon to Sat) via coe.verification@bhsed.co.in",
       isHighlight: true,
     },
     {
