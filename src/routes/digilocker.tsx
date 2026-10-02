@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import React, { useState } from "react";
 import {
   dbStore,
@@ -9,19 +9,14 @@ import {
   ShieldCheck,
   CheckCircle2,
   FileText,
-  Download,
   Printer,
-  ArrowLeft,
   LogOut,
   AlertCircle,
   Loader2,
-  ExternalLink,
   Award,
   QrCode,
-  Lock,
 } from "lucide-react";
-import logoEmblem from "@/assets/logo_emblem.svg";
-import digitalIndia from "@/assets/digital_india.svg";
+import digiLockerLogo from "@/assets/digilocker_logo.png";
 
 export const Route = createFileRoute("/digilocker")({
   head: () => ({
@@ -37,52 +32,16 @@ export const Route = createFileRoute("/digilocker")({
   component: DigiLockerPage,
 });
 
-/* DigiLocker Official Vector Logo */
-function DigiLockerLogo() {
+/* DigiLocker Official Logo Component using authentic PNG */
+function DigiLockerLogo({ className = "w-[200px] h-auto" }: { className?: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 select-none">
-      {/* Cloud + Document Keyhole Icon */}
-      <svg
-        className="w-12 h-12 shrink-0 drop-shadow-xs"
-        viewBox="0 0 72 72"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient
-            id="dlCloudGrad"
-            x1="8"
-            y1="12"
-            x2="64"
-            y2="60"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#6342ff" />
-            <stop offset="1" stopColor="#3d1ba8" />
-          </linearGradient>
-        </defs>
-        {/* Cloud Outline */}
-        <path
-          d="M52 28.5C52 19.387 44.613 12 35.5 12c-7.38 0-13.633 4.88-15.75 11.667C10.74 24.667 4 32.333 4 41.5 4 51.165 11.835 59 21.5 59h30c9.113 0 16.5-7.387 16.5-16.5 0-8.52-6.467-15.533-14.8-16.333A16.48 16.48 0 0052 28.5z"
-          fill="url(#dlCloudGrad)"
-        />
-        {/* Document Inside Cloud */}
-        <rect x="25" y="24" width="22" height="28" rx="3.5" fill="#ffffff" />
-        {/* Keyhole Symbol */}
-        <circle cx="36" cy="35" r="3.2" fill="#5834d9" />
-        <path d="M34.2 36.5h3.6l1.2 7.5h-6l1.2-7.5z" fill="#5834d9" />
-      </svg>
-
-      {/* Brand Text */}
-      <div className="flex flex-col text-left">
-        <span className="text-3xl font-extrabold tracking-tight font-sans leading-none">
-          <span className="text-[#5938d6]">Digi</span>
-          <span className="text-[#2b1979]">Locker</span>
-        </span>
-        <span className="text-[11px] text-gray-500 font-medium tracking-tight mt-1">
-          Your documents anytime, anywhere
-        </span>
-      </div>
+    <div className="flex items-center justify-center select-none">
+      <img
+        src={digiLockerLogo}
+        alt="DigiLocker - Your documents anytime, anywhere"
+        className={`${className} object-contain`}
+        draggable={false}
+      />
     </div>
   );
 }
@@ -95,6 +54,12 @@ function DigiLockerPage() {
   const [loggedInStudent, setLoggedInStudent] = useState<StudentResult | null>(null);
   const [viewingDocType, setViewingDocType] = useState<"marksheet" | "certificate" | null>(null);
 
+  React.useEffect(() => {
+    document.title = loggedInStudent
+      ? `DigiLocker | Issued Documents - ${loggedInStudent.student_name}`
+      : "DigiLocker | Sign In";
+  }, [loggedInStudent]);
+
   // Helper to normalize strings for comparison
   const normalizeText = (str: string) =>
     str.trim().toUpperCase().replace(/[\s\-_/]/g, "");
@@ -106,7 +71,7 @@ function DigiLockerPage() {
     setError("");
 
     if (!enrollmentNo.trim() || !dob.trim()) {
-      setError("Please enter both your Enrollment Number and Date of Birth.");
+      setError("Please enter your Enrollment Number and Date of Birth.");
       return;
     }
 
@@ -138,7 +103,7 @@ function DigiLockerPage() {
           "Unable to fetch documents. No issued record found matching this Enrollment Number and Date of Birth. Please check your credentials.",
         );
       }
-    }, 600);
+    }, 500);
   };
 
   const handleSignOut = () => {
@@ -168,13 +133,13 @@ function DigiLockerPage() {
         {/* DigiLocker Official Government Top Bar */}
         <header className="bg-white border-b border-gray-200 shadow-xs sticky top-0 z-30">
           <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <DigiLockerLogo />
-              <div className="hidden sm:block border-l border-gray-300 pl-3">
-                <span className="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">
+            <div className="flex items-center gap-4">
+              <DigiLockerLogo className="h-10 sm:h-12" />
+              <div className="hidden sm:block border-l border-gray-300 pl-4">
+                <span className="text-[11px] font-bold text-slate-700 block uppercase tracking-wider">
                   National e-Governance Division (NeGD)
                 </span>
-                <span className="text-[10px] text-slate-400 block font-medium">
+                <span className="text-[10px] text-slate-500 block font-medium">
                   Ministry of Electronics &amp; Information Technology, Govt. of India
                 </span>
               </div>
@@ -188,7 +153,7 @@ function DigiLockerPage() {
 
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-bold transition cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-bold transition cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>
@@ -413,7 +378,7 @@ function DigiLockerPage() {
                 {/* DigiLocker Digital Verification Seal Header */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-dashed border-gray-300 pb-4">
                   <div className="flex items-center gap-3">
-                    <DigiLockerLogo />
+                    <DigiLockerLogo className="h-12" />
                   </div>
                   <div className="bg-emerald-50 border border-emerald-400 p-2.5 rounded-lg text-right flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -594,47 +559,34 @@ function DigiLockerPage() {
   }
 
   /* -------------------------------------------------------------
-     VIEW 2: PIXEL-PERFECT DIGILOCKER SIGN IN (Matches User Screenshot)
+     VIEW 2: PIXEL-PERFECT DIGILOCKER SIGN IN (Exact to Screenshot)
   ------------------------------------------------------------- */
   return (
-    <div className="min-h-screen bg-[#edf2f7] flex flex-col justify-between items-center p-4 font-sans select-none relative">
-      {/* Top Subtle Return Bar */}
-      <div className="w-full max-w-5xl mx-auto flex items-center justify-between text-xs text-slate-500 py-2">
-        <Link
-          to="/"
-          className="flex items-center gap-1.5 hover:text-blue-700 transition font-medium cursor-pointer"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" /> Return to BHSE Board Portal
-        </Link>
-        <span className="text-[11px] font-mono font-medium text-slate-400">
-          digilocker.dobse.org
-        </span>
-      </div>
+    <div className="min-h-screen bg-[#f4f7f9] flex items-center justify-center p-4 font-sans select-none">
+      {/* CENTER SIGN IN CARD (Exact pixel-perfect design) */}
+      <div className="w-full max-w-[390px] bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 overflow-hidden animate-fade-in relative">
+        {/* Top Blue Stripe */}
+        <div className="h-[3.5px] w-full bg-[#0066ff]" />
 
-      {/* CENTER SIGN IN CARD (Exact design matching screenshot) */}
-      <div className="w-full max-w-[440px] bg-white rounded-2xl shadow-xl border border-gray-100/80 overflow-hidden my-auto animate-fade-in relative">
-        {/* Top Blue Accent Stripe */}
-        <div className="h-1.5 w-full bg-[#0066ff]" />
-
-        <div className="p-7 sm:p-9 space-y-6">
+        <div className="p-7 sm:p-8 space-y-5">
           {/* DigiLocker Official Logo */}
-          <DigiLockerLogo />
+          <DigiLockerLogo className="w-[190px] sm:w-[210px]" />
 
-          {/* Title & Subtitle */}
-          <div className="text-center space-y-1">
-            <h1 className="text-xl sm:text-[22px] font-bold text-gray-900 tracking-tight">
+          {/* Heading & Subtitle */}
+          <div className="text-center space-y-1 pt-1">
+            <h1 className="text-xl sm:text-[21px] font-bold text-[#1f2937] tracking-tight">
               Sign In to your account
             </h1>
-            <p className="text-xs sm:text-[13px] text-gray-500 font-normal">
+            <p className="text-xs sm:text-[13px] text-[#6b7280]">
               Enter your details to fetch documents
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSignIn} className="space-y-4 text-left">
+          <form onSubmit={handleSignIn} className="space-y-4 text-left pt-1">
             {/* ENROLLMENT NUMBER INPUT */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-gray-700">
+              <label className="block text-xs font-semibold text-[#374151]">
                 Enrollment Number
               </label>
               <input
@@ -643,13 +595,13 @@ function DigiLockerPage() {
                 value={enrollmentNo}
                 onChange={(e) => setEnrollmentNo(e.target.value)}
                 placeholder="Enter Enrollment No."
-                className="w-full px-3.5 py-2.5 sm:py-3 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-2xs transition"
+                className="w-full px-3.5 py-2.5 border border-[#d1d5db] rounded-lg text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:border-transparent bg-[#fbfbfb] shadow-2xs transition"
               />
             </div>
 
             {/* PASSWORD (DATE OF BIRTH) INPUT */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-gray-700">
+              <label className="block text-xs font-semibold text-[#374151]">
                 Password (Date of Birth)
               </label>
               <input
@@ -658,7 +610,7 @@ function DigiLockerPage() {
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
                 placeholder="DDMMYYYY"
-                className="w-full px-3.5 py-2.5 sm:py-3 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-2xs transition font-mono"
+                className="w-full px-3.5 py-2.5 border border-[#d1d5db] rounded-lg text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#0066ff] focus:border-transparent bg-[#fbfbfb] shadow-2xs transition"
               />
             </div>
 
@@ -674,12 +626,12 @@ function DigiLockerPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#0066ff] hover:bg-[#0052cc] text-white font-bold py-3 px-4 rounded-lg text-sm transition shadow-sm cursor-pointer active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 mt-4"
+              className="w-full bg-[#0066ff] hover:bg-[#0055d4] text-white font-semibold py-2.5 px-4 rounded-lg text-sm transition shadow-sm cursor-pointer active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 mt-4"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Fetching documents from DigiLocker...</span>
+                  <span>Signing In...</span>
                 </>
               ) : (
                 <span>Sign In</span>
@@ -687,49 +639,13 @@ function DigiLockerPage() {
             </button>
           </form>
 
-          {/* Quick Demo Credentials for One-Click Testing */}
-          <div className="pt-2 border-t border-gray-100 text-center space-y-1.5">
-            <span className="text-[11px] text-gray-400 block font-medium">
-              Sample credentials for testing:
-            </span>
-            <div className="flex flex-wrap justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEnrollmentNo("20241832");
-                  setDob("21052006");
-                  setError("");
-                }}
-                className="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono px-2 py-1 rounded transition cursor-pointer font-semibold"
-              >
-                20241832 / 21052006
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEnrollmentNo("A-08-COSE-221311");
-                  setDob("21011992");
-                  setError("");
-                }}
-                className="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono px-2 py-1 rounded transition cursor-pointer font-semibold"
-              >
-                COSE-221311 / 21011992
-              </button>
-            </div>
-          </div>
-
           {/* POWERED BY NEGD & DIGILOCKER */}
-          <div className="pt-2 text-center">
-            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 tracking-widest uppercase">
+          <div className="pt-3 text-center">
+            <span className="text-[10px] font-bold text-[#a0aec0] tracking-[0.14em] uppercase">
               POWERED BY NEGD &amp; DIGILOCKER
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Footer Credits */}
-      <div className="w-full text-center text-xs text-gray-400 py-3">
-        <span>Digital India | National e-Governance Division (NeGD)</span>
       </div>
     </div>
   );
