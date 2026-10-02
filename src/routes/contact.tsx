@@ -128,7 +128,39 @@ function ContactPage() {
               </div>
             </div>
 
-            {/* 2. EMAIL CONTACT DIRECTORY TABLE (Directly below Address with zero empty gap) */}
+            {/* 2. CORRESPONDENCE COMMUNICATION ADDRESS CARD */}
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-3 text-xs sm:text-sm text-gray-800">
+              <h2 className="font-extrabold text-sm sm:text-base text-slate-900 uppercase border-b-2 border-slate-900 pb-1 flex items-center gap-1.5">
+                <span>👉</span> ADDRESS FOR CORRESPONDENCE COMMUNICATION :
+              </h2>
+              <div className="pl-2 space-y-2">
+                <div className="text-xs text-slate-700 font-bold underline">
+                  If Undelivered Please Return To, :-
+                </div>
+                <div className="font-bold text-gray-900 text-sm sm:text-base">
+                  Board Of Higher Secondary Education, Delhi (BHSE )
+                </div>
+                <div className="text-slate-800 font-semibold text-xs sm:text-sm">
+                  Mr. Sudhir Kumar (Letters Assistant Dept.)
+                </div>
+                <div className="text-gray-700 font-medium leading-relaxed text-xs sm:text-sm">
+                  794, Krishan Ganj , In Front Hindu Kanya –<br />
+                  Inter College, Pilkhuwa Hapur<br />
+                  District. Hapur (GZB) Pin - 245304
+                </div>
+                <div className="pt-2 border-t border-gray-100 font-mono text-xs">
+                  <span className="font-bold text-gray-700 font-sans">E-mail. </span>
+                  <a
+                    href="mailto:info@bhsed.co.in"
+                    className="text-blue-800 font-bold hover:underline"
+                  >
+                    info@bhsed.co.in
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. EMAIL CONTACT DIRECTORY TABLE */}
             <div className="bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden">
               {/* Header Banner */}
               <div className="bg-[#0d6efd] text-white p-3.5 text-center">
