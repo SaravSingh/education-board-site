@@ -235,10 +235,10 @@
     border: none !important;
   }
 
-  /* Reset layout containers so they collapse completely */
-  div,
-  main,
-  section,
+  /* Reset layout containers so they collapse completely, except the certificate document and its elements */
+  div:not(.bhse-certificate-document):not(.bhse-certificate-document *),
+  main:not(.bhse-certificate-document *),
+  section:not(.bhse-certificate-document *),
   article,
   [role="dialog"] {
     overflow: visible !important;
@@ -262,6 +262,20 @@
   }
 
   /* Official Document Print Rules (100% Exact Single-Page Fit for A4 Sheet) */
+  .bhse-certificate-document,
+  .bhse-certificate-document * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .bhse-bg-watermark,
+  .bhse-bg-watermark-bg {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 0.85 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   .cose-certificate-document {
     display: flex !important;
     flex-direction: column !important;

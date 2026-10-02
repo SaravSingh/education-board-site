@@ -291,6 +291,27 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             </button>
           )}
 
+          {/* Download PDF (A4 Sheet) */}
+          <button
+            type="button"
+            onClick={handleDownloadPdf}
+            disabled={isGeneratingPdf}
+            className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-md shadow-xs flex items-center gap-1.5 cursor-pointer transition border border-emerald-600 disabled:opacity-50"
+            title="Download authentic Marksheet as A4 PDF"
+          >
+            {isGeneratingPdf ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Generating...</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-3.5 h-3.5 text-white" />
+                <span>Download PDF (A4)</span>
+              </>
+            )}
+          </button>
+
           {/* Print Button for A4 Sheet */}
           <button
             type="button"
@@ -347,9 +368,45 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
             style={{ boxSizing: "border-box" }}
           >
-            {/* Authentic Continuous Security Micro-Pattern Watermark (Zero Gaps) */}
+            {/* Authentic Continuous Security Micro-Pattern Watermark (Vector SVG DOM element - always renders in Print & PDF download) */}
+            <svg
+              className="bhse-bg-watermark absolute inset-0 w-full h-full pointer-events-none z-0"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              style={{
+                opacity: 0.85,
+                WebkitPrintColorAdjust: "exact",
+                printColorAdjust: "exact",
+              }}
+            >
+              <defs>
+                <pattern
+                  id="bhse-watermark-pattern"
+                  width="208"
+                  height="9"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <text
+                    x="0"
+                    y="7.4"
+                    fontFamily="'Arial', 'Helvetica Neue', Helvetica, sans-serif"
+                    fontSize="8"
+                    fontWeight="700"
+                    fill="#9bb2dd"
+                    textLength="208"
+                    lengthAdjust="spacingAndGlyphs"
+                  >
+                    BOARD OF HIGHER SECONDARY EDUCATION DELHI&#160;
+                  </text>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#bhse-watermark-pattern)" />
+            </svg>
+
+            {/* CSS Pattern Fallback for html2canvas */}
             <div
-              className="bhse-bg-watermark absolute inset-0 pointer-events-none z-0 opacity-80"
+              className="bhse-bg-watermark-bg absolute inset-0 pointer-events-none z-0 opacity-80"
               style={{
                 backgroundImage:
                   'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjkiIHZpZXdCb3g9IjAgMCAyMDggOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSIwIiB5PSI3LjQiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzliYjJkZCIgdGV4dExlbmd0aD0iMjA4IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiPkJPQVJEIE9GIEhJR0hFUiBTRUNPTkRBUlkgRURVQ0FUSU9OIERFTEhJJiMxNjA7PC90ZXh0Pjwvc3ZnPg==")',
