@@ -332,16 +332,8 @@ function Home() {
               Verification &amp; Helpline
             </h4>
             <p className="text-slate-400 leading-relaxed text-xs">
-              <span className="text-slate-300 font-bold">Helpline No.: </span>
-              <a
-                href="tel:+917979777354"
-                className="text-amber-400 font-bold hover:underline font-mono"
-              >
-                +91 7979777354
-              </a>
-              <br />
               <span className="text-slate-300 font-bold">Contact Time: </span>
-              <span>10:30 AM to 6:30 PM</span>
+              <span>10:30 AM to 6:30 PM (Mon – Sat)</span>
               <br />
               <span className="text-slate-300 font-bold">Email: </span>
               <a

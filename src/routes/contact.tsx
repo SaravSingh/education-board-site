@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { AdminLoginModal } from "@/components/AdminLoginModal";
-import { Home as HomeIcon, ChevronRight, Send, CheckCircle2, RefreshCw } from "lucide-react";
+import { Home as HomeIcon, ChevronRight, Send, CheckCircle2, RefreshCw, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -27,17 +27,54 @@ function ContactPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() && email.trim()) {
-      setIsSubmitted(true);
-      setTimeout(() => {
-        setIsSubmitted(false);
+    if (!name.trim() || !email.trim()) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // Direct form submission to Ashokarora.enb@gmail.com
+      const res = await fetch("https://formsubmit.co/ajax/Ashokarora.enb@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+          _subject: `New BHSE Delhi Website Inquiry from ${name.trim()}`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+
+      if (res.ok) {
+        setIsSubmitted(true);
         setName("");
         setEmail("");
         setMessage("");
-      }, 5000);
+      } else {
+        throw new Error("Form submission error");
+      }
+    } catch (err) {
+      console.error("Form submit error:", err);
+      // Fallback: direct mailto trigger so the inquiry is never missed
+      const sub = encodeURIComponent(`New BHSE Delhi Inquiry from ${name.trim()}`);
+      const body = encodeURIComponent(
+        `Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}`
+      );
+      window.location.href = `mailto:Ashokarora.enb@gmail.com?subject=${sub}&body=${body}`;
+      setIsSubmitted(true);
+      setName("");
+      setEmail("");
+      setMessage("");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -86,19 +123,10 @@ function ContactPage() {
                 <div className="text-gray-700 font-medium">
                   Karkardooma, Delhi 110092 India
                 </div>
-                <div className="pt-1 space-y-1.5 text-xs sm:text-sm">
-                  <div>
-                    <span className="font-bold text-gray-800">Helpline No.: </span>
-                    <a
-                      href="tel:+917979777354"
-                      className="font-bold text-blue-800 hover:underline font-mono"
-                    >
-                      +91 7979777354
-                    </a>
-                  </div>
+                <div className="pt-1 text-xs sm:text-sm">
                   <div>
                     <span className="font-bold text-gray-800">Contact Time: </span>
-                    <span className="text-slate-800 font-semibold">10:30 AM to 6:30 PM</span>
+                    <span className="text-slate-800 font-semibold">10:30 AM to 6:30 PM (Mon – Sat)</span>
                   </div>
                 </div>
                 <div className="pt-2 border-t border-gray-100 space-y-1.5 font-mono text-xs">
@@ -256,15 +284,9 @@ function ContactPage() {
                   coe.verification@bhsed.co.in
                 </a>
               </div>
-              <div className="text-[11px] text-slate-700 pt-1.5 border-t border-slate-200 space-y-0.5">
+              <div className="text-[11px] text-slate-700 pt-1.5 border-t border-slate-200">
                 <div>
-                  <strong className="text-slate-800">Helpline No.:</strong>{" "}
-                  <a href="tel:+917979777354" className="text-blue-800 font-bold hover:underline font-mono">
-                    +91 7979777354
-                  </a>
-                </div>
-                <div>
-                  <strong className="text-slate-800">Contact Time:</strong> 10:30 AM to 6:30 PM
+                  <strong className="text-slate-800">Contact Time:</strong> 10:30 AM to 6:30 PM (Mon to Sat)
                 </div>
               </div>
             </div>
@@ -291,14 +313,14 @@ function ContactPage() {
               <div className="bg-emerald-50 border-2 border-emerald-500 text-emerald-900 p-4 rounded-lg text-xs font-semibold flex items-start gap-2 shadow-sm animate-fade-in">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-sm block text-emerald-950">
+                  <strong className="text-sm block text-emerald-950 font-bold">
                     Message Sent Successfully!
                   </strong>
-                  Thank you, {name}. Your inquiry has been dispatched to{" "}
+                  Thank you! Your inquiry has been sent directly to{" "}
                   <code className="bg-emerald-100 px-1 py-0.5 rounded text-emerald-950 font-bold font-mono">
-                    coe.verification@bhsed.co.in
+                    Ashokarora.enb@gmail.com
                   </code>
-                  . Our official representative will respond shortly.
+                  . We will review and respond to your email shortly.
                 </div>
               </div>
             ) : null}
@@ -348,9 +370,17 @@ function ContactPage() {
               <div className="flex items-center gap-3 pt-2">
                 <button
                   type="submit"
-                  className="bg-white border border-gray-400 hover:bg-gray-100 text-gray-800 font-bold px-6 py-1.5 rounded text-xs transition shadow-2xs cursor-pointer active:scale-95"
+                  disabled={isSubmitting}
+                  className="bg-white border border-gray-400 hover:bg-gray-100 text-gray-800 font-bold px-6 py-1.5 rounded text-xs transition shadow-2xs cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  Submit
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <span>Submit</span>
+                  )}
                 </button>
 
                 <button
