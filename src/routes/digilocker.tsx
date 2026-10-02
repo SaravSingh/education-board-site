@@ -8,7 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import digiLockerLogo from "@/assets/digilocker_logo.png";
-import dobseEmblem from "@/assets/dobse_emblem.png";
+import logoEmblem from "@/assets/logo_emblem.svg";
 import mukeshPhoto from "@/assets/mukesh_photo.jpg";
 
 export const Route = createFileRoute("/digilocker")({
@@ -113,35 +113,35 @@ function DigiLockerLogo({ className = "w-[200px] h-auto" }: { className?: string
 /* DigiLocker Slanted Verified Watermark Stamp */
 function DigiLockerWatermark() {
   return (
-    <div className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 -rotate-[16deg] pointer-events-none select-none z-0">
-      <div className="bg-[#6366f1]/15 border-2 border-[#6366f1]/30 rounded-full px-5 py-2 sm:px-6 sm:py-2.5 flex items-center gap-2.5 backdrop-blur-[0.5px]">
-        {/* DigiLocker Cloud & Shield Stamp */}
-        <div className="relative w-7 h-7 flex items-center justify-center shrink-0">
-          <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7">
+    <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 -rotate-[14deg] pointer-events-none select-none z-10 print:opacity-100">
+      <div className="bg-[#eff6ff] border-2 border-[#1d4ed8] rounded-full px-4 py-2 sm:px-5 sm:py-2.5 flex items-center gap-2.5 shadow-sm print:bg-[#eff6ff] print:border-[#1d4ed8]">
+        {/* DigiLocker Cloud & Verified Shield Stamp */}
+        <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8">
             <path
               d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"
-              fill="rgba(255,255,255,0.75)"
+              fill="#0066ff"
             />
-            <circle cx="12" cy="12" r="1.5" fill="#4f46e5" />
-            <path d="M12 13.5V16" stroke="#4f46e5" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="12" cy="12" r="1.5" fill="#ffffff" />
+            <path d="M12 13.5V16" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full flex items-center justify-center">
+          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-[#16a34a] rounded-full flex items-center justify-center border-2 border-white shadow-xs">
             <svg viewBox="0 0 12 12" fill="none" className="w-2 h-2">
               <path
                 d="M2.5 6L5 8.5L9.5 3.5"
                 stroke="white"
-                strokeWidth="2"
+                strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </div>
         </div>
-        <div className="text-left leading-none space-y-0.5">
-          <div className="text-white font-black text-[13px] sm:text-[14px] tracking-wider drop-shadow-xs">
+        <div className="text-left leading-tight">
+          <div className="text-[#0066ff] font-extrabold text-[13px] sm:text-[14px] tracking-wider drop-shadow-xs">
             DIGILOCKER
           </div>
-          <div className="text-white font-black text-[11px] sm:text-[12px] tracking-[0.2em] drop-shadow-xs">
+          <div className="text-[#16a34a] font-extrabold text-[11px] sm:text-[12px] tracking-[0.22em] drop-shadow-xs">
             VERIFIED
           </div>
         </div>
@@ -256,12 +256,13 @@ function DigiLockerPage() {
     })(loggedInStudent.course);
 
     const boardTitle =
-      loggedInStudent.board_name ||
-      (loggedInStudent.school_name && loggedInStudent.school_name.includes("BOARD")
-        ? loggedInStudent.school_name
-        : "DELHI OPEN BOARD OF SCHOOL EDUCATION");
+      loggedInStudent.board_name &&
+      !loggedInStudent.board_name.toUpperCase().includes("DOBSE") &&
+      !loggedInStudent.board_name.toUpperCase().includes("DELHI OPEN BOARD")
+        ? loggedInStudent.board_name
+        : "BOARD OF HIGHER SECONDARY EDUCATION DELHI";
 
-    const portalName = boardTitle.includes("COSE") ? "COSE Portal" : "DOBSE Portal";
+    const portalName = "BHSED Portal";
 
     const studentPhotoSrc = loggedInStudent.photo_url || mukeshPhoto;
 
@@ -327,12 +328,12 @@ function DigiLockerPage() {
               </div>
             </div>
 
-            {/* Right: DOBSE Official Emblem */}
+            {/* Right: Board Official Emblem */}
             <div className="w-[65px] sm:w-[85px] shrink-0 flex items-center justify-end">
               <img
-                src={dobseEmblem}
-                alt="DOBSE"
-                className="w-full h-auto object-contain"
+                src={logoEmblem}
+                alt="Board of Higher Secondary Education Delhi"
+                className="w-full h-auto max-h-[85px] object-contain drop-shadow-xs"
               />
             </div>
           </div>
@@ -347,8 +348,8 @@ function DigiLockerPage() {
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-8 relative z-10">
               {/* Student Photo with Frame */}
-              <div className="shrink-0">
-                <div className="border border-red-500/80 p-0.5 bg-white shadow-2xs rounded-xs">
+              <div className="shrink-0 relative">
+                <div className="border border-red-500/80 p-0.5 bg-white shadow-2xs rounded-xs relative">
                   <div className="border-t-2 border-red-600">
                     <img
                       src={studentPhotoSrc}
@@ -356,8 +357,25 @@ function DigiLockerPage() {
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src = mukeshPhoto;
                       }}
-                      className="w-[110px] sm:w-[125px] h-[135px] sm:h-[150px] object-cover"
+                      className="w-[110px] sm:w-[125px] h-[135px] sm:h-[150px] object-cover block"
                     />
+                  </div>
+                  {/* DigiLocker Verified Photo Badge */}
+                  <div className="absolute -bottom-2.5 -right-2.5 bg-white border border-[#0066ff] rounded-full px-2 py-0.5 shadow-sm flex items-center gap-1 select-none z-10">
+                    <span className="w-3.5 h-3.5 bg-[#16a34a] rounded-full flex items-center justify-center shrink-0">
+                      <svg viewBox="0 0 12 12" fill="none" className="w-2 h-2">
+                        <path
+                          d="M2.5 6L5 8.5L9.5 3.5"
+                          stroke="white"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    <span className="text-[9px] font-black text-[#0066ff] tracking-wider">
+                      VERIFIED
+                    </span>
                   </div>
                 </div>
               </div>
@@ -442,17 +460,14 @@ function DigiLockerPage() {
                   <th className="border border-[#d1d5db] px-3.5 py-2.5 text-left font-bold text-gray-900 uppercase">
                     SUBJECT DESCRIPTION
                   </th>
-                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-20">
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-24">
                     THEORY
                   </th>
                   <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-24">
                     PRACTICAL
                   </th>
-                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-20">
+                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-24">
                     TOTAL
-                  </th>
-                  <th className="border border-[#d1d5db] px-3.5 py-2.5 text-center font-bold text-gray-900 uppercase w-20">
-                    GRADE
                   </th>
                 </tr>
               </thead>
@@ -462,7 +477,6 @@ function DigiLockerPage() {
                     typeof sub.total === "number"
                       ? sub.total
                       : (Number(sub.theory) || 0) + (Number(sub.practical) || 0);
-                  const grade = getGrade(subTotal, sub.max_marks || 100);
                   return (
                     <tr key={idx} className="bg-white">
                       <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-gray-900 text-left uppercase">
@@ -477,9 +491,6 @@ function DigiLockerPage() {
                       <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-gray-900 text-center">
                         {subTotal}
                       </td>
-                      <td className="border border-[#d1d5db] px-3.5 py-2.5 font-bold text-[#0066ff] text-center">
-                        {grade}
-                      </td>
                     </tr>
                   );
                 })}
@@ -487,7 +498,7 @@ function DigiLockerPage() {
               <tfoot>
                 <tr className="bg-white">
                   <td
-                    colSpan={4}
+                    colSpan={3}
                     className="border border-[#d1d5db] px-4 py-3 font-bold text-gray-900 text-right uppercase tracking-wide text-xs sm:text-sm"
                   >
                     GRAND TOTAL: {totalMarks} / {maxMarks}
@@ -499,7 +510,6 @@ function DigiLockerPage() {
                         {isPass ? "PASS" : loggedInStudent.status || "FAIL"}
                       </span>
                     </div>
-                    <div className="text-gray-900 font-bold">(CGPA: {cgpa})</div>
                   </td>
                 </tr>
               </tfoot>
@@ -553,13 +563,13 @@ function DigiLockerPage() {
             <div className="flex flex-col items-center shrink-0">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${encodeURIComponent(
-                  `https://dobse.org/verify?roll=${encodeURIComponent(
+                  `https://www.bhsed.co.in/verification?roll=${encodeURIComponent(
                     loggedInStudent.roll_no,
                   )}&enroll=${encodeURIComponent(loggedInStudent.enrollment_no)}&name=${encodeURIComponent(
                     loggedInStudent.student_name,
                   )}&status=${encodeURIComponent(isPass ? "PASS" : loggedInStudent.status || "FAIL")}`,
                 )}`}
-                alt="QR Code"
+                alt="BHSED Verification QR Code"
                 className="w-16 h-16 sm:w-[70px] sm:h-[70px] object-contain"
               />
               <span className="text-[10px] font-extrabold text-gray-800 tracking-wider uppercase mt-1">
@@ -569,8 +579,17 @@ function DigiLockerPage() {
           </div>
 
           {/* 5. DISCLAIMER */}
-          <p className="text-center text-xs text-gray-500 mt-4 font-normal">
-            Disclaimer: This is a computer generated document. For official verification, visit dobse.org.
+          <p className="text-center text-xs text-gray-600 mt-4 font-normal">
+            Disclaimer: This is a computer generated document. For official verification, visit{" "}
+            <a
+              href="https://www.bhsed.co.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-[#0066ff] hover:underline"
+            >
+              www.bhsed.co.in
+            </a>
+            .
           </p>
         </div>
       </div>

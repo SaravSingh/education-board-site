@@ -179,7 +179,7 @@ const INITIAL_RESULTS: StudentResult[] = [
     roll_no: "10181125013",
     school_code: "210001",
     centre_code: "210001",
-    exam_center: "DOBSE DELHI",
+    exam_center: "BHSE DELHI",
     status_mode: "REGULAR",
     exam_type: "ANNUAL",
     fee_status: "VERIFIED",
@@ -191,8 +191,8 @@ const INITIAL_RESULTS: StudentResult[] = [
     course: "10TH (General)",
     batch: "2024",
     enrollment_no: "1028112518013",
-    school_name: "DELHI OPEN BOARD OF SCHOOL EDUCATION",
-    board_name: "DELHI OPEN BOARD OF SCHOOL EDUCATION",
+    school_name: "BOARD OF HIGHER SECONDARY EDUCATION DELHI",
+    board_name: "BOARD OF HIGHER SECONDARY EDUCATION DELHI",
     place: "DELHI",
     photo_url: "/mukesh_photo.jpg",
     exam_year: "2024",
@@ -902,7 +902,7 @@ const INITIAL_ENROLLMENTS: EnrollmentRecord[] = [
   {
     enrollment_no: "1028112518013",
     student_name: "MUKESH UPADHAYAYA",
-    cert_no: "DOBSE/VER/2024/10181125013",
+    cert_no: "BHSE/VER/2024/10181125013",
     course: "10TH (GENERAL)",
     year: "2024",
     is_verified: true,
@@ -997,7 +997,7 @@ class LocalStore {
         localStorage.removeItem("bhse_announcements");
         this.save();
       }
-      const savedRes = localStorage.getItem("bhse_results_v7");
+      const savedRes = localStorage.getItem("bhse_results_v8");
       if (savedRes) {
         try {
           const parsed: StudentResult[] = JSON.parse(savedRes);
@@ -1026,9 +1026,10 @@ class LocalStore {
         localStorage.removeItem("bhse_results_v4");
         localStorage.removeItem("bhse_results_v5");
         localStorage.removeItem("bhse_results_v6");
+        localStorage.removeItem("bhse_results_v7");
         this.save();
       }
-      const savedEnr = localStorage.getItem("bhse_enrollments_v7");
+      const savedEnr = localStorage.getItem("bhse_enrollments_v8");
       if (savedEnr) {
         try {
           const parsedEnr: EnrollmentRecord[] = JSON.parse(savedEnr);
@@ -1056,6 +1057,7 @@ class LocalStore {
         localStorage.removeItem("bhse_enrollments_v4");
         localStorage.removeItem("bhse_enrollments_v5");
         localStorage.removeItem("bhse_enrollments_v6");
+        localStorage.removeItem("bhse_enrollments_v7");
         this.save();
       }
       const savedInq = localStorage.getItem("bhse_inquiries_v1");
