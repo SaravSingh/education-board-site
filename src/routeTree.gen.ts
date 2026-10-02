@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AffiliatedSchoolRouteImport } from './routes/affiliated-school'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DigiLockerRouteImport } from './routes/digi-locker'
 import { Route as DigilockerRouteImport } from './routes/digilocker'
 import { Route as ExaminationRouteImport } from './routes/examination'
 import { Route as HolidayListRouteImport } from './routes/holiday-list'
@@ -45,6 +46,11 @@ const AffiliatedSchoolRoute = AffiliatedSchoolRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigiLockerRoute = DigiLockerRouteImport.update({
+  id: '/digi-locker',
+  path: '/digi-locker',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DigilockerRoute = DigilockerRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/affiliated-school': typeof AffiliatedSchoolRoute
   '/contact': typeof ContactRoute
+  '/digi-locker': typeof DigiLockerRoute
   '/digilocker': typeof DigilockerRoute
   '/examination': typeof ExaminationRoute
   '/holiday-list': typeof HolidayListRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/affiliated-school': typeof AffiliatedSchoolRoute
   '/contact': typeof ContactRoute
+  '/digi-locker': typeof DigiLockerRoute
   '/digilocker': typeof DigilockerRoute
   '/examination': typeof ExaminationRoute
   '/holiday-list': typeof HolidayListRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/affiliated-school': typeof AffiliatedSchoolRoute
   '/contact': typeof ContactRoute
+  '/digi-locker': typeof DigiLockerRoute
   '/digilocker': typeof DigilockerRoute
   '/examination': typeof ExaminationRoute
   '/holiday-list': typeof HolidayListRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliated-school'
     | '/contact'
+    | '/digi-locker'
     | '/digilocker'
     | '/examination'
     | '/holiday-list'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliated-school'
     | '/contact'
+    | '/digi-locker'
     | '/digilocker'
     | '/examination'
     | '/holiday-list'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliated-school'
     | '/contact'
+    | '/digi-locker'
     | '/digilocker'
     | '/examination'
     | '/holiday-list'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AffiliatedSchoolRoute: typeof AffiliatedSchoolRoute
   ContactRoute: typeof ContactRoute
+  DigiLockerRoute: typeof DigiLockerRoute
   DigilockerRoute: typeof DigilockerRoute
   ExaminationRoute: typeof ExaminationRoute
   HolidayListRoute: typeof HolidayListRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digi-locker': {
+      id: '/digi-locker'
+      path: '/digi-locker'
+      fullPath: '/digi-locker'
+      preLoaderRoute: typeof DigiLockerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/digilocker': {
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AffiliatedSchoolRoute: AffiliatedSchoolRoute,
   ContactRoute: ContactRoute,
+  DigiLockerRoute: DigiLockerRoute,
   DigilockerRoute: DigilockerRoute,
   ExaminationRoute: ExaminationRoute,
   HolidayListRoute: HolidayListRoute,
