@@ -559,7 +559,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans select-none">
       {/* Background Admin Dashboard - completely hidden in print when a student detail modal is open */}
-      <div className={`flex flex-col flex-1 ${detailStudent || isEditModalOpen || isAddModalOpen ? "print:hidden" : ""}`}>
+      <div className={`flex flex-col flex-1 ${detailStudent ? "print:hidden" : ""}`}>
         {/* 1. TOP ADMIN HEADER */}
         <header className="bg-slate-950 border-b border-slate-800 px-3 sm:px-6 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sticky top-0 z-40 shadow-xl">
           <div className="flex items-center gap-3">
