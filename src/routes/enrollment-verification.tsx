@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { AdminLoginModal } from "@/components/AdminLoginModal";
 import { StudentIdCard } from "@/components/StudentIdCard";
 import { dbStore, StudentResult } from "@/lib/db";
-import { Home as HomeIcon, ChevronRight, AlertCircle, Sparkles } from "lucide-react";
+import { Home as HomeIcon, ChevronRight, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/enrollment-verification")({
   head: () => ({
@@ -67,19 +67,6 @@ function EnrollmentVerificationPage() {
     setSearched(false);
     setFoundStudent(null);
     setErrorMessage("");
-  };
-
-  const handleQuickFill = (name: string, enr: string, birthDate: string) => {
-    setCandidateName(name);
-    setEnrollmentNo(enr);
-    setDob(birthDate);
-    setErrorMessage("");
-
-    const student = dbStore.getStudentForVerification(name, enr, birthDate);
-    if (student) {
-      setFoundStudent(student);
-      setSearched(true);
-    }
   };
 
   return (
@@ -255,66 +242,6 @@ function EnrollmentVerificationPage() {
                   </button>
                 </div>
               </form>
-
-              {/* Quick Sample Fill Pill Buttons */}
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-2">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Sample Student Records for Testing:</span>
-                </div>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleQuickFill("MUKESH UPADHAYAYA", "1028112518013", "2001-05-02")
-                    }
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-100 text-blue-900 rounded border border-gray-300 font-mono text-[11px] transition cursor-pointer"
-                  >
-                    Mukesh Upadhayaya (1028112518013)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleQuickFill("KARIMSAHEB URF IRSHAD MARUF", "2012480926", "1994-08-15")
-                    }
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-100 text-blue-900 rounded border border-gray-300 font-mono text-[11px] transition cursor-pointer"
-                  >
-                    Karimsaheb Urf Irshad Maruf (2012480926)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickFill("SAMRIDDHI SAHA", "20241832", "2006-05-21")}
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-100 text-blue-900 rounded border border-gray-300 font-mono text-[11px] transition cursor-pointer"
-                  >
-                    Samriddhi Saha (20241832)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleQuickFill("SATISH KUMAR", "A-08-COSE-221311", "1992-01-21")
-                    }
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-100 text-blue-900 rounded border border-gray-300 font-mono text-[11px] transition cursor-pointer"
-                  >
-                    Satish Kumar (A-08-COSE-221311)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleQuickFill("DHIRODUTTA SAHA", "20264034", "2010-01-14")
-                    }
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-100 text-blue-900 rounded border border-gray-300 font-mono text-[11px] transition cursor-pointer"
-                  >
-                    Dhirodutta Saha (20264034)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickFill("KRITI SAHA", "20262455", "2008-07-05")}
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-blue-100 text-blue-900 rounded border border-gray-300 font-mono text-[11px] transition cursor-pointer"
-                  >
-                    Kriti Saha (20262455)
-                  </button>
-                </div>
-              </div>
             </div>
 
             {/* Error / Not Found Alert */}
