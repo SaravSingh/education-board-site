@@ -251,6 +251,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
       const docElement =
         document.getElementById("bhse-migration-document") ||
         document.getElementById("bhse-degree-document") ||
+        document.getElementById("bhse-tc-document") ||
+        document.getElementById("bhse-transcript-document") ||
+        document.getElementById("bhse-provisional-document") ||
         document.querySelector<HTMLElement>(".printable-marksheet > div");
 
       if (!docElement) {
@@ -288,6 +291,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
           const target =
             clonedDoc.getElementById("bhse-migration-document") ||
             clonedDoc.getElementById("bhse-degree-document") ||
+            clonedDoc.getElementById("bhse-tc-document") ||
+            clonedDoc.getElementById("bhse-transcript-document") ||
+            clonedDoc.getElementById("bhse-provisional-document") ||
             clonedDoc.querySelector<HTMLElement>(".printable-marksheet > div");
           if (target) {
             target.style.width = "794px";
@@ -296,7 +302,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
             target.style.transform = "none";
           }
           const clonedImgs = clonedDoc.querySelectorAll<HTMLImageElement>(
-            "#bhse-migration-document img, #bhse-degree-document img, .printable-marksheet img",
+            "#bhse-migration-document img, #bhse-degree-document img, #bhse-tc-document img, #bhse-transcript-document img, #bhse-provisional-document img, .printable-marksheet img",
           );
           await Promise.all(
             Array.from(clonedImgs).map(async (img) => {
@@ -2254,8 +2260,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 3: TRANSFER CERTIFICATE (TC) */}
               {docTab === "TC" && (
-                <div className="border-4 border-slate-800 p-6 rounded-lg bg-white space-y-6 text-slate-900 font-sans relative overflow-hidden">
-                  <DocumentWatermarkBg opacity={0.85} emblemOpacity={0.08} />
+                <div
+                  id="bhse-tc-document"
+                  className="bhse-certificate-document border-4 border-slate-800 p-6 sm:p-8 rounded-lg bg-white space-y-6 text-slate-900 font-sans relative overflow-hidden"
+                >
+                  <DocumentWatermarkBg opacity={0.16} emblemOpacity={0.06} />
                   <div className="relative z-10">
                     <div className="text-center border-b-2 border-slate-800 pb-4">
                       <img
@@ -2315,13 +2324,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-end pt-4 text-xs font-semibold">
-                      <div>Verified Officer Signature</div>
+                    <div className="flex justify-between items-end pt-6 text-xs font-semibold">
+                      <div className="text-left space-y-1">
+                        <div>
+                          Date of Issue: <strong>{detailStudent.result_declaration_date}</strong>
+                        </div>
+                        <div className="text-slate-600 font-mono text-[11px]">
+                          Place: Delhi, India
+                        </div>
+                        <div className="pt-3 font-bold text-slate-800">
+                          Verified &amp; Prepared By
+                        </div>
+                      </div>
+
                       <div className="text-center font-bold">
-                        <div className="border-b border-slate-900 pb-1 mb-1">
+                        <img
+                          src="/bhse_controller_signature.png"
+                          alt="Principal / Controller Signature"
+                          className="h-10 mx-auto object-contain mb-1"
+                        />
+                        <div className="text-xs font-bold text-[#0028a5] leading-tight">
+                          (ओमप्रकाश गुप्ता)
+                        </div>
+                        <div className="border-t border-slate-900 pt-1 mt-1 font-bold text-[11px] text-slate-900">
                           PRINCIPAL / HEAD OF INSTITUTION
                         </div>
-                        <div>{detailStudent.school_name}</div>
+                        <div className="text-[10px] text-slate-600 font-normal">
+                          {detailStudent.school_name}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2337,8 +2367,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 5: OFFICIAL ACADEMIC TRANSCRIPT SESSION */}
               {docTab === "TRANSCRIPT" && (
-                <div className="border-4 border-slate-900 p-4 sm:p-7 rounded-lg bg-white space-y-5 text-slate-900 font-sans shadow-inner relative overflow-hidden">
-                  <DocumentWatermarkBg opacity={0.85} emblemOpacity={0.08} />
+                <div
+                  id="bhse-transcript-document"
+                  className="bhse-certificate-document border-4 border-slate-900 p-4 sm:p-7 rounded-lg bg-white space-y-5 text-slate-900 font-sans shadow-inner relative overflow-hidden"
+                >
+                  <DocumentWatermarkBg opacity={0.16} emblemOpacity={0.06} />
                   <div className="relative z-10 space-y-5">
                     {/* Header Header Strip */}
                     <div className="border-b-2 border-slate-900 pb-4 text-center space-y-2">
@@ -2540,6 +2573,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                     <div className="flex items-center gap-8">
                       <div className="text-center">
+                        <div className="h-10 flex items-end justify-center pb-1">
+                          <span className="font-serif italic text-slate-700 text-xs tracking-wider">
+                            Verified &amp; Checked
+                          </span>
+                        </div>
                         <div className="border-b border-slate-900 pb-1 mb-1 font-mono font-bold text-slate-900">
                           SECTION OFFICER
                         </div>
@@ -2547,6 +2585,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       </div>
 
                       <div className="text-center">
+                        <img
+                          src="/bhse_controller_signature.png"
+                          alt="Controller Signature"
+                          className="h-10 mx-auto object-contain mb-1"
+                        />
                         <div className="border-b-2 border-slate-900 pb-1 mb-1 font-mono font-black text-blue-950">
                           DR. OMPRAKASH GUPTA
                         </div>
