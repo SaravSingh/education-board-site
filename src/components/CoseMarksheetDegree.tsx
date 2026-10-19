@@ -12,11 +12,11 @@ import { MigrationCertificate } from "@/components/MigrationCertificate";
 
 interface CoseMarksheetDegreeProps {
   student: StudentResult;
-  onBack?: () => void;
-  defaultDocType?: "MARKSHEET" | "DEGREE" | "MIGRATION";
-  autoDownload?: boolean;
-  isInternetCopy?: boolean;
-  hideToolbar?: boolean;
+  onBack?: (() => void) | undefined;
+  defaultDocType?: "MARKSHEET" | "DEGREE" | "MIGRATION" | undefined;
+  autoDownload?: boolean | undefined;
+  isInternetCopy?: boolean | undefined;
+  hideToolbar?: boolean | undefined;
 }
 
 // Convert any image URL to an inline base64 Data URL to guarantee zero canvas tainting

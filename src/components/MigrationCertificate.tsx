@@ -5,9 +5,9 @@ import { Printer, Download, ArrowLeft, Award, FileText } from "lucide-react";
 
 interface MigrationCertificateProps {
   student: StudentResult;
-  onBack?: () => void;
-  autoPrint?: boolean;
-  hideToolbar?: boolean;
+  onBack?: (() => void) | undefined;
+  autoPrint?: boolean | undefined;
+  hideToolbar?: boolean | undefined;
 }
 
 export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
