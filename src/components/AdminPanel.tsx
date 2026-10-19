@@ -2197,60 +2197,228 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 2: PROVISIONAL CERTIFICATE */}
               {docTab === "PROVISIONAL" && (
-                <div className="border-4 border-amber-600 p-6 rounded-lg bg-white space-y-6 text-center font-serif relative overflow-hidden">
-                  <DocumentWatermarkBg opacity={0.85} emblemOpacity={0.08} />
-                  <div className="relative z-10">
-                    <div className="border-b-2 border-amber-600 pb-4">
+                <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
+                  <div
+                    id="bhse-provisional-document"
+                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+                    style={{ boxSizing: "border-box" }}
+                  >
+                    {/* Authentic Continuous Security Micro-Pattern Watermark */}
+                    <svg
+                      className="bhse-bg-watermark absolute inset-0 w-full h-full pointer-events-none z-0"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="100%"
+                      height="100%"
+                      style={{
+                        opacity: 0.85,
+                        WebkitPrintColorAdjust: "exact",
+                        printColorAdjust: "exact",
+                      }}
+                    >
+                      <defs>
+                        <pattern
+                          id="bhse-watermark-pattern-prov"
+                          width="208"
+                          height="9"
+                          patternUnits="userSpaceOnUse"
+                        >
+                          <text
+                            x="0"
+                            y="7.4"
+                            fontFamily="'Arial', 'Helvetica Neue', Helvetica, sans-serif"
+                            fontSize="8"
+                            fontWeight="700"
+                            fill="#9bb2dd"
+                            textLength="208"
+                            lengthAdjust="spacingAndGlyphs"
+                          >
+                            BOARD OF HIGHER SECONDARY EDUCATION DELHI&#160;
+                          </text>
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#bhse-watermark-pattern-prov)" />
+                    </svg>
+
+                    {/* CSS Pattern Fallback for html2canvas */}
+                    <div
+                      className="bhse-bg-watermark-bg absolute inset-0 pointer-events-none z-0 opacity-80"
+                      style={{
+                        backgroundImage:
+                          'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjkiIHZpZXdCb3g9IjAgMCAyMDggOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSIwIiB5PSI3LjQiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzliYjJkZCIgdGV4dExlbmd0aD0iMjA4IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiPkJPQVJEIE9GIEhJR0hFUiBTRUNPTkRBUlkgRURVQ0FUSU9OIERFTEhJJiMxNjA7PC90ZXh0Pjwvc3ZnPg==")',
+                        backgroundRepeat: "repeat",
+                        backgroundSize: "208px 9px",
+                        WebkitPrintColorAdjust: "exact",
+                        printColorAdjust: "exact",
+                      }}
+                    />
+
+                    {/* Large Central Board Emblem Watermark */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
                       <img
-                        src={logoEmblem}
-                        alt="Emblem"
-                        className="w-20 h-20 object-contain mx-auto mb-2"
+                        src="/bhse_emblem_blue.png"
+                        alt="Watermark"
+                        crossOrigin="anonymous"
+                        className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
                       />
-                      <h2 className="text-2xl font-black text-[#1d359c] uppercase">
-                        Board of Higher Secondary Education, Delhi
-                      </h2>
-                      <p className="text-xs text-slate-700 font-sans">
-                        Govt. of Delhi Regd. No. 275 (India) | An Autonomous Organisation under Deptt.
-                        of School Education &amp; Literacy
-                      </p>
-                      <div className="inline-block mt-3 px-6 py-1 bg-amber-600 text-white font-extrabold text-sm uppercase tracking-widest rounded shadow-sm">
-                        PROVISIONAL PASS CERTIFICATE
-                      </div>
                     </div>
 
-                    <div className="space-y-4 text-slate-800 text-sm leading-relaxed max-w-2xl mx-auto py-4 font-sans">
-                      <p>
-                        This is to certify that <strong>{detailStudent.student_name}</strong>,
-                        Son/Daughter of <strong>{detailStudent.father_name}</strong> &amp;{" "}
-                        <strong>{detailStudent.mother_name}</strong>, Roll No.{" "}
-                        <strong className="font-mono text-blue-900">{detailStudent.roll_no}</strong>,
-                        Enrollment No.{" "}
-                        <strong className="font-mono">{detailStudent.enrollment_no}</strong>, student
-                        of <strong>{detailStudent.school_name}</strong> has passed the{" "}
-                        <strong>{detailStudent.course}</strong> Examination held in the session year{" "}
-                        <strong>{detailStudent.exam_year}</strong> and has been placed in{" "}
-                        <strong>{detailStudent.status}</strong>.
-                      </p>
-                    </div>
+                    {/* Outer Dark Blue Border Frame Container */}
+                    <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-5 sm:p-7 flex flex-col justify-between">
+                      <div>
+                        {/* Top Reference Numbers */}
+                        <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] mb-1 px-1 font-serif">
+                          <div>Government of India (TM-1, No. 1791977)</div>
+                          <div>Govt. of Delhi Regd. No. 275 (India)</div>
+                        </div>
 
-                    <div className="flex justify-between items-end pt-8 font-sans text-xs text-slate-700">
-                      <div className="text-left">
-                        <div>
-                          Date of Issue: <strong>{detailStudent.result_declaration_date}</strong>
+                        {/* Main Board Heading in Hindi */}
+                        <h1 className="text-center font-bold text-[#0028a5] text-[18px] sm:text-[23px] leading-tight font-serif tracking-normal">
+                          उच्चतर माध्यमिक शिक्षा परिषद्, दिल्ली
+                        </h1>
+
+                        {/* Main Board Heading in English */}
+                        <h2 className="text-center font-black text-[#0028a5] text-[17px] sm:text-[21px] leading-tight font-serif tracking-wide uppercase mt-0.5">
+                          Board of Higher Secondary Education, Delhi
+                        </h2>
+
+                        {/* Central Round Emblem */}
+                        <div className="pt-2 pb-1 flex justify-center">
+                          <img
+                            src="/bhse_emblem_blue.png"
+                            alt="BHSE Emblem"
+                            className="w-16 h-16 object-contain"
+                          />
                         </div>
-                        <div>Delhi, India</div>
+
+                        {/* Recognition Subtitle */}
+                        <div className="text-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] tracking-wide uppercase">
+                          AN AUTONOMOUS ORGANISATION UNDER DEPTT. OF SCHOOL EDUCATION &amp; LITERACY
+                        </div>
+
+                        {/* Serial Number & Roll Number Row */}
+                        <div className="flex justify-between items-end mt-4 text-xs font-semibold px-2 font-serif">
+                          <div>
+                            <span className="text-slate-800 font-bold">क्रमांक संख्या :</span>
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                              <span className="text-slate-700 font-bold">Cert. No:</span>
+                              <span className="font-mono font-black text-sm text-slate-950 border-b border-dotted border-slate-900 px-3 tracking-widest">
+                                PROV/{detailStudent.exam_year}/{detailStudent.roll_no}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <span className="text-slate-800 font-bold">अनुक्रमांक</span>
+                            <div className="flex items-baseline justify-end gap-1 mt-0.5">
+                              <span className="text-slate-700 font-bold">Roll No.</span>
+                              <span className="font-mono font-black text-sm sm:text-base text-slate-950 border-b border-dotted border-slate-900 px-3 tracking-widest">
+                                {detailStudent.roll_no}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Certificate Title Banner */}
+                        <div className="text-center mt-5 mb-6">
+                          <div className="text-base font-bold text-slate-900 tracking-wide font-serif">
+                            औपबंधिक उत्तीर्ण प्रमाण - पत्र
+                          </div>
+                          <div className="text-xl sm:text-2xl font-black text-[#0028a5] tracking-widest font-serif uppercase mt-0.5 border-b-2 border-[#0028a5] inline-block px-6 pb-1">
+                            PROVISIONAL PASS CERTIFICATE
+                          </div>
+                        </div>
+
+                        {/* Certificate Body */}
+                        <div className="space-y-6 text-[14px] leading-loose text-slate-950 px-3 font-serif">
+                          <p className="text-justify indent-8">
+                            This is to certify that{" "}
+                            <strong className="font-mono font-black text-base text-blue-950 uppercase border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.student_name}
+                            </strong>
+                            , Son / Daughter of{" "}
+                            <strong className="font-mono font-bold text-slate-900 uppercase border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.father_name}
+                            </strong>{" "}
+                            &amp;{" "}
+                            <strong className="font-mono font-bold text-slate-900 uppercase border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.mother_name}
+                            </strong>
+                            , Roll No.{" "}
+                            <strong className="font-mono font-black text-blue-950 border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.roll_no}
+                            </strong>
+                            , Enrollment No.{" "}
+                            <strong className="font-mono font-bold text-slate-900 border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.enrollment_no}
+                            </strong>
+                            , student of{" "}
+                            <strong className="font-mono font-bold text-slate-900 uppercase border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.school_name}
+                            </strong>{" "}
+                            has successfully appeared and passed the{" "}
+                            <strong className="font-mono font-black text-base text-blue-950 uppercase border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.course}
+                            </strong>{" "}
+                            Examination held in the session year{" "}
+                            <strong className="font-mono font-bold text-slate-900 border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.exam_year}
+                            </strong>{" "}
+                            and has been placed in{" "}
+                            <strong className="font-mono font-black text-emerald-800 uppercase text-base border-b border-dotted border-slate-900 px-3">
+                              {detailStudent.status}
+                            </strong>
+                            .
+                          </p>
+
+                          <div className="pt-4 p-3 bg-slate-50/70 rounded border border-slate-200/80 text-xs text-slate-700 font-sans">
+                            Note: This provisional certificate is issued to enable the candidate to seek admission to higher classes or apply for employment pending the issue of the original Certificate / Marksheet.
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-center font-bold text-slate-900">
-                        <img
-                          src="/bhse_controller_signature.png"
-                          alt="Controller Signature"
-                          className="h-9 mx-auto object-contain mb-1"
-                        />
-                        <div className="text-xs font-bold text-[#0028a5] leading-tight">
-                          (ओमप्रकाश गुप्ता)
+
+                      {/* Bottom Signatures */}
+                      <div className="flex justify-between items-end pt-6 px-2 mt-4 font-serif">
+                        <div className="flex items-end gap-5">
+                          <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                            <div>दिल्ली / Delhi</div>
+                            <div className="pt-1.5">
+                              Date of Issue:{" "}
+                              <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
+                                {detailStudent.result_declaration_date}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Official Seal */}
+                          <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#0028a5]/60 flex flex-col items-center justify-center text-center p-1 opacity-85 select-none bg-blue-50/30">
+                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
+                              BOARD OF HIGHER SECONDARY
+                            </span>
+                            <span className="text-[8.5px] font-black uppercase text-[#b8860b] my-0.5">
+                              ★ SEAL ★
+                            </span>
+                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
+                              EDUCATION DELHI
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-[11px] font-bold text-slate-800">
-                          परीक्षा नियंत्रक / Controller of Examinations
+
+                        {/* Right: Controller Signature */}
+                        <div className="text-center space-y-0.5">
+                          <img
+                            src="/bhse_controller_signature.png"
+                            alt="Controller Signature (ओमप्रकाश गुप्ता)"
+                            className="h-10 sm:h-12 mx-auto object-contain mb-1"
+                          />
+                          <div className="font-bold text-xs sm:text-sm text-[#0028a5] leading-tight">
+                            (ओमप्रकाश गुप्ता)
+                          </div>
+                          <div className="font-bold text-xs text-[#0028a5] leading-tight">
+                            परीक्षा नियंत्रक
+                          </div>
+                          <div className="font-bold text-[11px] text-[#0028a5] leading-tight uppercase font-sans">
+                            Controller of Examination
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2260,97 +2428,252 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 3: TRANSFER CERTIFICATE (TC) */}
               {docTab === "TC" && (
-                <div
-                  id="bhse-tc-document"
-                  className="bhse-certificate-document border-4 border-slate-800 p-6 sm:p-8 rounded-lg bg-white space-y-6 text-slate-900 font-sans relative overflow-hidden"
-                >
-                  <DocumentWatermarkBg opacity={0.16} emblemOpacity={0.06} />
-                  <div className="relative z-10">
-                    <div className="text-center border-b-2 border-slate-800 pb-4">
+                <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
+                  <div
+                    id="bhse-tc-document"
+                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+                    style={{ boxSizing: "border-box" }}
+                  >
+                    {/* Authentic Continuous Security Micro-Pattern Watermark */}
+                    <svg
+                      className="bhse-bg-watermark absolute inset-0 w-full h-full pointer-events-none z-0"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="100%"
+                      height="100%"
+                      style={{
+                        opacity: 0.85,
+                        WebkitPrintColorAdjust: "exact",
+                        printColorAdjust: "exact",
+                      }}
+                    >
+                      <defs>
+                        <pattern
+                          id="bhse-watermark-pattern-tc"
+                          width="208"
+                          height="9"
+                          patternUnits="userSpaceOnUse"
+                        >
+                          <text
+                            x="0"
+                            y="7.4"
+                            fontFamily="'Arial', 'Helvetica Neue', Helvetica, sans-serif"
+                            fontSize="8"
+                            fontWeight="700"
+                            fill="#9bb2dd"
+                            textLength="208"
+                            lengthAdjust="spacingAndGlyphs"
+                          >
+                            BOARD OF HIGHER SECONDARY EDUCATION DELHI&#160;
+                          </text>
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#bhse-watermark-pattern-tc)" />
+                    </svg>
+
+                    {/* CSS Pattern Fallback for html2canvas */}
+                    <div
+                      className="bhse-bg-watermark-bg absolute inset-0 pointer-events-none z-0 opacity-80"
+                      style={{
+                        backgroundImage:
+                          'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjkiIHZpZXdCb3g9IjAgMCAyMDggOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSIwIiB5PSI3LjQiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzliYjJkZCIgdGV4dExlbmd0aD0iMjA4IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiPkJPQVJEIE9GIEhJR0hFUiBTRUNPTkRBUlkgRURVQ0FUSU9OIERFTEhJJiMxNjA7PC90ZXh0Pjwvc3ZnPg==")',
+                        backgroundRepeat: "repeat",
+                        backgroundSize: "208px 9px",
+                        WebkitPrintColorAdjust: "exact",
+                        printColorAdjust: "exact",
+                      }}
+                    />
+
+                    {/* Large Central Board Emblem Watermark */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
                       <img
-                        src={logoEmblem}
-                        alt="Emblem"
-                        className="w-16 h-16 object-contain mx-auto mb-1"
+                        src="/bhse_emblem_blue.png"
+                        alt="Watermark"
+                        crossOrigin="anonymous"
+                        className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
                       />
-                      <h2 className="text-xl font-bold text-slate-900 font-serif uppercase">
-                        {detailStudent.school_name}
-                      </h2>
-                      <p className="text-xs text-slate-600">
-                        Affiliated to Board of Higher Secondary Education, Delhi (School Code:{" "}
-                        {detailStudent.school_code})
-                      </p>
-                      <div className="inline-block mt-2 px-6 py-1 bg-slate-900 text-white font-extrabold text-xs uppercase tracking-widest rounded">
-                        SCHOOL TRANSFER CERTIFICATE (TC)
-                      </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 text-xs font-semibold leading-loose border-b pb-4">
+                    {/* Outer Dark Blue Border Frame Container */}
+                    <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-5 sm:p-7 flex flex-col justify-between">
                       <div>
-                        TC Serial No:{" "}
-                        <strong className="font-mono text-blue-900">
-                          TC/{detailStudent.exam_year}/{detailStudent.roll_no}
-                        </strong>
-                      </div>
-                      <div>
-                        Admission No: <strong className="font-mono">{detailStudent.serial_no}</strong>
-                      </div>
-                      <div>
-                        Student Name:{" "}
-                        <strong className="uppercase">{detailStudent.student_name}</strong>
-                      </div>
-                      <div>
-                        Date of Birth: <strong>{detailStudent.dob}</strong>
-                      </div>
-                      <div>
-                        Father's Name:{" "}
-                        <strong className="uppercase">{detailStudent.father_name}</strong>
-                      </div>
-                      <div>
-                        Mother's Name:{" "}
-                        <strong className="uppercase">{detailStudent.mother_name}</strong>
-                      </div>
-                      <div>
-                        Class Last Attended: <strong>{detailStudent.course}</strong>
-                      </div>
-                      <div>
-                        Board Exam Result:{" "}
-                        <strong className="text-emerald-800">{detailStudent.status}</strong>
-                      </div>
-                      <div>
-                        General Conduct: <strong>GOOD &amp; SATISFACTORY</strong>
-                      </div>
-                      <div>
-                        Reason for Leaving: <strong>HIGHER STUDIES / COMPLETED COURSE</strong>
-                      </div>
-                    </div>
+                        {/* Top Reference Numbers */}
+                        <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] mb-1 px-1 font-serif">
+                          <div>Government of India (TM-1, No. 1791977)</div>
+                          <div>Govt. of Delhi Regd. No. 275 (India)</div>
+                        </div>
 
-                    <div className="flex justify-between items-end pt-6 text-xs font-semibold">
-                      <div className="text-left space-y-1">
-                        <div>
-                          Date of Issue: <strong>{detailStudent.result_declaration_date}</strong>
+                        {/* Main Board Heading in Hindi */}
+                        <h1 className="text-center font-bold text-[#0028a5] text-[18px] sm:text-[23px] leading-tight font-serif tracking-normal">
+                          उच्चतर माध्यमिक शिक्षा परिषद्, दिल्ली
+                        </h1>
+
+                        {/* Main Board Heading in English */}
+                        <h2 className="text-center font-black text-[#0028a5] text-[17px] sm:text-[21px] leading-tight font-serif tracking-wide uppercase mt-0.5">
+                          Board of Higher Secondary Education, Delhi
+                        </h2>
+
+                        {/* Central Round Emblem */}
+                        <div className="pt-2 pb-1 flex justify-center">
+                          <img
+                            src="/bhse_emblem_blue.png"
+                            alt="BHSE Emblem"
+                            className="w-16 h-16 object-contain"
+                          />
                         </div>
-                        <div className="text-slate-600 font-mono text-[11px]">
-                          Place: Delhi, India
+
+                        {/* Recognition Subtitle */}
+                        <div className="text-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] tracking-wide uppercase">
+                          AN AUTONOMOUS ORGANISATION UNDER DEPTT. OF SCHOOL EDUCATION &amp; LITERACY
                         </div>
-                        <div className="pt-3 font-bold text-slate-800">
-                          Verified &amp; Prepared By
+
+                        {/* School Affiliation Line */}
+                        <div className="text-center text-xs text-slate-700 font-semibold mt-1">
+                          Affiliated Institution:{" "}
+                          <span className="font-bold text-slate-900 uppercase">
+                            {detailStudent.school_name}
+                          </span>{" "}
+                          (School Code: {detailStudent.school_code})
+                        </div>
+
+                        {/* Serial Number & Admission Number Row */}
+                        <div className="flex justify-between items-end mt-3 text-xs font-semibold px-2 font-serif">
+                          <div>
+                            <span className="text-slate-800 font-bold">टी.सी. क्रमांक संख्या :</span>
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                              <span className="text-slate-700 font-bold">TC Serial No:</span>
+                              <span className="font-mono font-black text-sm text-slate-950 border-b border-dotted border-slate-900 px-3 tracking-widest">
+                                TC/{detailStudent.exam_year}/{detailStudent.roll_no}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <span className="text-slate-800 font-bold">प्रवेश क्रमांक</span>
+                            <div className="flex items-baseline justify-end gap-1 mt-0.5">
+                              <span className="text-slate-700 font-bold">Admission No:</span>
+                              <span className="font-mono font-black text-sm sm:text-base text-slate-950 border-b border-dotted border-slate-900 px-3 tracking-widest">
+                                {detailStudent.serial_no}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Certificate Title Banner */}
+                        <div className="text-center mt-4 mb-5">
+                          <div className="text-base font-bold text-slate-900 tracking-wide font-serif">
+                            विद्यालय स्थानांतरण प्रमाण - पत्र
+                          </div>
+                          <div className="text-xl sm:text-2xl font-black text-[#0028a5] tracking-widest font-serif uppercase mt-0.5 border-b-2 border-[#0028a5] inline-block px-6 pb-1">
+                            SCHOOL TRANSFER CERTIFICATE (TC)
+                          </div>
+                        </div>
+
+                        {/* Certificate Student Details Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-xs sm:text-[13px] font-serif leading-relaxed px-2">
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Student Name:</span>
+                            <span className="font-mono font-black text-slate-950 uppercase px-1">
+                              {detailStudent.student_name}
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Date of Birth:</span>
+                            <span className="font-mono font-bold text-slate-900 px-1">
+                              {detailStudent.dob}
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Father's Name:</span>
+                            <span className="font-mono font-bold text-slate-900 uppercase px-1">
+                              {detailStudent.father_name}
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Mother's Name:</span>
+                            <span className="font-mono font-bold text-slate-900 uppercase px-1">
+                              {detailStudent.mother_name}
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Class Last Attended:</span>
+                            <span className="font-mono font-bold text-slate-900 px-1">
+                              {detailStudent.course}
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Board Exam Result:</span>
+                            <span className="font-mono font-black text-emerald-800 uppercase px-1">
+                              {detailStudent.status}
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">General Conduct:</span>
+                            <span className="font-mono font-bold text-slate-900 px-1">
+                              GOOD &amp; SATISFACTORY
+                            </span>
+                          </div>
+
+                          <div className="flex items-baseline gap-1 border-b border-dotted border-slate-400 pb-1">
+                            <span className="text-slate-700 font-medium whitespace-nowrap">Reason for Leaving:</span>
+                            <span className="font-mono font-bold text-slate-900 px-1">
+                              HIGHER STUDIES / COMPLETED COURSE
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="text-center font-bold">
-                        <img
-                          src="/bhse_controller_signature.png"
-                          alt="Principal / Controller Signature"
-                          className="h-10 mx-auto object-contain mb-1"
-                        />
-                        <div className="text-xs font-bold text-[#0028a5] leading-tight">
-                          (ओमप्रकाश गुप्ता)
+                      {/* Bottom Signatures */}
+                      <div className="flex justify-between items-end pt-6 px-2 mt-4 font-serif">
+                        <div className="flex items-end gap-5">
+                          <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                            <div>दिल्ली / Delhi</div>
+                            <div className="pt-1.5">
+                              Date of Issue:{" "}
+                              <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
+                                {detailStudent.result_declaration_date}
+                              </span>
+                            </div>
+                            <div className="pt-3 font-bold text-slate-700">
+                              Prepared &amp; Verified By
+                            </div>
+                          </div>
+
+                          {/* Official Seal */}
+                          <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#0028a5]/60 flex flex-col items-center justify-center text-center p-1 opacity-85 select-none bg-blue-50/30">
+                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
+                              BOARD OF HIGHER SECONDARY
+                            </span>
+                            <span className="text-[8.5px] font-black uppercase text-[#b8860b] my-0.5">
+                              ★ SEAL ★
+                            </span>
+                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
+                              EDUCATION DELHI
+                            </span>
+                          </div>
                         </div>
-                        <div className="border-t border-slate-900 pt-1 mt-1 font-bold text-[11px] text-slate-900">
-                          PRINCIPAL / HEAD OF INSTITUTION
-                        </div>
-                        <div className="text-[10px] text-slate-600 font-normal">
-                          {detailStudent.school_name}
+
+                        {/* Right: Principal / Controller Signature */}
+                        <div className="text-center space-y-0.5">
+                          <img
+                            src="/bhse_controller_signature.png"
+                            alt="Principal / Controller Signature"
+                            className="h-10 sm:h-12 mx-auto object-contain mb-1"
+                          />
+                          <div className="font-bold text-xs sm:text-sm text-[#0028a5] leading-tight">
+                            (ओमप्रकाश गुप्ता)
+                          </div>
+                          <div className="border-t border-slate-900 pt-1 mt-1 font-bold text-xs text-slate-900">
+                            PRINCIPAL / HEAD OF INSTITUTION
+                          </div>
+                          <div className="text-[10px] text-slate-600 font-normal">
+                            {detailStudent.school_name}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2365,243 +2688,329 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 </div>
               )}
 
-              {/* DOCUMENT VIEW 5: OFFICIAL ACADEMIC TRANSCRIPT SESSION */}
+              {/* DOCUMENT VIEW 5: OFFICIAL ACADEMIC TRANSCRIPT */}
               {docTab === "TRANSCRIPT" && (
-                <div
-                  id="bhse-transcript-document"
-                  className="bhse-certificate-document border-4 border-slate-900 p-4 sm:p-7 rounded-lg bg-white space-y-5 text-slate-900 font-sans shadow-inner relative overflow-hidden"
-                >
-                  <DocumentWatermarkBg opacity={0.16} emblemOpacity={0.06} />
-                  <div className="relative z-10 space-y-5">
-                    {/* Header Header Strip */}
-                    <div className="border-b-2 border-slate-900 pb-4 text-center space-y-2">
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2">
-                        <div className="flex items-center gap-2">
-                          <img src={logoEmblem} alt="Emblem" className="w-16 h-16 object-contain" />
-                        <div className="text-left hidden sm:block">
-                          <span className="text-red-700 font-extrabold text-[10px] uppercase font-serif block">
-                            Govt. Regd. No. 275 (India)
-                          </span>
-                          <span className="text-[11px] font-bold text-slate-700">
-                            Recognized Board
-                          </span>
-                        </div>
-                      </div>
+                <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
+                  <div
+                    id="bhse-transcript-document"
+                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+                    style={{ boxSizing: "border-box" }}
+                  >
+                    {/* Authentic Continuous Security Micro-Pattern Watermark */}
+                    <svg
+                      className="bhse-bg-watermark absolute inset-0 w-full h-full pointer-events-none z-0"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="100%"
+                      height="100%"
+                      style={{
+                        opacity: 0.85,
+                        WebkitPrintColorAdjust: "exact",
+                        printColorAdjust: "exact",
+                      }}
+                    >
+                      <defs>
+                        <pattern
+                          id="bhse-watermark-pattern-trans"
+                          width="208"
+                          height="9"
+                          patternUnits="userSpaceOnUse"
+                        >
+                          <text
+                            x="0"
+                            y="7.4"
+                            fontFamily="'Arial', 'Helvetica Neue', Helvetica, sans-serif"
+                            fontSize="8"
+                            fontWeight="700"
+                            fill="#9bb2dd"
+                            textLength="208"
+                            lengthAdjust="spacingAndGlyphs"
+                          >
+                            BOARD OF HIGHER SECONDARY EDUCATION DELHI&#160;
+                          </text>
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#bhse-watermark-pattern-trans)" />
+                    </svg>
 
-                      <div className="text-center">
-                        <h1 className="text-lg sm:text-2xl font-black text-[#002b7f] font-serif uppercase tracking-tight">
-                          Board of Higher Secondary Education, Delhi
-                        </h1>
-                        <h2 className="text-xs sm:text-sm font-extrabold text-slate-700 font-serif">
-                          AN AUTONOMOUS BOARD UNDER DEPTT. OF SCHOOL EDUCATION &amp; LITERACY
-                        </h2>
-                        <div className="text-[10px] font-mono text-slate-500 font-semibold">
-                          Official Educational Helpline &amp; Document Verification Portal
-                        </div>
-                      </div>
+                    {/* CSS Pattern Fallback for html2canvas */}
+                    <div
+                      className="bhse-bg-watermark-bg absolute inset-0 pointer-events-none z-0 opacity-80"
+                      style={{
+                        backgroundImage:
+                          'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjkiIHZpZXdCb3g9IjAgMCAyMDggOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSIwIiB5PSI3LjQiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzliYjJkZCIgdGV4dExlbmd0aD0iMjA4IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiPkJPQVJEIE9GIEhJR0hFUiBTRUNPTkRBUlkgRURVQ0FUSU9OIERFTEhJJiMxNjA7PC90ZXh0Pjwvc3ZnPg==")',
+                        backgroundRepeat: "repeat",
+                        backgroundSize: "208px 9px",
+                        WebkitPrintColorAdjust: "exact",
+                        printColorAdjust: "exact",
+                      }}
+                    />
 
-                      <div className="flex flex-col items-center sm:items-end">
-                        <img
-                          src={digitalIndia}
-                          alt="Digital India"
-                          className="w-20 h-8 object-contain"
-                        />
-                        <span className="text-[10px] font-mono font-bold bg-slate-900 text-amber-400 px-2 py-0.5 rounded mt-1">
-                          TRANSCRIPT VERIFIED
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="inline-block px-6 py-1 bg-blue-950 text-white font-extrabold text-xs sm:text-sm uppercase tracking-widest rounded shadow-sm">
-                      OFFICIAL CUMULATIVE ACADEMIC TRANSCRIPT OF MARKS
-                    </div>
-                  </div>
-
-                  {/* Transcript Metadata & Serial Header */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-blue-50/60 p-3 rounded-lg border border-blue-200 text-xs font-semibold">
-                    <div>
-                      Transcript Ref No:{" "}
-                      <strong className="font-mono text-blue-900">
-                        BHSE/TRN/{detailStudent.exam_year}/{detailStudent.roll_no}
-                      </strong>
-                    </div>
-                    <div>
-                      Issue Date: <strong>{detailStudent.result_declaration_date}</strong>
-                    </div>
-                    <div>
-                      Medium of Instruction: <strong>ENGLISH / HINDI</strong>
-                    </div>
-                  </div>
-
-                  {/* Student Bio Details Card */}
-                  <div className="border border-slate-300 rounded-lg p-4 bg-slate-50 flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 text-xs font-semibold">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-slate-800 w-full">
-                      <div>
-                        Candidate Name:{" "}
-                        <strong className="uppercase font-extrabold text-blue-950 text-sm">
-                          {detailStudent.student_name}
-                        </strong>
-                      </div>
-                      <div>
-                        Roll Number:{" "}
-                        <strong className="font-mono text-amber-700 text-sm">
-                          {detailStudent.roll_no}
-                        </strong>
-                      </div>
-                      <div>
-                        Enrollment Number:{" "}
-                        <strong className="font-mono text-slate-900">
-                          {detailStudent.enrollment_no}
-                        </strong>
-                      </div>
-                      <div>
-                        Date of Birth: <strong>{detailStudent.dob}</strong>
-                      </div>
-                      <div>
-                        Father's Name:{" "}
-                        <strong className="uppercase">{detailStudent.father_name}</strong>
-                      </div>
-                      <div>
-                        Mother's Name:{" "}
-                        <strong className="uppercase">{detailStudent.mother_name}</strong>
-                      </div>
-                      <div>
-                        Course Level: <strong>{detailStudent.course}</strong>
-                      </div>
-                      <div>
-                        Batch / Session: <strong>{detailStudent.batch}</strong>
-                      </div>
-                      <div className="sm:col-span-2">
-                        School / Institution:{" "}
-                        <strong className="uppercase text-slate-900">
-                          {detailStudent.school_name}
-                        </strong>
-                      </div>
-                    </div>
-
-                    <div className="border-2 border-slate-800 p-1 bg-white rounded shrink-0 shadow-sm">
+                    {/* Large Central Board Emblem Watermark */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
                       <img
-                        src={detailStudent.photo_url}
-                        alt="Candidate"
-                        className="w-24 h-32 object-cover block"
+                        src="/bhse_emblem_blue.png"
+                        alt="Watermark"
+                        crossOrigin="anonymous"
+                        className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
                       />
                     </div>
-                  </div>
 
-                  {/* Subject Marks Breakdown Table */}
-                  <div className="overflow-x-auto border-2 border-slate-900 rounded-lg shadow-sm">
-                    <table className="w-full min-w-[650px] text-center text-xs border-collapse font-medium">
-                      <thead>
-                        <tr className="bg-slate-900 text-white font-bold uppercase text-[11px]">
-                          <th className="p-2.5 border-r border-slate-700 w-12">S.No.</th>
-                          <th className="p-2.5 border-r border-slate-700 text-left">
-                            Subject Code &amp; Title
-                          </th>
-                          <th className="p-2.5 border-r border-slate-700">Max</th>
-                          <th className="p-2.5 border-r border-slate-700">Pass</th>
-                          <th className="p-2.5 border-r border-slate-700">Theory</th>
-                          <th className="p-2.5 border-r border-slate-700">Practical</th>
-                          <th className="p-2.5 border-r border-slate-700">Total Marks</th>
-                          <th className="p-2.5 text-left">Marks in Words</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-300">
-                        {JSON.parse(detailStudent.subjects_json || "[]").map(
-                          (sub: SubjectMarks, i: number) => (
-                            <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
-                              <td className="p-2.5 border-r border-slate-300 font-mono font-bold">
-                                {i + 1}
-                              </td>
-                              <td className="p-2.5 border-r border-slate-300 text-left font-bold text-slate-900">
-                                {sub.code || sub.name}
-                              </td>
-                              <td className="p-2.5 border-r border-slate-300 font-mono">
-                                {sub.max_marks || 100}
-                              </td>
-                              <td className="p-2.5 border-r border-slate-300 font-mono">
-                                {sub.pass_marks || 33}
-                              </td>
-                              <td className="p-2.5 border-r border-slate-300 font-mono font-semibold">
-                                {sub.theory}
-                              </td>
-                              <td className="p-2.5 border-r border-slate-300 font-mono font-semibold">
-                                {sub.practical}
-                              </td>
-                              <td className="p-2.5 border-r border-slate-300 font-mono font-extrabold text-blue-950 text-sm">
-                                {sub.total}
-                              </td>
-                              <td className="p-2.5 text-left font-mono font-bold text-slate-700">
-                                {sub.words}
-                              </td>
-                            </tr>
-                          ),
-                        )}
-                        <tr className="bg-slate-200 font-bold border-t-2 border-slate-900 text-slate-900">
-                          <td
-                            colSpan={2}
-                            className="p-2.5 border-r border-slate-400 uppercase text-left pl-4 font-black"
-                          >
-                            CUMULATIVE TOTAL &amp; FINAL RESULT
-                          </td>
-                          <td
-                            colSpan={4}
-                            className="p-2.5 border-r border-slate-400 text-emerald-800 font-black uppercase text-sm"
-                          >
-                            {detailStudent.status}
-                          </td>
-                          <td className="p-2.5 border-r border-slate-400 font-mono text-sm font-black text-blue-950">
-                            {detailStudent.total_marks} / {detailStudent.max_marks}
-                          </td>
-                          <td className="p-2.5 text-left font-mono font-extrabold">
-                            {detailStudent.total_words} ({detailStudent.percentage})
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* Verification Footer & Signatures */}
-                  <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end pt-6 text-xs text-slate-800 font-semibold gap-4 border-t border-slate-300">
-                    <div className="text-center sm:text-left space-y-1">
-                      <div className="text-[11px] text-slate-500 font-mono">
-                        Official Verification URL: https://bhsed.co.in/result
-                      </div>
-                      <div className="text-[11px] text-slate-500">
-                        Help Desk: coe.verification@bhsed.co.in
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-8">
-                      <div className="text-center">
-                        <div className="h-10 flex items-end justify-center pb-1">
-                          <span className="font-serif italic text-slate-700 text-xs tracking-wider">
-                            Verified &amp; Checked
-                          </span>
+                    {/* Outer Dark Blue Border Frame Container */}
+                    <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-4 sm:p-6 flex flex-col justify-between">
+                      <div>
+                        {/* Top Reference Numbers */}
+                        <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] mb-1 px-1 font-serif">
+                          <div>Government of India (TM-1, No. 1791977)</div>
+                          <div>Govt. of Delhi Regd. No. 275 (India)</div>
                         </div>
-                        <div className="border-b border-slate-900 pb-1 mb-1 font-mono font-bold text-slate-900">
-                          SECTION OFFICER
+
+                        {/* Main Board Heading in Hindi */}
+                        <h1 className="text-center font-bold text-[#0028a5] text-[18px] sm:text-[23px] leading-tight font-serif tracking-normal">
+                          उच्चतर माध्यमिक शिक्षा परिषद्, दिल्ली
+                        </h1>
+
+                        {/* Main Board Heading in English */}
+                        <h2 className="text-center font-black text-[#0028a5] text-[17px] sm:text-[21px] leading-tight font-serif tracking-wide uppercase mt-0.5">
+                          Board of Higher Secondary Education, Delhi
+                        </h2>
+
+                        {/* Central Round Emblem */}
+                        <div className="pt-1.5 pb-1 flex justify-center">
+                          <img
+                            src="/bhse_emblem_blue.png"
+                            alt="BHSE Emblem"
+                            className="w-14 h-14 object-contain"
+                          />
                         </div>
-                        <div className="text-[10px] text-slate-600">Verification Cell</div>
+
+                        {/* Recognition Subtitle */}
+                        <div className="text-center text-[10px] sm:text-[11px] font-bold text-[#0028a5] tracking-wide uppercase">
+                          AN AUTONOMOUS ORGANISATION UNDER DEPTT. OF SCHOOL EDUCATION &amp; LITERACY
+                        </div>
+
+                        {/* Certificate Title Banner */}
+                        <div className="text-center mt-3 mb-3">
+                          <div className="text-sm font-bold text-slate-900 tracking-wide font-serif">
+                            आधिकारिक संचयी शैक्षणिक प्रतिलेख
+                          </div>
+                          <div className="text-base sm:text-lg font-black text-[#0028a5] tracking-widest font-serif uppercase mt-0.5 border-b-2 border-[#0028a5] inline-block px-5 pb-0.5">
+                            OFFICIAL ACADEMIC TRANSCRIPT OF MARKS
+                          </div>
+                        </div>
+
+                        {/* Transcript Ref & Meta Strip */}
+                        <div className="flex justify-between items-center bg-blue-50/70 border border-blue-200 px-3 py-1.5 text-xs font-serif font-semibold text-slate-800 mb-3">
+                          <div>
+                            Transcript Ref:{" "}
+                            <span className="font-mono font-black text-[#0028a5]">
+                              BHSE/TRN/{detailStudent.exam_year}/{detailStudent.roll_no}
+                            </span>
+                          </div>
+                          <div>
+                            Medium: <span className="font-bold text-slate-900">ENGLISH / HINDI</span>
+                          </div>
+                          <div>
+                            Issue Date:{" "}
+                            <span className="font-mono font-bold text-slate-900">
+                              {detailStudent.result_declaration_date}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Student Bio Details Grid with Photo */}
+                        <div className="flex justify-between items-start gap-4 border border-slate-300 p-3 bg-slate-50/60 text-xs font-serif leading-relaxed mb-3">
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 flex-1">
+                            <div>
+                              <span className="text-slate-600">Candidate Name: </span>
+                              <strong className="font-mono font-black text-blue-950 uppercase">
+                                {detailStudent.student_name}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Roll No: </span>
+                              <strong className="font-mono font-bold text-slate-950">
+                                {detailStudent.roll_no}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Enrollment No: </span>
+                              <strong className="font-mono font-bold text-slate-900">
+                                {detailStudent.enrollment_no}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Date of Birth: </span>
+                              <strong className="font-mono font-bold text-slate-900">
+                                {detailStudent.dob}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Father's Name: </span>
+                              <strong className="font-mono font-bold text-slate-900 uppercase">
+                                {detailStudent.father_name}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Mother's Name: </span>
+                              <strong className="font-mono font-bold text-slate-900 uppercase">
+                                {detailStudent.mother_name}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Course / Class: </span>
+                              <strong className="font-mono font-bold text-blue-950 uppercase">
+                                {detailStudent.course}
+                              </strong>
+                            </div>
+                            <div>
+                              <span className="text-slate-600">Batch / Session: </span>
+                              <strong className="font-mono font-bold text-slate-900">
+                                {detailStudent.batch || detailStudent.exam_year}
+                              </strong>
+                            </div>
+                            <div className="col-span-2">
+                              <span className="text-slate-600">School / Institution: </span>
+                              <strong className="font-mono font-bold text-slate-900 uppercase">
+                                {detailStudent.school_name}
+                              </strong>
+                            </div>
+                          </div>
+
+                          <div className="border border-slate-800 p-0.5 bg-white shrink-0">
+                            <img
+                              src={detailStudent.photo_url || "/students/dhirodutta_saha.jpg"}
+                              alt={detailStudent.student_name}
+                              crossOrigin="anonymous"
+                              className="w-20 h-24 object-cover block grayscale contrast-105"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Subject Marks Breakdown Table */}
+                        <div className="border border-slate-800 overflow-hidden text-xs font-serif">
+                          <table className="w-full text-center border-collapse">
+                            <thead>
+                              <tr className="bg-[#0028a5] text-white font-bold uppercase text-[10px] tracking-wider">
+                                <th className="p-1.5 border-r border-blue-400 w-10">S.No.</th>
+                                <th className="p-1.5 border-r border-blue-400 text-left">
+                                  Subject Code &amp; Title
+                                </th>
+                                <th className="p-1.5 border-r border-blue-400 w-14">Max</th>
+                                <th className="p-1.5 border-r border-blue-400 w-14">Pass</th>
+                                <th className="p-1.5 border-r border-blue-400 w-14">Theory</th>
+                                <th className="p-1.5 border-r border-blue-400 w-14">Practical</th>
+                                <th className="p-1.5 border-r border-blue-400 w-16">Total</th>
+                                <th className="p-1.5 text-left">Marks in Words</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-300">
+                              {JSON.parse(detailStudent.subjects_json || "[]").map(
+                                (sub: SubjectMarks, i: number) => (
+                                  <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-blue-50/20"}>
+                                    <td className="p-1.5 border-r border-slate-300 font-mono font-bold">
+                                      {i + 1}
+                                    </td>
+                                    <td className="p-1.5 border-r border-slate-300 text-left font-bold text-slate-900">
+                                      {sub.code || sub.name}
+                                    </td>
+                                    <td className="p-1.5 border-r border-slate-300 font-mono">
+                                      {sub.max_marks || 100}
+                                    </td>
+                                    <td className="p-1.5 border-r border-slate-300 font-mono">
+                                      {sub.pass_marks || 33}
+                                    </td>
+                                    <td className="p-1.5 border-r border-slate-300 font-mono">
+                                      {sub.theory}
+                                    </td>
+                                    <td className="p-1.5 border-r border-slate-300 font-mono">
+                                      {sub.practical}
+                                    </td>
+                                    <td className="p-1.5 border-r border-slate-300 font-mono font-extrabold text-[#0028a5]">
+                                      {sub.total}
+                                    </td>
+                                    <td className="p-1.5 text-left font-mono font-bold text-slate-700 text-[11px] uppercase">
+                                      {sub.words}
+                                    </td>
+                                  </tr>
+                                ),
+                              )}
+                              <tr className="bg-slate-100 font-bold border-t-2 border-[#0028a5] text-slate-900">
+                                <td
+                                  colSpan={2}
+                                  className="p-1.5 border-r border-slate-400 uppercase text-left pl-3 font-black text-xs"
+                                >
+                                  CUMULATIVE TOTAL &amp; RESULT
+                                </td>
+                                <td
+                                  colSpan={4}
+                                  className="p-1.5 border-r border-slate-400 text-emerald-800 font-black uppercase text-xs"
+                                >
+                                  {detailStudent.status}
+                                </td>
+                                <td className="p-1.5 border-r border-slate-400 font-mono text-xs font-black text-[#0028a5]">
+                                  {detailStudent.total_marks}/{detailStudent.max_marks}
+                                </td>
+                                <td className="p-1.5 text-left font-mono font-extrabold text-[11px] uppercase">
+                                  {detailStudent.total_words} ({detailStudent.percentage}%)
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
 
-                      <div className="text-center">
-                        <img
-                          src="/bhse_controller_signature.png"
-                          alt="Controller Signature"
-                          className="h-10 mx-auto object-contain mb-1"
-                        />
-                        <div className="border-b-2 border-slate-900 pb-1 mb-1 font-mono font-black text-blue-950">
-                          DR. OMPRAKASH GUPTA
+                      {/* Bottom Signatures & Seal */}
+                      <div className="flex justify-between items-end pt-4 px-2 font-serif">
+                        <div className="flex items-end gap-5">
+                          <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                            <div>दिल्ली / Delhi</div>
+                            <div className="pt-1">
+                              Date:{" "}
+                              <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
+                                {detailStudent.result_declaration_date}
+                              </span>
+                            </div>
+                            <div className="pt-2 font-bold text-slate-700">
+                              Prepared &amp; Verified By
+                            </div>
+                          </div>
+
+                          {/* Official Board Seal */}
+                          <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#0028a5]/60 flex flex-col items-center justify-center text-center p-0.5 opacity-85 select-none bg-blue-50/30">
+                            <span className="text-[6px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
+                              BOARD OF HIGHER SECONDARY
+                            </span>
+                            <span className="text-[7.5px] font-black uppercase text-[#b8860b] my-0.5">
+                              ★ SEAL ★
+                            </span>
+                            <span className="text-[6px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
+                              EDUCATION DELHI
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-[11px] font-bold text-slate-900">
-                          Controller of Examinations
+
+                        {/* Right: Controller of Examinations Signature */}
+                        <div className="text-center space-y-0.5">
+                          <img
+                            src="/bhse_controller_signature.png"
+                            alt="Controller Signature"
+                            className="h-10 sm:h-12 mx-auto object-contain mb-1"
+                          />
+                          <div className="font-bold text-xs sm:text-sm text-[#0028a5] leading-tight">
+                            (ओमप्रकाश गुप्ता)
+                          </div>
+                          <div className="border-t border-slate-900 pt-0.5 mt-0.5 font-bold text-xs text-slate-900">
+                            परीक्षा नियंत्रक / Controller of Examinations
+                          </div>
+                          <div className="text-[10px] text-slate-600">
+                            Board of Higher Secondary Education, Delhi
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
             </div>
           </div>
         </div>
