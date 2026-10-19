@@ -2378,27 +2378,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                       {/* Bottom Signatures */}
                       <div className="flex justify-between items-end pt-6 px-2 mt-4 font-serif">
-                        <div className="flex items-end gap-5">
-                          <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
-                            <div>दिल्ली / Delhi</div>
-                            <div className="pt-1.5">
-                              Date of Issue:{" "}
-                              <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
-                                {detailStudent.result_declaration_date}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Official Seal */}
-                          <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#0028a5]/60 flex flex-col items-center justify-center text-center p-1 opacity-85 select-none bg-blue-50/30">
-                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
-                              BOARD OF HIGHER SECONDARY
-                            </span>
-                            <span className="text-[8.5px] font-black uppercase text-[#b8860b] my-0.5">
-                              ★ SEAL ★
-                            </span>
-                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
-                              EDUCATION DELHI
+                        <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                          <div>दिल्ली / Delhi</div>
+                          <div className="pt-1.5">
+                            Date of Issue:{" "}
+                            <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.result_declaration_date}
                             </span>
                           </div>
                         </div>
@@ -2630,31 +2615,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                       {/* Bottom Signatures */}
                       <div className="flex justify-between items-end pt-6 px-2 mt-4 font-serif">
-                        <div className="flex items-end gap-5">
-                          <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
-                            <div>दिल्ली / Delhi</div>
-                            <div className="pt-1.5">
-                              Date of Issue:{" "}
-                              <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
-                                {detailStudent.result_declaration_date}
-                              </span>
-                            </div>
-                            <div className="pt-3 font-bold text-slate-700">
-                              Prepared &amp; Verified By
-                            </div>
+                        <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                          <div>दिल्ली / Delhi</div>
+                          <div className="pt-1.5">
+                            Date of Issue:{" "}
+                            <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.result_declaration_date}
+                            </span>
                           </div>
-
-                          {/* Official Seal */}
-                          <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#0028a5]/60 flex flex-col items-center justify-center text-center p-1 opacity-85 select-none bg-blue-50/30">
-                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
-                              BOARD OF HIGHER SECONDARY
-                            </span>
-                            <span className="text-[8.5px] font-black uppercase text-[#b8860b] my-0.5">
-                              ★ SEAL ★
-                            </span>
-                            <span className="text-[7px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
-                              EDUCATION DELHI
-                            </span>
+                          <div className="pt-3 font-bold text-slate-700">
+                            Prepared &amp; Verified By
                           </div>
                         </div>
 
@@ -2959,33 +2929,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                         </div>
                       </div>
 
-                      {/* Bottom Signatures & Seal */}
+                      {/* Bottom Signatures */}
                       <div className="flex justify-between items-end pt-4 px-2 font-serif">
-                        <div className="flex items-end gap-5">
-                          <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
-                            <div>दिल्ली / Delhi</div>
-                            <div className="pt-1">
-                              Date:{" "}
-                              <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
-                                {detailStudent.result_declaration_date}
-                              </span>
-                            </div>
-                            <div className="pt-2 font-bold text-slate-700">
-                              Prepared &amp; Verified By
-                            </div>
+                        <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                          <div>दिल्ली / Delhi</div>
+                          <div className="pt-1">
+                            Date:{" "}
+                            <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
+                              {detailStudent.result_declaration_date}
+                            </span>
                           </div>
-
-                          {/* Official Board Seal */}
-                          <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#0028a5]/60 flex flex-col items-center justify-center text-center p-0.5 opacity-85 select-none bg-blue-50/30">
-                            <span className="text-[6px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
-                              BOARD OF HIGHER SECONDARY
-                            </span>
-                            <span className="text-[7.5px] font-black uppercase text-[#b8860b] my-0.5">
-                              ★ SEAL ★
-                            </span>
-                            <span className="text-[6px] font-black uppercase text-[#0028a5] tracking-tighter leading-none">
-                              EDUCATION DELHI
-                            </span>
+                          <div className="pt-2 font-bold text-slate-700">
+                            Prepared &amp; Verified By
                           </div>
                         </div>
 

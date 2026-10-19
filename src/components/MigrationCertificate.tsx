@@ -427,30 +427,15 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
 
               {/* Bottom Signature & Date Block */}
               <div className="flex justify-between items-end pt-3 sm:pt-4 px-2 mt-2 font-serif">
-                {/* Left: Date, City & Official Seal Stamp */}
-                <div className="flex items-end gap-5">
-                  <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
-                    <div>दिल्ली</div>
-                    <div className="font-mono text-xs text-slate-600">Delhi</div>
-                    <div className="pt-1.5">दिनांक</div>
-                    <div className="flex items-baseline gap-1">
-                      <span>Dated</span>
-                      <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-800 px-2">
-                        {issueDate}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Official Board Seal Stamp */}
-                  <div className="w-20 h-20 rounded-full border-2 border-dashed border-[#0c2356]/60 flex flex-col items-center justify-center text-center p-1 opacity-85 select-none bg-blue-50/30">
-                    <span className="text-[7px] font-black uppercase text-[#0c2356] tracking-tighter leading-none">
-                      BOARD OF HIGHER SECONDARY
-                    </span>
-                    <span className="text-[8.5px] font-black uppercase text-[#b8860b] my-0.5">
-                      ★ SEAL ★
-                    </span>
-                    <span className="text-[7px] font-black uppercase text-[#0c2356] tracking-tighter leading-none">
-                      EDUCATION DELHI
+                {/* Left: Date & City */}
+                <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
+                  <div>दिल्ली</div>
+                  <div className="font-mono text-xs text-slate-600">Delhi</div>
+                  <div className="pt-1.5">दिनांक</div>
+                  <div className="flex items-baseline gap-1">
+                    <span>Dated</span>
+                    <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-800 px-2">
+                      {issueDate}
                     </span>
                   </div>
                 </div>
