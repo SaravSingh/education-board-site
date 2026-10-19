@@ -320,13 +320,6 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   Subject Code
                 </Link>
-                <Link
-                  to="/regional-centre"
-                  onClick={() => setActiveDropdown(null)}
-                  className="block px-4 py-2 hover:bg-gray-800 hover:text-yellow-300 transition-colors cursor-pointer"
-                >
-                  Regional Centre
-                </Link>
               </div>
             )}
           </div>

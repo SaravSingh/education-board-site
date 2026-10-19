@@ -246,14 +246,7 @@ function SubjectCodePage() {
                     <span className="text-amber-500 font-bold">▸</span> Subject Code
                   </Link>
                 </li>
-                <li className="py-2.5">
-                  <Link
-                    to="/regional-centre"
-                    className="hover:text-amber-600 flex items-center gap-1.5"
-                  >
-                    <span className="text-amber-500 font-bold">▸</span> Regional Centre
-                  </Link>
-                </li>
+
                 <li className="py-2.5">
                   <Link
                     to="/result"
