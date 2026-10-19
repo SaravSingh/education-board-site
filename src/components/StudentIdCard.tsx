@@ -219,16 +219,18 @@ export const StudentIdCard: React.FC<StudentIdCardProps> = ({ student, onBack })
               <div className="text-center pt-1 w-full border-t border-gray-200">
                 <img
                   src="/bhse_controller_signature.png"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/cose_signature_clean.png";
-                  }}
-                  alt="Controller Signature"
-                  className="h-7 mx-auto object-contain"
+                  alt="Controller Signature (ओमप्रकाश गुप्ता)"
+                  className="h-8 mx-auto object-contain mb-0.5"
                 />
-                <div className="text-[9px] font-bold text-slate-800 uppercase leading-none">
+                <div className="text-[10px] font-bold text-[#0028a5] leading-tight">
+                  (ओमप्रकाश गुप्ता)
+                </div>
+                <div className="text-[9px] font-bold text-slate-800 leading-tight">
+                  परीक्षा नियंत्रक
+                </div>
+                <div className="text-[8.5px] font-semibold text-slate-600 uppercase leading-none">
                   Controller of Examination
                 </div>
-                <div className="text-[8px] text-gray-500">BHSE Delhi</div>
               </div>
             </div>
           </div>
