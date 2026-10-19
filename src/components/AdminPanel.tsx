@@ -257,7 +257,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
         document.querySelector<HTMLElement>(".printable-marksheet > div");
 
       if (!docElement) {
-        window.print();
+        handlePrintDocument();
         return;
       }
 
@@ -325,22 +325,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
       pdf.addImage(imgData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
 
-      const cleanName = detailStudent.student_name
-        ? detailStudent.student_name.trim().replace(/\s+/g, "_")
-        : "Student";
+      const roll = detailStudent.roll_no ? detailStudent.roll_no.trim() : "document";
       const docLabel =
         docTab === "MIGRATION"
-          ? "Migration_Certificate"
+          ? "migration"
           : docTab === "COSE_DEGREE"
-          ? "Degree_Certificate"
+          ? "degree"
           : docTab === "TC"
-          ? "Transfer_Certificate"
+          ? "tc"
           : docTab === "PROVISIONAL"
-          ? "Provisional_Certificate"
+          ? "provisional"
           : docTab === "TRANSCRIPT"
-          ? "Academic_Transcript"
-          : "Marksheet";
-      const fileName = `${cleanName}_${detailStudent.roll_no}_${docLabel}.pdf`;
+          ? "transcript"
+          : "marksheet";
+      const fileName = `${roll}_${docLabel}.pdf`;
 
       try {
         pdf.save(fileName);
@@ -357,10 +355,42 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
       }
     } catch (err) {
       console.error("PDF generation fallback:", err);
-      window.print();
+      handlePrintDocument();
     } finally {
       setIsExportingPdf(false);
     }
+  };
+
+  const handlePrintDocument = () => {
+    if (!detailStudent) {
+      window.print();
+      return;
+    }
+    const roll = detailStudent.roll_no ? detailStudent.roll_no.trim() : "document";
+    const docLabel =
+      docTab === "MIGRATION"
+        ? "migration"
+        : docTab === "COSE_DEGREE"
+        ? "degree"
+        : docTab === "TC"
+        ? "tc"
+        : docTab === "PROVISIONAL"
+        ? "provisional"
+        : docTab === "TRANSCRIPT"
+        ? "transcript"
+        : "marksheet";
+
+    const prevTitle = document.title;
+    document.title = `${roll}_${docLabel}`;
+
+    const restoreTitle = () => {
+      document.title = prevTitle;
+      window.removeEventListener("afterprint", restoreTitle);
+    };
+
+    window.addEventListener("afterprint", restoreTitle);
+    window.print();
+    setTimeout(restoreTitle, 2500);
   };
 
   // Edit existing student handler
@@ -1821,7 +1851,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                 {/* Print / PDF Button */}
                 <button
-                  onClick={() => window.print()}
+                  onClick={handlePrintDocument}
                   className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer flex items-center gap-1.5 active:scale-95 border border-blue-400"
                   title="Print active document on A4 sheet or Save as PDF"
                 >

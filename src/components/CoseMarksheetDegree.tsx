@@ -87,6 +87,28 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
     : "Secondary School Examination";
   const examSession = student.batch || `MAY ${student.exam_year || "2009"}`;
 
+  // Print handler with dynamic document title for "Save as PDF" naming
+  const handlePrint = useCallback(() => {
+    const roll = student.roll_no ? student.roll_no.trim() : "document";
+    const docLabel =
+      docType === "DEGREE"
+        ? "degree"
+        : docType === "MIGRATION"
+        ? "migration"
+        : "marksheet";
+    const prevTitle = document.title;
+    document.title = `${roll}_${docLabel}`;
+
+    const restoreTitle = () => {
+      document.title = prevTitle;
+      window.removeEventListener("afterprint", restoreTitle);
+    };
+
+    window.addEventListener("afterprint", restoreTitle);
+    window.print();
+    setTimeout(restoreTitle, 2500);
+  }, [student.roll_no, docType]);
+
   // Direct High-Resolution A4 Sheet Fit PDF Download
   const handleDownloadPdf = useCallback(async () => {
     const docElement = document.getElementById("bhse-degree-document");
@@ -155,11 +177,9 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
       // Standard A4 dimensions in mm: 210mm x 297mm (100% exact fit)
       pdf.addImage(imgData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
 
-      const cleanName = student.student_name
-        ? student.student_name.trim().replace(/\s+/g, "_")
-        : "Student";
-      const rollNo = student.roll_no || "Result";
-      const fileName = `${cleanName}_Roll_${rollNo}_Marksheet.pdf`;
+      const roll = student.roll_no ? student.roll_no.trim() : "document";
+      const docLabel = docType === "DEGREE" ? "degree" : docType === "MIGRATION" ? "migration" : "marksheet";
+      const fileName = `${roll}_${docLabel}.pdf`;
 
       // Multi-method download trigger to guarantee download works across all browsers
       try {
@@ -178,11 +198,11 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
     } catch (err) {
       console.error("PDF generation error:", err);
       // Fallback to native print dialog
-      window.print();
+      handlePrint();
     } finally {
       setIsGeneratingPdf(false);
     }
-  }, [student, isGeneratingPdf]);
+  }, [student, docType, isGeneratingPdf]);
 
   // Direct High-Resolution HD Image Download (JPG)
   const handleDownloadImage = useCallback(async () => {
@@ -238,11 +258,14 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         },
       });
 
-      const cleanName = student.student_name
-        ? student.student_name.trim().replace(/\s+/g, "_")
-        : "Student";
-      const rollNo = student.roll_no || "Result";
-      const fileName = `${cleanName}_Roll_${rollNo}_Marksheet.jpg`;
+      const roll = student.roll_no ? student.roll_no.trim() : "document";
+      const docLabel =
+        docType === "DEGREE"
+          ? "degree"
+          : docType === "MIGRATION"
+          ? "migration"
+          : "marksheet";
+      const fileName = `${roll}_${docLabel}.jpg`;
 
       const imgBlob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob(resolve, "image/jpeg", 0.95),
@@ -346,7 +369,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             {/* Print Button for A4 Sheet */}
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={handlePrint}
               className="px-4 py-2 bg-[#1b3f8b] hover:bg-[#122e6e] active:scale-95 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-2 cursor-pointer transition border border-[#1b3f8b]"
               title="Print Marksheet on A4 Sheet (or Save as PDF)"
             >

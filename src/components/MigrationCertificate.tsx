@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { StudentResult } from "@/lib/db";
 import { DocumentWatermarkBg } from "@/components/DocumentWatermarkBg";
 import { Printer, Download, ArrowLeft, Award, FileText, Loader2 } from "lucide-react";
@@ -35,11 +35,26 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
+  const handlePrint = useCallback(() => {
+    const roll = student.roll_no ? student.roll_no.trim() : "document";
+    const prevTitle = document.title;
+    document.title = `${roll}_migration`;
+
+    const restore = () => {
+      document.title = prevTitle;
+      window.removeEventListener("afterprint", restore);
+    };
+
+    window.addEventListener("afterprint", restore);
+    window.print();
+    setTimeout(restore, 2500);
+  }, [student.roll_no]);
+
   useEffect(() => {
     if (autoPrint) {
-      setTimeout(() => window.print(), 500);
+      setTimeout(() => handlePrint(), 500);
     }
-  }, [autoPrint]);
+  }, [autoPrint, handlePrint]);
 
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -49,7 +64,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
     try {
       const docElement = certRef.current || document.getElementById("bhse-migration-document");
       if (!docElement) {
-        window.print();
+        handlePrint();
         return;
       }
 
@@ -99,8 +114,8 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
 
       pdf.addImage(imgData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
 
-      const cleanName = student.student_name ? student.student_name.trim().replace(/\s+/g, "_") : "Student";
-      const fileName = `${cleanName}_${student.roll_no}_Migration_Certificate.pdf`;
+      const roll = student.roll_no ? student.roll_no.trim() : "document";
+      const fileName = `${roll}_migration.pdf`;
 
       try {
         pdf.save(fileName);
@@ -117,14 +132,10 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
       }
     } catch (err) {
       console.error("PDF download failed, falling back to print:", err);
-      window.print();
+      handlePrint();
     } finally {
       setIsDownloading(false);
     }
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const isClass12 =

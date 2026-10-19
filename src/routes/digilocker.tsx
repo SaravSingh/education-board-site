@@ -270,6 +270,21 @@ function DigiLockerPage() {
 
     const studentPhotoSrc = loggedInStudent.photo_url || mukeshPhoto;
 
+    const handlePrintMarksheet = () => {
+      const roll = loggedInStudent.roll_no ? loggedInStudent.roll_no.trim() : "document";
+      const prevTitle = document.title;
+      document.title = `${roll}_marksheet`;
+
+      const restore = () => {
+        document.title = prevTitle;
+        window.removeEventListener("afterprint", restore);
+      };
+
+      window.addEventListener("afterprint", restore);
+      window.print();
+      setTimeout(restore, 2500);
+    };
+
     return (
       <div className="min-h-screen bg-[#eaeff2] py-6 px-3 sm:px-4 font-sans text-slate-800">
         <style>{`
@@ -301,7 +316,7 @@ function DigiLockerPage() {
           {/* Print Marksheet Button */}
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={handlePrintMarksheet}
             className="bg-[#0066ff] hover:bg-[#0055d4] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
           >
             <Printer className="w-4 h-4" />

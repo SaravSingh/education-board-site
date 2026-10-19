@@ -25,10 +25,19 @@ export const StudentIdCard: React.FC<StudentIdCardProps> = ({ student, onBack })
 
   const handlePrint = () => {
     document.body.classList.add("printing-icard-only");
-    window.print();
-    setTimeout(() => {
+    const roll = student.roll_no ? student.roll_no.trim() : "student";
+    const prevTitle = document.title;
+    document.title = `${roll}_icard`;
+
+    const restore = () => {
+      document.title = prevTitle;
       document.body.classList.remove("printing-icard-only");
-    }, 1500);
+      window.removeEventListener("afterprint", restore);
+    };
+
+    window.addEventListener("afterprint", restore);
+    window.print();
+    setTimeout(restore, 2500);
   };
 
   const photoSrc =
