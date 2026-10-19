@@ -213,66 +213,73 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
         <div
           ref={certRef}
           id="bhse-migration-document"
-          className="bhse-certificate-document bg-white border-[6px] border-[#0c2356] relative flex flex-col justify-between origin-top transition-transform duration-200 shadow-2xl print:shadow-none print:transform-none print:w-full print:m-0 print:border-[5px]"
+          className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
           style={{
             transform: scale < 1 ? `scale(${scale})` : "none",
-            width: "794px",
-            minWidth: "794px",
-            maxWidth: "794px",
-            height: "1123px",
-            minHeight: "1123px",
-            padding: "10px",
             boxSizing: "border-box",
           }}
         >
-          {/* Inner Decorative Golden Security Border with Inset */}
-          <div className="relative w-full h-full border-2 border-[#b8860b] p-7 sm:p-9 flex flex-col justify-between overflow-hidden bg-white/95">
-            {/* Fine Inner Security Hairline */}
-            <div className="absolute inset-1 border border-[#0c2356]/30 pointer-events-none" />
+          {/* Authentic Continuous Security Micro-Pattern Watermark (Vector SVG DOM element - always renders in Print & PDF download) */}
+          <svg
+            className="bhse-bg-watermark absolute inset-0 w-full h-full pointer-events-none z-0"
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            height="100%"
+            style={{
+              opacity: 0.85,
+              WebkitPrintColorAdjust: "exact",
+              printColorAdjust: "exact",
+            }}
+          >
+            <defs>
+              <pattern
+                id="bhse-watermark-pattern-mig"
+                width="208"
+                height="9"
+                patternUnits="userSpaceOnUse"
+              >
+                <text
+                  x="0"
+                  y="7.4"
+                  fontFamily="'Arial', 'Helvetica Neue', Helvetica, sans-serif"
+                  fontSize="8"
+                  fontWeight="700"
+                  fill="#9bb2dd"
+                  textLength="208"
+                  lengthAdjust="spacingAndGlyphs"
+                >
+                  BOARD OF HIGHER SECONDARY EDUCATION DELHI&#160;
+                </text>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#bhse-watermark-pattern-mig)" />
+          </svg>
 
-            {/* Corner Ornamental Security Rosettes */}
-            <svg
-              className="absolute top-1 left-1 w-8 h-8 text-[#b8860b] pointer-events-none"
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path d="M2 14V2H14M2 2L10 10M6 2V6H2M2 10H10V2" />
-            </svg>
-            <svg
-              className="absolute top-1 right-1 w-8 h-8 text-[#b8860b] pointer-events-none"
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path d="M30 14V2H18M30 2L22 10M26 2V6H30M30 10H22V2" />
-            </svg>
-            <svg
-              className="absolute bottom-1 left-1 w-8 h-8 text-[#b8860b] pointer-events-none"
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path d="M2 18V30H14M2 30L10 22M6 30V26H2M2 22H10V30" />
-            </svg>
-            <svg
-              className="absolute bottom-1 right-1 w-8 h-8 text-[#b8860b] pointer-events-none"
-              viewBox="0 0 32 32"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path d="M30 18V30H18M30 30L22 22M26 30V26H30M30 22H22V30" />
-            </svg>
+          {/* CSS Pattern Fallback for html2canvas */}
+          <div
+            className="bhse-bg-watermark-bg absolute inset-0 pointer-events-none z-0 opacity-80"
+            style={{
+              backgroundImage:
+                'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA4IiBoZWlnaHQ9IjkiIHZpZXdCb3g9IjAgMCAyMDggOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSIwIiB5PSI3LjQiIGZvbnQtZmFtaWx5PSInQXJpYWwnLCAnaGVsdmV0aWNhIE5ldWUnLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzliYjJkZCIgdGV4dExlbmd0aD0iMjA4IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiPkJPQVJEIE9GIEhJR0hFUiBTRUNPTkRBUlkgRURVQ0FUSU9OIERFTEhJJiMxNjA7PC90ZXh0Pjwvc3ZnPg==")',
+              backgroundRepeat: "repeat",
+              backgroundSize: "208px 9px",
+              WebkitPrintColorAdjust: "exact",
+              printColorAdjust: "exact",
+            }}
+          />
 
-            {/* Authentic Security Background Pattern (Subtle & High Clarity) */}
-            <DocumentWatermarkBg opacity={0.16} emblemOpacity={0.05} showEmblem={true} />
+          {/* Large Central Board Emblem Watermark */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden select-none">
+            <img
+              src="/bhse_emblem_blue.png"
+              alt="Watermark"
+              crossOrigin="anonymous"
+              className="w-[480px] h-[430px] object-contain opacity-15 transform translate-y-8"
+            />
+          </div>
 
-            {/* Foreground Document Layer */}
-            <div className="relative z-10 h-full flex flex-col justify-between text-slate-900">
+          {/* Outer Dark Blue Border Frame Container (Exact same single blue border line as CoseMarksheetDegree) */}
+          <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-5 sm:p-7 flex flex-col justify-between">
               {/* Top Recognised Header Strip */}
               <div>
                 <div className="flex justify-between items-center text-xs font-bold text-slate-800 tracking-wider border-b border-slate-300 pb-1.5 px-1 font-serif">
@@ -470,6 +477,5 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };
