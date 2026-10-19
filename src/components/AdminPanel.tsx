@@ -44,6 +44,8 @@ import {
   Sparkles,
   Users,
   LogOut,
+  Download,
+  Loader2,
 } from "lucide-react";
 import logoEmblem from "@/assets/logo_emblem.svg";
 import digitalIndia from "@/assets/digital_india.svg";
@@ -54,6 +56,22 @@ import { DocumentWatermarkBg } from "@/components/DocumentWatermarkBg";
 interface AdminPanelProps {
   onBackToSite: () => void;
 }
+
+// Convert any image URL to an inline base64 Data URL to guarantee zero canvas tainting during PDF export
+const fetchAsDataUrl = async (url: string): Promise<string> => {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => resolve(url);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    return url;
+  }
+};
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   const [activeTab, setActiveTab] = useState<
@@ -221,6 +239,122 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     showMsg(
       `Student Roll No ${roll} status set to ${isNowHidden ? "HIDDEN (Off)" : "VISIBLE (On)"}`,
     );
+  };
+
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  // High-Resolution Direct PDF Download
+  const handleExportPdf = async () => {
+    if (!detailStudent || isExportingPdf) return;
+    setIsExportingPdf(true);
+    try {
+      const docElement =
+        document.getElementById("bhse-migration-document") ||
+        document.getElementById("bhse-degree-document") ||
+        document.querySelector<HTMLElement>(".printable-marksheet > div");
+
+      if (!docElement) {
+        window.print();
+        return;
+      }
+
+      // Pre-load all images to avoid blank spaces
+      const images = docElement.getElementsByTagName("img");
+      await Promise.all(
+        Array.from(images).map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((r) => {
+                img.onload = r;
+                img.onerror = r;
+              }),
+        ),
+      );
+      if (document.fonts) await document.fonts.ready;
+
+      const { default: html2canvas } = await import("html2canvas");
+      const { jsPDF } = await import("jspdf");
+
+      const canvas = await html2canvas(docElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200,
+        onclone: async (clonedDoc) => {
+          const target =
+            clonedDoc.getElementById("bhse-migration-document") ||
+            clonedDoc.getElementById("bhse-degree-document") ||
+            clonedDoc.querySelector<HTMLElement>(".printable-marksheet > div");
+          if (target) {
+            target.style.width = "794px";
+            target.style.maxWidth = "794px";
+            target.style.margin = "0 auto";
+            target.style.transform = "none";
+          }
+          const clonedImgs = clonedDoc.querySelectorAll<HTMLImageElement>(
+            "#bhse-migration-document img, #bhse-degree-document img, .printable-marksheet img",
+          );
+          await Promise.all(
+            Array.from(clonedImgs).map(async (img) => {
+              if (img.src && !img.src.startsWith("data:")) {
+                const dataUrl = await fetchAsDataUrl(img.src);
+                if (dataUrl) img.src = dataUrl;
+              }
+            }),
+          );
+        },
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.96);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+        compress: true,
+      });
+
+      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
+
+      const cleanName = detailStudent.student_name
+        ? detailStudent.student_name.trim().replace(/\s+/g, "_")
+        : "Student";
+      const docLabel =
+        docTab === "MIGRATION"
+          ? "Migration_Certificate"
+          : docTab === "COSE_DEGREE"
+          ? "Degree_Certificate"
+          : docTab === "TC"
+          ? "Transfer_Certificate"
+          : docTab === "PROVISIONAL"
+          ? "Provisional_Certificate"
+          : docTab === "TRANSCRIPT"
+          ? "Academic_Transcript"
+          : "Marksheet";
+      const fileName = `${cleanName}_${detailStudent.roll_no}_${docLabel}.pdf`;
+
+      try {
+        pdf.save(fileName);
+      } catch (saveErr) {
+        const blob = pdf.output("blob");
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+      }
+    } catch (err) {
+      console.error("PDF generation fallback:", err);
+      window.print();
+    } finally {
+      setIsExportingPdf(false);
+    }
   };
 
   // Edit existing student handler
@@ -418,12 +552,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans select-none">
-      {/* 1. TOP ADMIN HEADER */}
-      <header className="bg-slate-950 border-b border-slate-800 px-3 sm:px-6 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sticky top-0 z-40 shadow-xl">
-        <div className="flex items-center gap-3">
-          <div className="bg-amber-500 text-slate-950 p-2 rounded-lg font-bold shrink-0">
-            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
+      {/* Background Admin Dashboard - completely hidden in print when a student detail modal is open */}
+      <div className={`flex flex-col flex-1 ${detailStudent || isEditModalOpen || isAddModalOpen ? "print:hidden" : ""}`}>
+        {/* 1. TOP ADMIN HEADER */}
+        <header className="bg-slate-950 border-b border-slate-800 px-3 sm:px-6 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sticky top-0 z-40 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="bg-amber-500 text-slate-950 p-2 rounded-lg font-bold shrink-0">
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
           <div>
             <h1 className="font-extrabold text-sm sm:text-base lg:text-lg text-white font-serif tracking-wide flex flex-wrap items-center gap-2">
               <span>BHSE Delhi — Dynamic Admin Panel</span>
@@ -1583,11 +1719,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
           )}
         </main>
       </div>
+      </div>
 
       {/* 3. FULL COMPREHENSIVE STUDENT DETAIL MODAL */}
       {detailStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 lg:p-6 overflow-y-auto text-slate-900 font-sans">
-          <div className="w-full max-w-5xl my-2 sm:my-6 bg-white rounded-xl shadow-2xl border-2 border-slate-300 overflow-hidden relative animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 lg:p-6 overflow-y-auto text-slate-900 font-sans print:static print:p-0 print:m-0 print:bg-white print:overflow-visible print:w-full print:h-auto print:block">
+          <div className="w-full max-w-5xl my-2 sm:my-6 bg-white rounded-xl shadow-2xl border-2 border-slate-300 overflow-hidden relative animate-fade-in print:my-0 print:p-0 print:shadow-none print:border-none print:w-full print:h-auto print:max-w-none print:overflow-visible print:rounded-none">
             {/* Header Control Strip - Student Identity & Record Actions */}
             <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 text-white px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 shadow-md">
               <div className="flex items-center gap-3 min-w-0">
@@ -1656,6 +1793,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   <span>Edit Record</span>
                 </button>
 
+                {/* Download PDF Button */}
+                <button
+                  onClick={handleExportPdf}
+                  disabled={isExportingPdf}
+                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer flex items-center gap-1.5 active:scale-95 border border-emerald-400 disabled:opacity-60"
+                  title="Directly download high-resolution PDF file to your device"
+                >
+                  {isExportingPdf ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+                      <span>Generating PDF...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-3.5 h-3.5 text-white" />
+                      <span>Download PDF</span>
+                    </>
+                  )}
+                </button>
+
                 {/* Print / PDF Button */}
                 <button
                   onClick={() => window.print()}
@@ -1663,7 +1820,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   title="Print active document on A4 sheet or Save as PDF"
                 >
                   <Printer className="w-3.5 h-3.5 text-yellow-300" />
-                  <span>Print / PDF</span>
+                  <span>Print (A4)</span>
                 </button>
 
                 {/* Close Button */}
@@ -1810,7 +1967,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
             </div>
 
             {/* DOCUMENT CANVAS CONTAINER */}
-            <div className="p-4 sm:p-8 max-h-[75vh] overflow-y-auto printable-marksheet">
+            <div className="p-4 sm:p-8 max-h-[75vh] overflow-y-auto printable-marksheet print:p-0 print:m-0 print:max-h-none print:overflow-visible print:block">
               {/* DOCUMENT VIEW 0: COSE ORIGINAL MARKSHEET & DEGREE */}
               {(docTab === "COSE_MARKSHEET" || docTab === "COSE_DEGREE") && detailStudent && (
                 <CoseMarksheetDegree
@@ -2173,7 +2330,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 4: MIGRATION CERTIFICATE */}
               {docTab === "MIGRATION" && (
-                <div className="w-full flex justify-center py-2">
+                <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
                   <MigrationCertificate student={detailStudent} hideToolbar={true} />
                 </div>
               )}

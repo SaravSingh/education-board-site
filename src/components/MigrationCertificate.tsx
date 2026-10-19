@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { StudentResult } from "@/lib/db";
 import { DocumentWatermarkBg } from "@/components/DocumentWatermarkBg";
-import { Printer, Download, ArrowLeft, Award, FileText } from "lucide-react";
+import { Printer, Download, ArrowLeft, Award, FileText, Loader2 } from "lucide-react";
 
 interface MigrationCertificateProps {
   student: StudentResult;
@@ -40,6 +40,88 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
       setTimeout(() => window.print(), 500);
     }
   }, [autoPrint]);
+
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadPdf = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    try {
+      const docElement = certRef.current || document.getElementById("bhse-migration-document");
+      if (!docElement) {
+        window.print();
+        return;
+      }
+
+      const images = docElement.getElementsByTagName("img");
+      await Promise.all(
+        Array.from(images).map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((r) => {
+                img.onload = r;
+                img.onerror = r;
+              }),
+        ),
+      );
+      if (document.fonts) await document.fonts.ready;
+
+      const { default: html2canvas } = await import("html2canvas");
+      const { jsPDF } = await import("jspdf");
+
+      const canvas = await html2canvas(docElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const target = clonedDoc.getElementById("bhse-migration-document");
+          if (target) {
+            target.style.width = "794px";
+            target.style.maxWidth = "794px";
+            target.style.margin = "0 auto";
+            target.style.transform = "none";
+          }
+        },
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.96);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+        compress: true,
+      });
+
+      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
+
+      const cleanName = student.student_name ? student.student_name.trim().replace(/\s+/g, "_") : "Student";
+      const fileName = `${cleanName}_${student.roll_no}_Migration_Certificate.pdf`;
+
+      try {
+        pdf.save(fileName);
+      } catch (err) {
+        const blob = pdf.output("blob");
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      }
+    } catch (err) {
+      console.error("PDF download failed, falling back to print:", err);
+      window.print();
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const handlePrint = () => {
     window.print();
@@ -86,6 +168,28 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
               <span>स्थानान्तरण प्रमाण - पत्र (Migration Certificate)</span>
             </div>
 
+            {/* Direct High-Resolution PDF Download */}
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              disabled={isDownloading}
+              className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-1.5 cursor-pointer transition border border-emerald-600 disabled:opacity-60"
+              title="Download High-Resolution PDF Certificate"
+            >
+              {isDownloading ? (
+                <>
+                  <Loader2 className="w-4 h-4 text-white animate-spin" />
+                  <span>Generating PDF...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 text-emerald-200" />
+                  <span>Download PDF</span>
+                </>
+              )}
+            </button>
+
+            {/* Print Certificate Button */}
             <button
               type="button"
               onClick={handlePrint}
@@ -109,7 +213,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
         <div
           ref={certRef}
           id="bhse-migration-document"
-          className="bhse-certificate-document bg-white border-[6px] border-[#0c2356] relative flex flex-col justify-between origin-top transition-transform duration-200 shadow-2xl print:shadow-none print:transform-none! print:w-[210mm] print:h-[296.5mm] print:m-0 print:border-[5px]"
+          className="bhse-certificate-document bg-white border-[6px] border-[#0c2356] relative flex flex-col justify-between origin-top transition-transform duration-200 shadow-2xl print:shadow-none print:transform-none print:w-full print:m-0 print:border-[5px]"
           style={{
             transform: scale < 1 ? `scale(${scale})` : "none",
             width: "794px",
