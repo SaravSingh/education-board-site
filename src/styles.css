@@ -261,6 +261,49 @@
     background: #ffffff !important;
   }
 
+  /* Single-Page Clean Print Rules for Student Identity Card */
+  body.printing-icard-only,
+  body:has(#printable-icard) {
+    background: #ffffff !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.printing-icard-only #root,
+  body.printing-icard-only main,
+  body.printing-icard-only .min-h-screen,
+  body:has(#printable-icard) #root,
+  body:has(#printable-icard) main,
+  body:has(#printable-icard) .min-h-screen {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  #printable-icard {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    margin: 15mm auto !important;
+    max-width: 600px !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: 2px solid #002b7f !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   /* Official Document Print Rules (100% Exact Single-Page Fit for A4 Sheet) */
   .bhse-certificate-document,
   .bhse-certificate-document * {

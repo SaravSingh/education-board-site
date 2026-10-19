@@ -85,14 +85,16 @@ function EnrollmentVerificationPage() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800 flex flex-col font-sans w-full overflow-x-hidden">
       {/* Top Header & Navbar */}
-      <Header
-        onAdminClick={() => setIsAdminOpen(true)}
-        onResultClick={() => navigate({ to: "/result" })}
-        onVerificationClick={() => navigate({ to: "/enrollment-verification" })}
-      />
+      <div className="print:hidden">
+        <Header
+          onAdminClick={() => setIsAdminOpen(true)}
+          onResultClick={() => navigate({ to: "/result" })}
+          onVerificationClick={() => navigate({ to: "/enrollment-verification" })}
+        />
+      </div>
 
       {/* Breadcrumb banner */}
-      <div className="w-full bg-slate-200 border-b border-gray-300 py-2.5 px-4 text-xs font-semibold text-slate-600">
+      <div className="w-full bg-slate-200 border-b border-gray-300 py-2.5 px-4 text-xs font-semibold text-slate-600 print:hidden">
         <div className="max-w-7xl mx-auto flex items-center gap-2">
           <Link to="/" className="text-blue-800 hover:underline flex items-center gap-1">
             <HomeIcon className="w-3.5 h-3.5" /> Home
@@ -108,7 +110,7 @@ function EnrollmentVerificationPage() {
       <main className="w-full max-w-7xl mx-auto px-4 py-8 flex-1">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           {/* Left Column: Quick Link Sidebar */}
-          <div className="md:col-span-4 lg:col-span-3 space-y-8">
+          <div className="md:col-span-4 lg:col-span-3 space-y-8 print:hidden">
             <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
               <h3 className="font-serif italic text-xl font-bold text-gray-700 border-b-2 border-gray-300 pb-1 mb-3">
                 Quick Link
@@ -184,13 +186,13 @@ function EnrollmentVerificationPage() {
           </div>
 
           {/* Right Column: Search Form and I-Card Display */}
-          <div className="md:col-span-8 lg:col-span-9 space-y-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-700 uppercase tracking-wide">
+          <div className="md:col-span-8 lg:col-span-9 space-y-6 print:col-span-12 print:w-full print:m-0 print:p-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-700 uppercase tracking-wide print:hidden">
               ENROLLMENT VERIFICATION
             </h2>
 
             {/* Verification Form Card (Exact visual match to user screenshot) */}
-            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8">
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 sm:p-8 print:hidden">
               <form onSubmit={handleSearch} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                   {/* CANDIDATE NAME */}
@@ -308,7 +310,7 @@ function EnrollmentVerificationPage() {
 
             {/* Error / Not Found Alert */}
             {searched && errorMessage && (
-              <div className="bg-amber-50 border-2 border-amber-400 text-amber-950 p-4 rounded-lg text-xs space-y-1 flex items-start gap-3 shadow-xs animate-fade-in">
+              <div className="bg-amber-50 border-2 border-amber-400 text-amber-950 p-4 rounded-lg text-xs space-y-1 flex items-start gap-3 shadow-xs animate-fade-in print:hidden">
                 <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-sm font-bold block">No Record Found</strong>
@@ -319,8 +321,8 @@ function EnrollmentVerificationPage() {
 
             {/* Student I-Card Output */}
             {foundStudent && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="text-center font-bold text-gray-700 text-sm">
+              <div className="space-y-4 animate-fade-in print:m-0 print:p-0">
+                <div className="text-center font-bold text-gray-700 text-sm print:hidden">
                   Verified Student Identity Card
                 </div>
                 <StudentIdCard student={foundStudent} onBack={handleCancel} />
@@ -331,7 +333,7 @@ function EnrollmentVerificationPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-[#002b7f] text-white py-6 text-xs text-center border-t-2 border-yellow-400 mt-auto">
+      <footer className="w-full bg-[#002b7f] text-white py-6 text-xs text-center border-t-2 border-yellow-400 mt-auto print:hidden">
         <div className="max-w-7xl mx-auto px-4 space-y-2">
           <p className="font-semibold">
             © {new Date().getFullYear()} Board of Higher Secondary Education, Delhi. All Rights

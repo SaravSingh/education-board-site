@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { StudentResult } from "@/lib/db";
 import { Printer, Download, ArrowLeft, ShieldCheck, CheckCircle2 } from "lucide-react";
 import logoEmblem from "@/assets/logo_emblem.svg";
@@ -11,8 +11,24 @@ interface StudentIdCardProps {
 export const StudentIdCard: React.FC<StudentIdCardProps> = ({ student, onBack }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const onBefore = () => document.body.classList.add("printing-icard-only");
+    const onAfter = () => document.body.classList.remove("printing-icard-only");
+    window.addEventListener("beforeprint", onBefore);
+    window.addEventListener("afterprint", onAfter);
+    return () => {
+      window.removeEventListener("beforeprint", onBefore);
+      window.removeEventListener("afterprint", onAfter);
+      document.body.classList.remove("printing-icard-only");
+    };
+  }, []);
+
   const handlePrint = () => {
+    document.body.classList.add("printing-icard-only");
     window.print();
+    setTimeout(() => {
+      document.body.classList.remove("printing-icard-only");
+    }, 1500);
   };
 
   const photoSrc =
