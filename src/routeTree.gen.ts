@@ -16,6 +16,7 @@ import { Route as AffiliatedSchoolRouteImport } from './routes/affiliated-school
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DigiLockerRouteImport } from './routes/digi-locker'
 import { Route as DigilockerRouteImport } from './routes/digilocker'
+import { Route as EnrollmentVerificationRouteImport } from './routes/enrollment-verification'
 import { Route as ExaminationRouteImport } from './routes/examination'
 import { Route as HolidayListRouteImport } from './routes/holiday-list'
 import { Route as RegionalCentreRouteImport } from './routes/regional-centre'
@@ -58,6 +59,11 @@ const DigilockerRoute = DigilockerRouteImport.update({
   path: '/digilocker',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnrollmentVerificationRoute = EnrollmentVerificationRouteImport.update({
+  id: '/enrollment-verification',
+  path: '/enrollment-verification',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExaminationRoute = ExaminationRouteImport.update({
   id: '/examination',
   path: '/examination',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/digi-locker': typeof DigiLockerRoute
   '/digilocker': typeof DigilockerRoute
+  '/enrollment-verification': typeof EnrollmentVerificationRoute
   '/examination': typeof ExaminationRoute
   '/holiday-list': typeof HolidayListRoute
   '/regional-centre': typeof RegionalCentreRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/digi-locker': typeof DigiLockerRoute
   '/digilocker': typeof DigilockerRoute
+  '/enrollment-verification': typeof EnrollmentVerificationRoute
   '/examination': typeof ExaminationRoute
   '/holiday-list': typeof HolidayListRoute
   '/regional-centre': typeof RegionalCentreRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/digi-locker': typeof DigiLockerRoute
   '/digilocker': typeof DigilockerRoute
+  '/enrollment-verification': typeof EnrollmentVerificationRoute
   '/examination': typeof ExaminationRoute
   '/holiday-list': typeof HolidayListRoute
   '/regional-centre': typeof RegionalCentreRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/digi-locker'
     | '/digilocker'
+    | '/enrollment-verification'
     | '/examination'
     | '/holiday-list'
     | '/regional-centre'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/digi-locker'
     | '/digilocker'
+    | '/enrollment-verification'
     | '/examination'
     | '/holiday-list'
     | '/regional-centre'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/digi-locker'
     | '/digilocker'
+    | '/enrollment-verification'
     | '/examination'
     | '/holiday-list'
     | '/regional-centre'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DigiLockerRoute: typeof DigiLockerRoute
   DigilockerRoute: typeof DigilockerRoute
+  EnrollmentVerificationRoute: typeof EnrollmentVerificationRoute
   ExaminationRoute: typeof ExaminationRoute
   HolidayListRoute: typeof HolidayListRoute
   RegionalCentreRoute: typeof RegionalCentreRoute
@@ -250,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DigilockerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/enrollment-verification': {
+      id: '/enrollment-verification'
+      path: '/enrollment-verification'
+      fullPath: '/enrollment-verification'
+      preLoaderRoute: typeof EnrollmentVerificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/examination': {
       id: '/examination'
       path: '/examination'
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DigiLockerRoute: DigiLockerRoute,
   DigilockerRoute: DigilockerRoute,
+  EnrollmentVerificationRoute: EnrollmentVerificationRoute,
   ExaminationRoute: ExaminationRoute,
   HolidayListRoute: HolidayListRoute,
   RegionalCentreRoute: RegionalCentreRoute,

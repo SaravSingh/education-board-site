@@ -4,16 +4,25 @@ import logoEmblem from "@/assets/logo_emblem.svg";
 import digitalIndia from "@/assets/digital_india.svg";
 
 interface HeaderProps {
-  onOpenAdminLogin: () => void;
-  onOpenResult: () => void;
-  onOpenVerification: () => void;
+  onOpenAdminLogin?: () => void;
+  onOpenResult?: () => void;
+  onOpenVerification?: () => void;
+  onAdminClick?: () => void;
+  onResultClick?: () => void;
+  onVerificationClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenAdminLogin,
   onOpenResult,
   onOpenVerification,
+  onAdminClick,
+  onResultClick,
+  onVerificationClick,
 }) => {
+  const handleAdmin = onOpenAdminLogin || onAdminClick;
+  const handleResult = onOpenResult || onResultClick;
+  const handleVerification = onOpenVerification || onVerificationClick;
   const [formattedTime, setFormattedTime] = useState("");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -253,37 +262,42 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          {/* ADMISSION Dropdown */}
-          <div className="relative">
+          {/* ADMISSION Dropdown (Matching Screenshot with Black Dropdown) */}
+          <div
+            className="relative"
+            onMouseEnter={() => setActiveDropdown("admission")}
+            onMouseLeave={() => setActiveDropdown(null)}
+          >
             <button
               onClick={() => toggleDropdown("admission")}
-              className="px-2.5 sm:px-3 lg:px-3.5 py-2.5 hover:bg-blue-900 uppercase tracking-wide flex items-center gap-1 border-r border-blue-800/40 cursor-pointer"
+              className={`px-2.5 sm:px-3 lg:px-3.5 py-2.5 hover:bg-blue-900 uppercase tracking-wide flex items-center gap-1 border-r border-blue-800/40 cursor-pointer transition ${
+                activeDropdown === "admission"
+                  ? "text-yellow-400 bg-blue-900 font-extrabold"
+                  : "text-white hover:text-yellow-300"
+              }`}
             >
               ▾ ADMISSION
             </button>
             {activeDropdown === "admission" && (
-              <div className="absolute left-0 top-full bg-white text-gray-800 shadow-xl border border-gray-200 rounded-b w-56 py-1 z-30 font-normal">
+              <div className="absolute left-0 top-full bg-black text-white shadow-2xl border border-gray-800 w-56 py-1.5 z-30 font-semibold rounded-b text-xs divide-y divide-gray-800">
                 <a
                   href="#"
-                  onClick={() => setActiveDropdown(null)}
-                  className="block px-4 py-2 hover:bg-blue-50 text-xs"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveDropdown(null);
+                    alert("Online Admission session portal for the upcoming session is open.");
+                  }}
+                  className="block px-4 py-2 hover:bg-gray-800 hover:text-yellow-300 transition-colors cursor-pointer"
                 >
-                  Admission Rules Class X &amp; XII
+                  Online Admission
                 </a>
-                <a
-                  href="#"
+                <Link
+                  to="/enrollment-verification"
                   onClick={() => setActiveDropdown(null)}
-                  className="block px-4 py-2 hover:bg-blue-50 text-xs"
+                  className="block px-4 py-2 hover:bg-gray-800 hover:text-yellow-300 transition-colors cursor-pointer"
                 >
-                  Direct Student Registration
-                </a>
-                <a
-                  href="#"
-                  onClick={() => setActiveDropdown(null)}
-                  className="block px-4 py-2 hover:bg-blue-50 text-xs"
-                >
-                  Prospectus &amp; Forms
-                </a>
+                  Enrollment Verification
+                </Link>
               </div>
             )}
           </div>
