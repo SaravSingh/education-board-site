@@ -48,6 +48,8 @@ import {
 import logoEmblem from "@/assets/logo_emblem.svg";
 import digitalIndia from "@/assets/digital_india.svg";
 import { CoseMarksheetDegree } from "@/components/CoseMarksheetDegree";
+import { MigrationCertificate } from "@/components/MigrationCertificate";
+import { DocumentWatermarkBg } from "@/components/DocumentWatermarkBg";
 
 interface AdminPanelProps {
   onBackToSite: () => void;
@@ -2003,52 +2005,62 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 2: PROVISIONAL CERTIFICATE */}
               {docTab === "PROVISIONAL" && (
-                <div className="border-4 border-amber-600 p-6 rounded-lg bg-amber-50/30 space-y-6 text-center font-serif">
-                  <div className="border-b-2 border-amber-600 pb-4">
-                    <img
-                      src={logoEmblem}
-                      alt="Emblem"
-                      className="w-20 h-20 object-contain mx-auto mb-2"
-                    />
-                    <h2 className="text-2xl font-black text-[#1d359c] uppercase">
-                      Board of Higher Secondary Education, Delhi
-                    </h2>
-                    <p className="text-xs text-slate-700 font-sans">
-                      Govt. of Delhi Regd. No. 275 (India) | An Autonomous Organisation under Deptt.
-                      of School Education &amp; Literacy
-                    </p>
-                    <div className="inline-block mt-3 px-6 py-1 bg-amber-600 text-white font-extrabold text-sm uppercase tracking-widest rounded shadow-sm">
-                      PROVISIONAL PASS CERTIFICATE
-                    </div>
-                  </div>
-
-                  <div className="space-y-4 text-slate-800 text-sm leading-relaxed max-w-2xl mx-auto py-4 font-sans">
-                    <p>
-                      This is to certify that <strong>{detailStudent.student_name}</strong>,
-                      Son/Daughter of <strong>{detailStudent.father_name}</strong> &amp;{" "}
-                      <strong>{detailStudent.mother_name}</strong>, Roll No.{" "}
-                      <strong className="font-mono text-blue-900">{detailStudent.roll_no}</strong>,
-                      Enrollment No.{" "}
-                      <strong className="font-mono">{detailStudent.enrollment_no}</strong>, student
-                      of <strong>{detailStudent.school_name}</strong> has passed the{" "}
-                      <strong>{detailStudent.course}</strong> Examination held in the session year{" "}
-                      <strong>{detailStudent.exam_year}</strong> and has been placed in{" "}
-                      <strong>{detailStudent.status}</strong>.
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between items-end pt-8 font-sans text-xs text-slate-700">
-                    <div className="text-left">
-                      <div>
-                        Date of Issue: <strong>{detailStudent.result_declaration_date}</strong>
+                <div className="border-4 border-amber-600 p-6 rounded-lg bg-white space-y-6 text-center font-serif relative overflow-hidden">
+                  <DocumentWatermarkBg opacity={0.85} emblemOpacity={0.08} />
+                  <div className="relative z-10">
+                    <div className="border-b-2 border-amber-600 pb-4">
+                      <img
+                        src={logoEmblem}
+                        alt="Emblem"
+                        className="w-20 h-20 object-contain mx-auto mb-2"
+                      />
+                      <h2 className="text-2xl font-black text-[#1d359c] uppercase">
+                        Board of Higher Secondary Education, Delhi
+                      </h2>
+                      <p className="text-xs text-slate-700 font-sans">
+                        Govt. of Delhi Regd. No. 275 (India) | An Autonomous Organisation under Deptt.
+                        of School Education &amp; Literacy
+                      </p>
+                      <div className="inline-block mt-3 px-6 py-1 bg-amber-600 text-white font-extrabold text-sm uppercase tracking-widest rounded shadow-sm">
+                        PROVISIONAL PASS CERTIFICATE
                       </div>
-                      <div>Delhi, India</div>
                     </div>
-                    <div className="text-center font-bold text-slate-900">
-                      <div className="border-b border-slate-700 pb-1 mb-1 font-mono">
-                        DR. A.K. SHARMA
+
+                    <div className="space-y-4 text-slate-800 text-sm leading-relaxed max-w-2xl mx-auto py-4 font-sans">
+                      <p>
+                        This is to certify that <strong>{detailStudent.student_name}</strong>,
+                        Son/Daughter of <strong>{detailStudent.father_name}</strong> &amp;{" "}
+                        <strong>{detailStudent.mother_name}</strong>, Roll No.{" "}
+                        <strong className="font-mono text-blue-900">{detailStudent.roll_no}</strong>,
+                        Enrollment No.{" "}
+                        <strong className="font-mono">{detailStudent.enrollment_no}</strong>, student
+                        of <strong>{detailStudent.school_name}</strong> has passed the{" "}
+                        <strong>{detailStudent.course}</strong> Examination held in the session year{" "}
+                        <strong>{detailStudent.exam_year}</strong> and has been placed in{" "}
+                        <strong>{detailStudent.status}</strong>.
+                      </p>
+                    </div>
+
+                    <div className="flex justify-between items-end pt-8 font-sans text-xs text-slate-700">
+                      <div className="text-left">
+                        <div>
+                          Date of Issue: <strong>{detailStudent.result_declaration_date}</strong>
+                        </div>
+                        <div>Delhi, India</div>
                       </div>
-                      <div>Controller of Examinations</div>
+                      <div className="text-center font-bold text-slate-900">
+                        <img
+                          src="/bhse_controller_signature.png"
+                          alt="Controller Signature"
+                          className="h-9 mx-auto object-contain mb-1"
+                        />
+                        <div className="text-xs font-bold text-[#0028a5] leading-tight">
+                          (ओमप्रकाश गुप्ता)
+                        </div>
+                        <div className="text-[11px] font-bold text-slate-800">
+                          परीक्षा नियंत्रक / Controller of Examinations
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2056,72 +2068,75 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 3: TRANSFER CERTIFICATE (TC) */}
               {docTab === "TC" && (
-                <div className="border-4 border-slate-800 p-6 rounded-lg bg-white space-y-6 text-slate-900 font-sans">
-                  <div className="text-center border-b-2 border-slate-800 pb-4">
-                    <img
-                      src={logoEmblem}
-                      alt="Emblem"
-                      className="w-16 h-16 object-contain mx-auto mb-1"
-                    />
-                    <h2 className="text-xl font-bold text-slate-900 font-serif uppercase">
-                      {detailStudent.school_name}
-                    </h2>
-                    <p className="text-xs text-slate-600">
-                      Affiliated to Board of Higher Secondary Education, Delhi (School Code:{" "}
-                      {detailStudent.school_code})
-                    </p>
-                    <div className="inline-block mt-2 px-6 py-1 bg-slate-900 text-white font-extrabold text-xs uppercase tracking-widest rounded">
-                      SCHOOL TRANSFER CERTIFICATE (TC)
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 text-xs font-semibold leading-loose border-b pb-4">
-                    <div>
-                      TC Serial No:{" "}
-                      <strong className="font-mono text-blue-900">
-                        TC/{detailStudent.exam_year}/{detailStudent.roll_no}
-                      </strong>
-                    </div>
-                    <div>
-                      Admission No: <strong className="font-mono">{detailStudent.serial_no}</strong>
-                    </div>
-                    <div>
-                      Student Name:{" "}
-                      <strong className="uppercase">{detailStudent.student_name}</strong>
-                    </div>
-                    <div>
-                      Date of Birth: <strong>{detailStudent.dob}</strong>
-                    </div>
-                    <div>
-                      Father's Name:{" "}
-                      <strong className="uppercase">{detailStudent.father_name}</strong>
-                    </div>
-                    <div>
-                      Mother's Name:{" "}
-                      <strong className="uppercase">{detailStudent.mother_name}</strong>
-                    </div>
-                    <div>
-                      Class Last Attended: <strong>{detailStudent.course}</strong>
-                    </div>
-                    <div>
-                      Board Exam Result:{" "}
-                      <strong className="text-emerald-800">{detailStudent.status}</strong>
-                    </div>
-                    <div>
-                      General Conduct: <strong>GOOD &amp; SATISFACTORY</strong>
-                    </div>
-                    <div>
-                      Reason for Leaving: <strong>HIGHER STUDIES / COMPLETED COURSE</strong>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-end pt-4 text-xs font-semibold">
-                    <div>Verified Officer Signature</div>
-                    <div className="text-center font-bold">
-                      <div className="border-b border-slate-900 pb-1 mb-1">
-                        PRINCIPAL / HEAD OF INSTITUTION
+                <div className="border-4 border-slate-800 p-6 rounded-lg bg-white space-y-6 text-slate-900 font-sans relative overflow-hidden">
+                  <DocumentWatermarkBg opacity={0.85} emblemOpacity={0.08} />
+                  <div className="relative z-10">
+                    <div className="text-center border-b-2 border-slate-800 pb-4">
+                      <img
+                        src={logoEmblem}
+                        alt="Emblem"
+                        className="w-16 h-16 object-contain mx-auto mb-1"
+                      />
+                      <h2 className="text-xl font-bold text-slate-900 font-serif uppercase">
+                        {detailStudent.school_name}
+                      </h2>
+                      <p className="text-xs text-slate-600">
+                        Affiliated to Board of Higher Secondary Education, Delhi (School Code:{" "}
+                        {detailStudent.school_code})
+                      </p>
+                      <div className="inline-block mt-2 px-6 py-1 bg-slate-900 text-white font-extrabold text-xs uppercase tracking-widest rounded">
+                        SCHOOL TRANSFER CERTIFICATE (TC)
                       </div>
-                      <div>{detailStudent.school_name}</div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 text-xs font-semibold leading-loose border-b pb-4">
+                      <div>
+                        TC Serial No:{" "}
+                        <strong className="font-mono text-blue-900">
+                          TC/{detailStudent.exam_year}/{detailStudent.roll_no}
+                        </strong>
+                      </div>
+                      <div>
+                        Admission No: <strong className="font-mono">{detailStudent.serial_no}</strong>
+                      </div>
+                      <div>
+                        Student Name:{" "}
+                        <strong className="uppercase">{detailStudent.student_name}</strong>
+                      </div>
+                      <div>
+                        Date of Birth: <strong>{detailStudent.dob}</strong>
+                      </div>
+                      <div>
+                        Father's Name:{" "}
+                        <strong className="uppercase">{detailStudent.father_name}</strong>
+                      </div>
+                      <div>
+                        Mother's Name:{" "}
+                        <strong className="uppercase">{detailStudent.mother_name}</strong>
+                      </div>
+                      <div>
+                        Class Last Attended: <strong>{detailStudent.course}</strong>
+                      </div>
+                      <div>
+                        Board Exam Result:{" "}
+                        <strong className="text-emerald-800">{detailStudent.status}</strong>
+                      </div>
+                      <div>
+                        General Conduct: <strong>GOOD &amp; SATISFACTORY</strong>
+                      </div>
+                      <div>
+                        Reason for Leaving: <strong>HIGHER STUDIES / COMPLETED COURSE</strong>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-end pt-4 text-xs font-semibold">
+                      <div>Verified Officer Signature</div>
+                      <div className="text-center font-bold">
+                        <div className="border-b border-slate-900 pb-1 mb-1">
+                          PRINCIPAL / HEAD OF INSTITUTION
+                        </div>
+                        <div>{detailStudent.school_name}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2129,51 +2144,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
               {/* DOCUMENT VIEW 4: MIGRATION CERTIFICATE */}
               {docTab === "MIGRATION" && (
-                <div className="border-4 border-blue-900 p-6 rounded-lg bg-blue-50/20 space-y-6 text-center font-serif">
-                  <div className="border-b-2 border-blue-900 pb-4">
-                    <img
-                      src={logoEmblem}
-                      alt="Emblem"
-                      className="w-20 h-20 object-contain mx-auto mb-2"
-                    />
-                    <h2 className="text-2xl font-black text-[#1d359c] uppercase">
-                      Board of Higher Secondary Education, Delhi
-                    </h2>
-                    <div className="inline-block mt-3 px-6 py-1 bg-[#002b7f] text-white font-extrabold text-sm uppercase tracking-widest rounded">
-                      MIGRATION CERTIFICATE
-                    </div>
-                  </div>
-
-                  <div className="space-y-4 text-slate-800 text-sm leading-relaxed max-w-2xl mx-auto py-4 font-sans">
-                    <p>
-                      This Board has no objection to candidate{" "}
-                      <strong>{detailStudent.student_name}</strong>, Roll No.{" "}
-                      <strong className="font-mono text-blue-900">{detailStudent.roll_no}</strong>,
-                      continuing his/her further studies at any recognized University or Educational
-                      Board in India or Abroad.
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between items-end pt-8 font-sans text-xs text-slate-700">
-                    <div className="text-left">
-                      <div>Delhi, India</div>
-                    </div>
-                    <div className="text-center font-bold text-slate-900">
-                      <div className="border-b border-slate-700 pb-1 mb-1 font-mono">REGISTRAR</div>
-                      <div>BHSE Delhi</div>
-                    </div>
-                  </div>
+                <div className="w-full flex justify-center py-2">
+                  <MigrationCertificate student={detailStudent} />
                 </div>
               )}
 
               {/* DOCUMENT VIEW 5: OFFICIAL ACADEMIC TRANSCRIPT SESSION */}
               {docTab === "TRANSCRIPT" && (
-                <div className="border-4 border-slate-900 p-4 sm:p-7 rounded-lg bg-white space-y-5 text-slate-900 font-sans shadow-inner">
-                  {/* Header Header Strip */}
-                  <div className="border-b-2 border-slate-900 pb-4 text-center space-y-2">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2">
-                      <div className="flex items-center gap-2">
-                        <img src={logoEmblem} alt="Emblem" className="w-16 h-16 object-contain" />
+                <div className="border-4 border-slate-900 p-4 sm:p-7 rounded-lg bg-white space-y-5 text-slate-900 font-sans shadow-inner relative overflow-hidden">
+                  <DocumentWatermarkBg opacity={0.85} emblemOpacity={0.08} />
+                  <div className="relative z-10 space-y-5">
+                    {/* Header Header Strip */}
+                    <div className="border-b-2 border-slate-900 pb-4 text-center space-y-2">
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2">
+                        <div className="flex items-center gap-2">
+                          <img src={logoEmblem} alt="Emblem" className="w-16 h-16 object-contain" />
                         <div className="text-left hidden sm:block">
                           <span className="text-red-700 font-extrabold text-[10px] uppercase font-serif block">
                             Govt. Regd. No. 275 (India)
@@ -2386,7 +2371,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
             </div>
           </div>
         </div>

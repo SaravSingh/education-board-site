@@ -8,10 +8,12 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 
+import { MigrationCertificate } from "@/components/MigrationCertificate";
+
 interface CoseMarksheetDegreeProps {
   student: StudentResult;
   onBack?: () => void;
-  defaultDocType?: "MARKSHEET" | "DEGREE";
+  defaultDocType?: "MARKSHEET" | "DEGREE" | "MIGRATION";
   autoDownload?: boolean;
   isInternetCopy?: boolean;
 }
@@ -39,7 +41,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   autoDownload = false,
   isInternetCopy = true,
 }) => {
-  const [docType, setDocType] = useState<"MARKSHEET" | "DEGREE">(defaultDocType);
+  const [docType, setDocType] = useState<"MARKSHEET" | "DEGREE" | "MIGRATION">(defaultDocType);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isGeneratingImg, setIsGeneratingImg] = useState(false);
 
@@ -266,6 +268,46 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
     return undefined;
   }, [autoDownload, handleDownloadPdf]);
 
+  if (docType === "MIGRATION") {
+    return (
+      <div className="w-full flex flex-col items-center">
+        {/* Top switcher toolbar */}
+        <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
+            </button>
+          )}
+
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
+            <button
+              type="button"
+              onClick={() => setDocType("MARKSHEET")}
+              className="px-3 py-1 font-bold text-xs rounded-md text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
+              <span>अंक विवरणिका (Marksheet)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDocType("MIGRATION")}
+              className="px-3 py-1 font-bold text-xs rounded-md bg-white text-purple-800 shadow-2xs transition cursor-pointer flex items-center gap-1.5"
+            >
+              <Award className="w-3.5 h-3.5 text-purple-600" />
+              <span>माइग्रेशन प्रमाण पत्र (Migration Certificate)</span>
+            </button>
+          </div>
+        </div>
+
+        <MigrationCertificate student={student} onBack={onBack} />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col items-center">
       {/* Top Action Bar (Hidden in Print) */}
@@ -303,13 +345,30 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             <span>Print (A4 Sheet)</span>
           </button>
 
-          {/* Marks Statement Title Badge */}
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300">
-            <span className="px-3 py-1 bg-white text-slate-800 font-bold text-xs rounded-md shadow-2xs flex items-center gap-1.5 cursor-default">
+          {/* Document Switcher Tabs */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
+            <button
+              type="button"
+              onClick={() => setDocType("MARKSHEET")}
+              className={`px-3 py-1 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer ${
+                docType === "MARKSHEET"
+                  ? "bg-white text-slate-800 shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
               <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
-              <span className="hidden sm:inline">अंक विवरणिका (Marks Statement)</span>
+              <span className="hidden sm:inline">अंक विवरणिका (Marksheet)</span>
               <span className="sm:hidden">अंक विवरणिका</span>
-            </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDocType("MIGRATION")}
+              className="px-3 py-1 text-slate-600 hover:text-purple-800 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <Award className="w-3.5 h-3.5 text-purple-600" />
+              <span className="hidden sm:inline">माइग्रेशन (Migration Certificate)</span>
+              <span className="sm:hidden">माइग्रेशन</span>
+            </button>
           </div>
         </div>
       </div>
