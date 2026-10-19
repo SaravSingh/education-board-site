@@ -126,7 +126,7 @@ function ContactPage() {
     setLastSubmission(null);
   };
 
-  const recipientEmail = "Ashokarora.enb@gmail.com";
+  const recipientEmail = "info@bhsed.co.in";
   const inquirySubject = encodeURIComponent(
     `New BHSE Delhi Inquiry from ${lastSubmission?.name || name || "Website Visitor"}`
   );
@@ -293,22 +293,6 @@ function ContactPage() {
                       </td>
                     </tr>
 
-                    {/* Direct Inquiry Desk */}
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3.5 border-r border-gray-200 text-center">
-                        <span className="inline-block px-3 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold border border-emerald-300">
-                          Inquiry Desk
-                        </span>
-                      </td>
-                      <td className="p-3.5 font-mono text-xs sm:text-sm text-blue-900">
-                        <a
-                          href="mailto:Ashokarora.enb@gmail.com"
-                          className="hover:underline font-bold text-blue-800"
-                        >
-                          Ashokarora.enb@gmail.com
-                        </a>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -358,17 +342,7 @@ function ContactPage() {
                 </div>
               </div>
             </div>
-            <div className="bg-emerald-50 p-3.5 rounded-lg border border-emerald-200 space-y-2">
-              <div className="font-bold text-emerald-950">Direct Board Inquiry Mail:</div>
-              <div className="font-mono text-emerald-900 font-semibold">
-                <a href="mailto:Ashokarora.enb@gmail.com" className="hover:underline font-bold">
-                  Ashokarora.enb@gmail.com
-                </a>
-              </div>
-              <div className="text-[11px] text-emerald-800 pt-1 border-t border-emerald-200">
-                Official contact inbox for student inquiries, admission, examination, and verification questions.
-              </div>
-            </div>
+
             <div className="bg-blue-50 p-3.5 rounded-lg border border-blue-200 space-y-2">
               <div className="font-bold text-blue-950">Administrative &amp; General Inquiries:</div>
               <div className="font-mono text-blue-900 font-semibold">
@@ -397,11 +371,8 @@ function ContactPage() {
                     Inquiry Sent Successfully!
                   </strong>
                   <div>
-                    Thank you! Your inquiry details have been forwarded directly to{" "}
-                    <code className="bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-950 font-bold font-mono">
-                      Ashokarora.enb@gmail.com
-                    </code>
-                    . Our administration will review and respond to your email shortly.
+                    Thank you! Your inquiry details have been forwarded directly to our administration team.
+                    Our administration will review and respond to your email shortly.
                   </div>
                 </div>
               </div>
@@ -414,23 +385,17 @@ function ContactPage() {
                   <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div className="space-y-1.5 flex-1">
                     <strong className="text-sm block text-amber-950 font-bold">
-                      One-Time Activation Email Sent to Ashokarora.enb@gmail.com
+                      Inquiry Submission Received
                     </strong>
                     <p className="text-amber-900 leading-relaxed font-medium">
-                      The mail delivery service has dispatched a one-time confirmation email to{" "}
-                      <strong className="font-mono text-amber-950 font-bold bg-amber-100 px-1 py-0.5 rounded">
-                        Ashokarora.enb@gmail.com
-                      </strong>
-                      . Please open your Gmail inbox (or Spam/Promotions folder) and click{" "}
-                      <strong>"Activate Form"</strong> once. After that single confirmation, all
-                      future inquiries will land in your inbox automatically!
+                      Your inquiry has been recorded. You can also send this inquiry directly to our official inbox:
                     </p>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t border-amber-200 space-y-2">
                   <p className="font-bold text-amber-950">
-                    ⚡ Send this inquiry to Ashokarora.enb@gmail.com right now:
+                    ⚡ Send this inquiry via mail:
                   </p>
                   <div className="flex flex-wrap gap-2.5">
                     <a
@@ -459,14 +424,10 @@ function ContactPage() {
                   <Mail className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                   <div className="space-y-1 flex-1">
                     <strong className="text-sm block text-blue-950 font-bold">
-                      Deliver Inquiry to Ashokarora.enb@gmail.com
+                      Deliver Inquiry to Official Desk
                     </strong>
                     <p className="text-blue-900 leading-relaxed font-medium">
-                      Your inquiry details have been saved. Click below to deliver it directly to{" "}
-                      <strong className="font-mono text-blue-950 font-bold">
-                        Ashokarora.enb@gmail.com
-                      </strong>
-                      :
+                      Your inquiry details have been saved. Click below to deliver it directly via email:
                     </p>
                   </div>
                 </div>
@@ -556,24 +517,7 @@ function ContactPage() {
                 </button>
               </div>
 
-              {/* DIRECT EMAIL INFO FOOTNOTE */}
-              <div className="pt-2 flex flex-wrap items-center justify-between text-[11px] text-gray-500 border-t border-gray-100 gap-2">
-                <span>
-                  Inquiries delivered to:{" "}
-                  <a
-                    href="mailto:Ashokarora.enb@gmail.com"
-                    className="font-mono text-blue-800 font-bold hover:underline"
-                  >
-                    Ashokarora.enb@gmail.com
-                  </a>
-                </span>
-                <a
-                  href={`mailto:Ashokarora.enb@gmail.com?subject=BHSE%20Delhi%20Inquiry`}
-                  className="text-blue-700 hover:underline font-semibold flex items-center gap-1"
-                >
-                  <Mail className="w-3 h-3" /> Direct Email
-                </a>
-              </div>
+
             </form>
           </div>
         </div>

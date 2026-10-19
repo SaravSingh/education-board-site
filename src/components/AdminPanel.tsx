@@ -1488,7 +1488,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                     <Mail className="w-5 h-5 text-amber-400" /> Website Inquiries &amp; Messages
                   </h2>
                   <p className="text-xs text-slate-400">
-                    Inquiries submitted through the Contact Us form (forwarded to Ashokarora.enb@gmail.com).
+                    Inquiries submitted through the Contact Us form.
                   </p>
                 </div>
                 <span className="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-full font-mono">
@@ -1501,7 +1501,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   <Mail className="w-10 h-10 text-slate-600 mx-auto" />
                   <p className="text-sm font-semibold text-slate-300">No Inquiries Received Yet</p>
                   <p className="text-xs text-slate-500">
-                    Submissions from the Contact Us form will appear here and route to Ashokarora.enb@gmail.com.
+                    Submissions from the Contact Us form will appear here.
                   </p>
                 </div>
               ) : (
