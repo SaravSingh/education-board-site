@@ -252,11 +252,11 @@
   .min-h-screen {
     margin: 0 !important;
     padding: 0 !important;
-    width: 210mm !important;
-    height: 297mm !important;
-    max-width: 210mm !important;
-    max-height: 297mm !important;
-    overflow: hidden !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
     display: block !important;
     background: #ffffff !important;
   }
@@ -306,7 +306,10 @@
 
   /* Official Document Print Rules (100% Exact Single-Page Fit for A4 Sheet) */
   .bhse-certificate-document,
-  .bhse-certificate-document * {
+  .bhse-certificate-document *,
+  .cose-certificate-document,
+  .cose-certificate-document *,
+  .printable-marksheet * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -320,19 +323,23 @@
     print-color-adjust: exact !important;
   }
 
+  .cose-certificate-document,
   .bhse-certificate-document {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
     position: relative !important;
-    width: 100% !important;
-    max-width: 205mm !important;
-    height: 275mm !important;
-    max-height: 275mm !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    height: 290mm !important;
+    max-height: 290mm !important;
+    min-height: 0 !important;
     margin: 0 auto !important;
-    padding: 6px !important;
+    padding: 3mm 4mm !important;
     background-color: #ffffff !important;
     box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     page-break-before: avoid !important;
@@ -341,7 +348,6 @@
     break-after: avoid !important;
     overflow: hidden !important;
     transform: none !important;
-    border: none !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     box-sizing: border-box !important;
@@ -371,68 +377,6 @@
   .bhse-internet-header {
     display: block !important;
     visibility: visible !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  .cose-certificate-document {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    position: relative !important;
-    width: 210mm !important;
-    height: 296.5mm !important;
-    max-width: 210mm !important;
-    max-height: 296.5mm !important;
-    min-height: 296.5mm !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-    background-color: #fffdf6 !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    overflow: hidden !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    box-sizing: border-box !important;
-  }
-
-  .bhse-certificate-document {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    position: relative !important;
-    width: 210mm !important;
-    height: 296.5mm !important;
-    max-width: 210mm !important;
-    max-height: 296.5mm !important;
-    min-height: 296.5mm !important;
-    margin: 0 auto !important;
-    padding: 6mm 8mm !important;
-    background-color: #ffffff !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    page-break-before: avoid !important;
-    break-before: avoid !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    overflow: hidden !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    box-sizing: border-box !important;
-  }
-
-  .cose-certificate-document *,
-  .bhse-certificate-document *,
-  .printable-marksheet * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }

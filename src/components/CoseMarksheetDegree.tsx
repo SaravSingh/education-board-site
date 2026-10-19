@@ -402,7 +402,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         }}
       >
         <div
-          className="transition-transform duration-200 ease-out origin-top flex justify-center print:transform-none! print:w-[210mm] print:h-[296.5mm] print:m-0"
+          className="transition-transform duration-200 ease-out origin-top flex justify-center print:transform-none! print:w-[210mm] print:h-[290mm] print:m-0"
           style={{
             transform: viewMode === "fit" && scale < 1 ? `scale(${scale})` : "none",
             width: "794px",
@@ -414,7 +414,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
         >
           <div
             id="bhse-degree-document"
-            className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+            className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[290mm] print:max-w-[210mm] print:max-h-[290mm] print:min-h-0 print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
             style={{ boxSizing: "border-box" }}
           >
             {/* Authentic Continuous Security Micro-Pattern Watermark (Vector SVG DOM element - always renders in Print & PDF download) */}

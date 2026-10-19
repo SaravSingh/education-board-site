@@ -213,7 +213,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
         <div
           ref={certRef}
           id="bhse-migration-document"
-          className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+          className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[290mm] print:max-w-[210mm] print:max-h-[290mm] print:min-h-0 print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
           style={{
             transform: scale < 1 ? `scale(${scale})` : "none",
             boxSizing: "border-box",
@@ -279,16 +279,16 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
           </div>
 
           {/* Outer Dark Blue Border Frame Container (Exact same single blue border line as CoseMarksheetDegree) */}
-          <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-5 sm:p-7 flex flex-col justify-between">
+          <div className="relative z-10 w-full h-full border-2 border-[#0028a5] p-4 sm:p-6 print:p-5 flex flex-col justify-between">
               {/* Top Recognised Header Strip */}
               <div>
-                <div className="flex justify-between items-center text-xs font-bold text-slate-800 tracking-wider border-b border-slate-300 pb-1.5 px-1 font-serif">
+                <div className="flex justify-between items-center text-xs font-bold text-slate-800 tracking-wider border-b border-slate-300 pb-1 px-1 font-serif">
                   <span className="uppercase tracking-widest text-[#0c2356]">Government Recognised</span>
                   <span className="font-mono text-slate-700">Govt. of Delhi Regd. No. 275 (India)</span>
                 </div>
 
                 {/* Board Header & Emblem */}
-                <div className="text-center mt-3 space-y-1">
+                <div className="text-center mt-2 space-y-0.5">
                   <h1 className="text-2xl sm:text-[27px] font-black text-[#0c2356] tracking-wide font-serif leading-tight">
                     उच्चतर माध्यमिक शिक्षा परिषद्, दिल्ली
                   </h1>
@@ -297,8 +297,8 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
                   </h2>
 
                   {/* Central Round Emblem */}
-                  <div className="pt-2.5 pb-1 flex justify-center">
-                    <div className="w-20 h-20 bg-white rounded-full p-1 border-2 border-[#b8860b] shadow-xs flex items-center justify-center ring-2 ring-[#0c2356]/15">
+                  <div className="pt-1.5 pb-0.5 flex justify-center">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full p-1 border-2 border-[#b8860b] shadow-xs flex items-center justify-center ring-2 ring-[#0c2356]/15">
                       <img
                         src="/bhse_emblem_blue.png"
                         alt="BHSE Emblem"
@@ -309,7 +309,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
                 </div>
 
                 {/* Serial Number & Roll Number Row */}
-                <div className="flex justify-between items-end mt-4 text-xs font-semibold px-2">
+                <div className="flex justify-between items-end mt-3 text-xs font-semibold px-2">
                   <div>
                     <span className="text-slate-800 font-bold">क्रमांक संख्या :</span>
                     <div className="flex items-baseline gap-1 mt-0.5">
@@ -336,7 +336,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
                 </div>
 
                 {/* Certificate Title Banner */}
-                <div className="text-center mt-6 mb-7">
+                <div className="text-center mt-3 mb-4 sm:mt-4 sm:mb-5 print:mt-2 print:mb-3">
                   <div className="text-base font-bold text-slate-900 tracking-wide font-serif">
                     स्थानान्तरण प्रमाण - पत्र
                   </div>
@@ -347,7 +347,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
               </div>
 
               {/* Certificate Body Paragraphs with Dotted Blanks (Exact Image 1 layout) */}
-              <div className="space-y-6 text-[13.5px] leading-loose text-slate-950 px-2 font-serif">
+              <div className="space-y-3.5 sm:space-y-4 print:space-y-3 text-[13px] sm:text-[13.5px] leading-relaxed text-slate-950 px-2 font-serif">
                 {/* Clause 1: Student Name */}
                 <div>
                   <div className="text-slate-800 font-medium">यह प्रमाणित किया जाता है कि</div>
@@ -426,7 +426,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
               </div>
 
               {/* Bottom Signature & Date Block */}
-              <div className="flex justify-between items-end pt-6 px-2 mt-4 font-serif">
+              <div className="flex justify-between items-end pt-3 sm:pt-4 px-2 mt-2 font-serif">
                 {/* Left: Date, City & Official Seal Stamp */}
                 <div className="flex items-end gap-5">
                   <div className="space-y-0.5 text-xs text-slate-800 font-semibold">

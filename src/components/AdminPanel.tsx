@@ -1732,7 +1732,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 lg:p-6 overflow-y-auto text-slate-900 font-sans print:static print:p-0 print:m-0 print:bg-white print:overflow-visible print:w-full print:h-auto print:block">
           <div className="w-full max-w-5xl my-2 sm:my-6 bg-white rounded-xl shadow-2xl border-2 border-slate-300 overflow-hidden relative animate-fade-in print:my-0 print:p-0 print:shadow-none print:border-none print:w-full print:h-auto print:max-w-none print:overflow-visible print:rounded-none">
             {/* Header Control Strip - Student Identity & Record Actions */}
-            <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 text-white px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 shadow-md">
+            <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 text-white px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 shadow-md print:hidden">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0 shadow-inner">
                   <GraduationCap className="w-5 h-5 text-amber-400" />
@@ -2200,7 +2200,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
                   <div
                     id="bhse-provisional-document"
-                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[290mm] print:max-w-[210mm] print:max-h-[290mm] print:min-h-0 print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
                     style={{ boxSizing: "border-box" }}
                   >
                     {/* Authentic Continuous Security Micro-Pattern Watermark */}
@@ -2431,7 +2431,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
                   <div
                     id="bhse-tc-document"
-                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[290mm] print:max-w-[210mm] print:max-h-[290mm] print:min-h-0 print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
                     style={{ boxSizing: "border-box" }}
                   >
                     {/* Authentic Continuous Security Micro-Pattern Watermark */}
@@ -2693,7 +2693,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 <div className="w-full flex justify-center py-2 print:p-0 print:m-0 print:block">
                   <div
                     id="bhse-transcript-document"
-                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[296.5mm] print:max-w-[210mm] print:max-h-[296.5mm] print:min-h-[296.5mm] print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
+                    className="bhse-certificate-document relative w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] bg-white text-slate-900 rounded-xs shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-[210mm] print:h-[290mm] print:max-w-[210mm] print:max-h-[290mm] print:min-h-0 print:rounded-none flex flex-col justify-between select-none p-3.5 sm:p-5"
                     style={{ boxSizing: "border-box" }}
                   >
                     {/* Authentic Continuous Security Micro-Pattern Watermark */}
