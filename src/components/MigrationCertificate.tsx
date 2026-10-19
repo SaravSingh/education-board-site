@@ -7,12 +7,14 @@ interface MigrationCertificateProps {
   student: StudentResult;
   onBack?: () => void;
   autoPrint?: boolean;
+  hideToolbar?: boolean;
 }
 
 export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
   student,
   onBack,
   autoPrint = false,
+  hideToolbar = false,
 }) => {
   const certRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -66,34 +68,36 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
   return (
     <div className="w-full flex flex-col items-center">
       {/* Top Action Bar */}
-      <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back</span>
-          </button>
-        )}
+      {!hideToolbar && (
+        <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
+            </button>
+          )}
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center bg-purple-50 text-purple-900 border border-purple-200 px-3 py-1.5 rounded-lg text-xs font-bold gap-1.5">
-            <Award className="w-4 h-4 text-purple-700" />
-            <span>स्थानान्तरण प्रमाण - पत्र (Migration Certificate)</span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center bg-purple-50 text-purple-900 border border-purple-200 px-3 py-1.5 rounded-lg text-xs font-bold gap-1.5">
+              <Award className="w-4 h-4 text-purple-700" />
+              <span>स्थानान्तरण प्रमाण - पत्र (Migration Certificate)</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="px-4 py-2 bg-[#1b3f8b] hover:bg-[#122e6e] text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-2 cursor-pointer transition border border-[#1b3f8b] active:scale-95"
+              title="Print Migration Certificate on A4 Sheet"
+            >
+              <Printer className="w-4 h-4 text-yellow-300" />
+              <span>Print Certificate (A4)</span>
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="px-4 py-2 bg-[#1b3f8b] hover:bg-[#122e6e] text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-2 cursor-pointer transition border border-[#1b3f8b] active:scale-95"
-            title="Print Migration Certificate on A4 Sheet"
-          >
-            <Printer className="w-4 h-4 text-yellow-300" />
-            <span>Print Certificate (A4)</span>
-          </button>
         </div>
-      </div>
+      )}
 
       {/* Responsive Scaling Wrapper */}
       <div

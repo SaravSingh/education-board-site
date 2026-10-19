@@ -16,6 +16,7 @@ interface CoseMarksheetDegreeProps {
   defaultDocType?: "MARKSHEET" | "DEGREE" | "MIGRATION";
   autoDownload?: boolean;
   isInternetCopy?: boolean;
+  hideToolbar?: boolean;
 }
 
 // Convert any image URL to an inline base64 Data URL to guarantee zero canvas tainting
@@ -40,8 +41,13 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
   defaultDocType = "MARKSHEET",
   autoDownload = false,
   isInternetCopy = true,
+  hideToolbar = false,
 }) => {
   const [docType, setDocType] = useState<"MARKSHEET" | "DEGREE" | "MIGRATION">(defaultDocType);
+
+  useEffect(() => {
+    setDocType(defaultDocType);
+  }, [defaultDocType]);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isGeneratingImg, setIsGeneratingImg] = useState(false);
 
@@ -272,6 +278,48 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
     return (
       <div className="w-full flex flex-col items-center">
         {/* Top switcher toolbar */}
+        {!hideToolbar && (
+          <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back</span>
+              </button>
+            )}
+
+            <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
+              <button
+                type="button"
+                onClick={() => setDocType("MARKSHEET")}
+                className="px-3 py-1 font-bold text-xs rounded-md text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center gap-1.5"
+              >
+                <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
+                <span>अंक विवरणिका (Marksheet)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDocType("MIGRATION")}
+                className="px-3 py-1 font-bold text-xs rounded-md bg-white text-purple-800 shadow-2xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Award className="w-3.5 h-3.5 text-purple-600" />
+                <span>माइग्रेशन प्रमाण पत्र (Migration Certificate)</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        <MigrationCertificate student={student} onBack={onBack} hideToolbar={hideToolbar} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full flex flex-col items-center">
+      {/* Top Action Bar (Hidden in Print) */}
+      {!hideToolbar && (
         <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
           {onBack && (
             <button
@@ -283,95 +331,57 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
             </button>
           )}
 
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Mobile Screen-Fit / Zoom Toggle (Only on mobile screens < 820px) */}
+            {scale < 1 && (
+              <button
+                type="button"
+                onClick={() => setViewMode(viewMode === "fit" ? "full" : "fit")}
+                className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0028a5] text-xs font-bold rounded-lg border border-blue-200 flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+              >
+                <span>{viewMode === "fit" ? "🔍 Zoom 100%" : "📱 Fit to Screen"}</span>
+              </button>
+            )}
+
+            {/* Print Button for A4 Sheet */}
             <button
               type="button"
-              onClick={() => setDocType("MARKSHEET")}
-              className="px-3 py-1 font-bold text-xs rounded-md text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center gap-1.5"
+              onClick={() => window.print()}
+              className="px-4 py-2 bg-[#1b3f8b] hover:bg-[#122e6e] active:scale-95 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-2 cursor-pointer transition border border-[#1b3f8b]"
+              title="Print Marksheet on A4 Sheet (or Save as PDF)"
             >
-              <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
-              <span>अंक विवरणिका (Marksheet)</span>
+              <Printer className="w-4 h-4 text-yellow-300" />
+              <span>Print (A4 Sheet)</span>
             </button>
-            <button
-              type="button"
-              onClick={() => setDocType("MIGRATION")}
-              className="px-3 py-1 font-bold text-xs rounded-md bg-white text-purple-800 shadow-2xs transition cursor-pointer flex items-center gap-1.5"
-            >
-              <Award className="w-3.5 h-3.5 text-purple-600" />
-              <span>माइग्रेशन प्रमाण पत्र (Migration Certificate)</span>
-            </button>
+
+            {/* Document Switcher Tabs */}
+            <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
+              <button
+                type="button"
+                onClick={() => setDocType("MARKSHEET")}
+                className={`px-3 py-1 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer ${
+                  docType === "MARKSHEET"
+                    ? "bg-white text-slate-800 shadow-2xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
+                <span className="hidden sm:inline">अंक विवरणिका (Marksheet)</span>
+                <span className="sm:hidden">अंक विवरणिका</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDocType("MIGRATION")}
+                className="px-3 py-1 text-slate-600 hover:text-purple-800 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <Award className="w-3.5 h-3.5 text-purple-600" />
+                <span className="hidden sm:inline">माइग्रेशन (Migration Certificate)</span>
+                <span className="sm:hidden">माइग्रेशन</span>
+              </button>
+            </div>
           </div>
         </div>
-
-        <MigrationCertificate student={student} onBack={onBack} />
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full flex flex-col items-center">
-      {/* Top Action Bar (Hidden in Print) */}
-      <div className="w-full max-w-[800px] mb-3 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 rounded-xl border border-slate-300 shadow-md flex flex-wrap items-center justify-between gap-2.5 print:hidden">
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back</span>
-          </button>
-        )}
-
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Mobile Screen-Fit / Zoom Toggle (Only on mobile screens < 820px) */}
-          {scale < 1 && (
-            <button
-              type="button"
-              onClick={() => setViewMode(viewMode === "fit" ? "full" : "fit")}
-              className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0028a5] text-xs font-bold rounded-lg border border-blue-200 flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-            >
-              <span>{viewMode === "fit" ? "🔍 Zoom 100%" : "📱 Fit to Screen"}</span>
-            </button>
-          )}
-
-          {/* Print Button for A4 Sheet */}
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="px-4 py-2 bg-[#1b3f8b] hover:bg-[#122e6e] active:scale-95 text-white font-bold text-xs rounded-lg shadow-sm flex items-center gap-2 cursor-pointer transition border border-[#1b3f8b]"
-            title="Print Marksheet on A4 Sheet (or Save as PDF)"
-          >
-            <Printer className="w-4 h-4 text-yellow-300" />
-            <span>Print (A4 Sheet)</span>
-          </button>
-
-          {/* Document Switcher Tabs */}
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
-            <button
-              type="button"
-              onClick={() => setDocType("MARKSHEET")}
-              className={`px-3 py-1 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer ${
-                docType === "MARKSHEET"
-                  ? "bg-white text-slate-800 shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
-              <span className="hidden sm:inline">अंक विवरणिका (Marksheet)</span>
-              <span className="sm:hidden">अंक विवरणिका</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setDocType("MIGRATION")}
-              className="px-3 py-1 text-slate-600 hover:text-purple-800 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <Award className="w-3.5 h-3.5 text-purple-600" />
-              <span className="hidden sm:inline">माइग्रेशन (Migration Certificate)</span>
-              <span className="sm:hidden">माइग्रेशन</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Mobile view tip when zoomed */}
       {scale < 1 && viewMode === "full" && (
