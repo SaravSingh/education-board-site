@@ -23,6 +23,7 @@ import { Route as RegionalCentreRouteImport } from './routes/regional-centre'
 import { Route as ResultRouteImport } from './routes/result'
 import { Route as RtiRouteImport } from './routes/rti'
 import { Route as SubjectCodeRouteImport } from './routes/subject-code'
+import { Route as VerificationRouteImport } from './routes/verification'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const SubjectCodeRoute = SubjectCodeRouteImport.update({
   path: '/subject-code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerificationRoute = VerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/result': typeof ResultRoute
   '/rti': typeof RtiRoute
   '/subject-code': typeof SubjectCodeRoute
+  '/verification': typeof VerificationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/result': typeof ResultRoute
   '/rti': typeof RtiRoute
   '/subject-code': typeof SubjectCodeRoute
+  '/verification': typeof VerificationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/result': typeof ResultRoute
   '/rti': typeof RtiRoute
   '/subject-code': typeof SubjectCodeRoute
+  '/verification': typeof VerificationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/result'
     | '/rti'
     | '/subject-code'
+    | '/verification'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/result'
     | '/rti'
     | '/subject-code'
+    | '/verification'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/result'
     | '/rti'
     | '/subject-code'
+    | '/verification'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   ResultRoute: typeof ResultRoute
   RtiRoute: typeof RtiRoute
   SubjectCodeRoute: typeof SubjectCodeRoute
+  VerificationRoute: typeof VerificationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubjectCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verification': {
+      id: '/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResultRoute: ResultRoute,
   RtiRoute: RtiRoute,
   SubjectCodeRoute: SubjectCodeRoute,
+  VerificationRoute: VerificationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

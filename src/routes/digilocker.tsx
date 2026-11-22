@@ -160,6 +160,30 @@ function DigiLockerPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loggedInStudent, setLoggedInStudent] = useState<StudentResult | null>(null);
 
+  // Auto-load and display verified document when accessed directly or via QR Code scan
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined" && window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        const rollParam =
+          params.get("roll") ||
+          params.get("roll_no") ||
+          params.get("enroll") ||
+          params.get("enrollment") ||
+          params.get("id");
+        if (rollParam) {
+          const student = dbStore.getResultByRoll(rollParam.trim());
+          if (student) {
+            setLoggedInStudent(student);
+            setError("");
+          }
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
   useEffect(() => {
     document.title = loggedInStudent
       ? `DigiLocker | Mark Statement - ${loggedInStudent.student_name}`
@@ -581,12 +605,10 @@ function DigiLockerPage() {
             {/* Right: QR Code & Verification Label */}
             <div className="flex flex-col items-center shrink-0">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${encodeURIComponent(
-                  `https://www.bhsed.co.in/verification?roll=${encodeURIComponent(
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=0&data=${encodeURIComponent(
+                  `https://www.bhsed.co.in/digilocker?roll=${encodeURIComponent(
                     loggedInStudent.roll_no,
-                  )}&enroll=${encodeURIComponent(loggedInStudent.enrollment_no)}&name=${encodeURIComponent(
-                    loggedInStudent.student_name,
-                  )}&status=${encodeURIComponent(isPass ? "PASS" : loggedInStudent.status || "FAIL")}`,
+                  )}&verify=true`,
                 )}`}
                 alt="BHSED Verification QR Code"
                 className="w-16 h-16 sm:w-[70px] sm:h-[70px] object-contain"
