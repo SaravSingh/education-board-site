@@ -127,6 +127,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   );
   const [examYear, setExamYear] = useState("2008");
   const [resultDeclarationDate, setResultDeclarationDate] = useState("09-06-2014");
+  const [migrationIssueDate, setMigrationIssueDate] = useState("");
+  const [tcIssueDate, setTcIssueDate] = useState("");
+  const [provisionalIssueDate, setProvisionalIssueDate] = useState("");
   const [isHidden, setIsHidden] = useState(false);
 
   // Dynamic Subjects state
@@ -430,6 +433,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     }
 
     setActiveTab("add_student");
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     showMsg(`Loaded Roll No ${r.roll_no} into editor.`);
   };
 
@@ -493,6 +499,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     setTcIssueDate("");
     setProvisionalIssueDate("");
     setIsHidden(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   // Add or Update student result handler
