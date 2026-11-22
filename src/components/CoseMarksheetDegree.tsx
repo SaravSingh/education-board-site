@@ -377,30 +377,11 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
               <span>Print (A4 Sheet)</span>
             </button>
 
-            {/* Document Switcher Tabs */}
-            <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-300 gap-1">
-              <button
-                type="button"
-                onClick={() => setDocType("MARKSHEET")}
-                className={`px-3 py-1 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer ${
-                  docType === "MARKSHEET"
-                    ? "bg-white text-slate-800 shadow-2xs"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
-                <span className="hidden sm:inline">अंक विवरणिका (Marksheet)</span>
-                <span className="sm:hidden">अंक विवरणिका</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setDocType("MIGRATION")}
-                className="px-3 py-1 text-slate-600 hover:text-purple-800 font-bold text-xs rounded-md flex items-center gap-1.5 transition cursor-pointer"
-              >
-                <Award className="w-3.5 h-3.5 text-purple-600" />
-                <span className="hidden sm:inline">माइग्रेशन (Migration Certificate)</span>
-                <span className="sm:hidden">माइग्रेशन</span>
-              </button>
+            {/* Document Indicator */}
+            <div className="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-300 gap-1.5 text-xs font-bold text-slate-800">
+              <FileText className="w-3.5 h-3.5 text-[#1b3f8b]" />
+              <span className="hidden sm:inline">अंक विवरणिका (Marksheet)</span>
+              <span className="sm:hidden">अंक विवरणिका</span>
             </div>
           </div>
         </div>
