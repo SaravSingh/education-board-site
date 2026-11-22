@@ -117,18 +117,8 @@ function ResultPage() {
         setDocTypeParam("DEGREE");
       }
       if (rollParam) {
-        const found = dbStore.getResultByRoll(rollParam.trim());
-        if (found) {
-          setSelectedResult(found);
-          setRollNoInput(found.roll_no);
-          setTemplateFormat("COSE");
-          try {
-            setParsedSubjects(JSON.parse(found.subjects_json));
-          } catch (e) {
-            setParsedSubjects([]);
-          }
-          setStep(stepParam === "3" ? 3 : 2);
-        }
+        setRollNoInput(rollParam.trim());
+        // Pre-fill roll number but require solving the ReCAPTCHA so user is not logged in without captcha
       }
     } catch (e) {
       // ignore
@@ -140,7 +130,7 @@ function ResultPage() {
     setErrorMsg("");
 
     if (!rollNoInput.trim()) {
-      setErrorMsg("Please enter Roll Number.");
+      setErrorMsg("Please enter Roll Number or Enrollment Number.");
       return;
     }
 
@@ -152,6 +142,7 @@ function ResultPage() {
     if (captchaInput.trim().toLowerCase() !== captchaCode.toLowerCase()) {
       setErrorMsg("ReCAPTCHA verification failed. Please enter the correct code.");
       generateCaptcha();
+      setCaptchaInput("");
       return;
     }
 
@@ -159,15 +150,7 @@ function ResultPage() {
 
     if (found) {
       setSelectedResult(found);
-      if (
-        found.format === "COSE" ||
-        found.roll_no === "10203527" ||
-        found.school_name?.includes("COUNCIL")
-      ) {
-        setTemplateFormat("COSE");
-      } else {
-        setTemplateFormat("COSE");
-      }
+      setTemplateFormat("COSE");
       try {
         setParsedSubjects(JSON.parse(found.subjects_json));
       } catch (err) {
@@ -175,6 +158,8 @@ function ResultPage() {
       }
       setStep(2); // Move to Step 2: Student Details preview card
     } else {
+      generateCaptcha();
+      setCaptchaInput("");
       setErrorMsg(
         `No Result found for '${rollNoInput}'. Please verify your Roll Number or Enrollment Number and try again.`,
       );

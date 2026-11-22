@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { X, Lock, Mail, ShieldCheck, ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, Lock, Mail, ShieldCheck, ArrowRight, RefreshCw, KeyRound } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { dbStore } from "@/lib/db";
 
@@ -16,8 +16,27 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [captchaCode, setCaptchaCode] = useState("AD98kX");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const generateCaptcha = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789abcdefghijkmnpqrstuvwxyz";
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCaptchaCode(code);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      generateCaptcha();
+      setCaptchaInput("");
+      setError("");
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -28,9 +47,23 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
       return;
     }
 
+    if (!captchaInput.trim()) {
+      setError("Please enter the Security ReCAPTCHA verification code.");
+      return;
+    }
+
+    if (captchaInput.trim().toLowerCase() !== captchaCode.toLowerCase()) {
+      setError("Security ReCAPTCHA verification failed. Please enter the correct code.");
+      generateCaptcha();
+      setCaptchaInput("");
+      return;
+    }
+
     const isValid = dbStore.validateAdminLogin(email, password);
     if (!isValid) {
       setError("Invalid Admin Email or Password. Please enter correct credentials.");
+      generateCaptcha();
+      setCaptchaInput("");
       return;
     }
 
@@ -98,6 +131,39 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                   placeholder="Enter Password"
                   className="w-full text-xs pl-9 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-900 font-mono"
                 />
+              </div>
+            </div>
+
+            {/* Security Captcha Field */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                Security ReCAPTCHA Verification
+              </label>
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <KeyRound className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    required
+                    value={captchaInput}
+                    onChange={(e) => setCaptchaInput(e.target.value)}
+                    placeholder="Enter captcha code"
+                    className="w-full text-xs pl-9 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-900 font-mono tracking-wider font-bold"
+                  />
+                </div>
+                <div className="flex items-center gap-1.5 bg-slate-900 text-amber-400 px-3 py-1.5 rounded border border-slate-700 select-none">
+                  <span className="font-mono font-black text-sm tracking-widest line-through decoration-amber-500/60">
+                    {captchaCode}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={generateCaptcha}
+                    className="p-1 text-slate-400 hover:text-white transition cursor-pointer"
+                    title="Refresh Captcha"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
 

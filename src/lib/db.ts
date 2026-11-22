@@ -56,6 +56,7 @@ export interface StudentResult {
   migration_issue_date?: string;
   tc_issue_date?: string;
   provisional_issue_date?: string;
+  alt_roll_no?: string;
 }
 
 export interface EnrollmentRecord {
@@ -180,6 +181,7 @@ const INITIAL_RESULTS: StudentResult[] = [
   {
     serial_no: "N/A",
     roll_no: "10181125013",
+    alt_roll_no: "101811250313",
     school_code: "210001",
     centre_code: "210001",
     exam_center: "BHSE DELHI",
@@ -1017,13 +1019,15 @@ class LocalStore {
       if (savedRes) {
         try {
           const parsed: StudentResult[] = JSON.parse(savedRes);
-          const existingRolls = new Set(
-            parsed.map((r) => (r.roll_no ? r.roll_no.toLowerCase().trim() : "")),
-          );
           INITIAL_RESULTS.forEach((initR) => {
             const cleanInit = initR.roll_no.toLowerCase().trim();
-            if (!existingRolls.has(cleanInit)) {
+            const existing = parsed.find(
+              (r) => r.roll_no && r.roll_no.toLowerCase().trim() === cleanInit,
+            );
+            if (!existing) {
               parsed.push(initR);
+            } else if (initR.alt_roll_no && !existing.alt_roll_no) {
+              existing.alt_roll_no = initR.alt_roll_no;
             }
           });
           this.results = parsed;
@@ -1113,7 +1117,21 @@ class LocalStore {
       const savedAnn = localStorage.getItem(ANNOUNCEMENTS_STORAGE_KEY);
       if (savedAnn) this.announcements = JSON.parse(savedAnn);
       const savedRes = localStorage.getItem(RESULTS_STORAGE_KEY);
-      if (savedRes) this.results = JSON.parse(savedRes);
+      if (savedRes) {
+        const parsed = JSON.parse(savedRes);
+        INITIAL_RESULTS.forEach((initR) => {
+          const cleanInit = initR.roll_no.toLowerCase().trim();
+          const existing = parsed.find(
+            (r: StudentResult) => r.roll_no && r.roll_no.toLowerCase().trim() === cleanInit,
+          );
+          if (!existing) {
+            parsed.push(initR);
+          } else if (initR.alt_roll_no && !existing.alt_roll_no) {
+            existing.alt_roll_no = initR.alt_roll_no;
+          }
+        });
+        this.results = parsed;
+      }
       const savedEnr = localStorage.getItem(ENROLLMENTS_STORAGE_KEY);
       if (savedEnr) this.enrollments = JSON.parse(savedEnr);
       const savedInq = localStorage.getItem(INQUIRIES_STORAGE_KEY);
@@ -1209,21 +1227,58 @@ class LocalStore {
     return this.results;
   }
 
+  private isTypoMatch(a: string, b: string): boolean {
+    if (!a || !b) return false;
+    if (a === b) return true;
+    if (Math.abs(a.length - b.length) > 1) return false;
+
+    // Same length, at most 1 character difference (single digit typo)
+    if (a.length === b.length) {
+      let diff = 0;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+          diff++;
+          if (diff > 1) return false;
+        }
+      }
+      return diff <= 1;
+    }
+
+    // Length differs by 1: check if removing 1 character from longer yields shorter
+    const longer = a.length > b.length ? a : b;
+    const shorter = a.length > b.length ? b : a;
+    let i = 0;
+    let j = 0;
+    let diff = 0;
+    while (i < longer.length && j < shorter.length) {
+      if (longer[i] === shorter[j]) {
+        i++;
+        j++;
+      } else {
+        diff++;
+        if (diff > 1) return false;
+        i++;
+      }
+    }
+    return true;
+  }
+
   getResultByRoll(term: string): StudentResult | undefined {
     if (!term) return undefined;
-    const cleanSearch = term.trim().toUpperCase().replace(/[\s-]/g, "");
+    const cleanSearch = term.trim().toUpperCase().replace(/[\s\-_/]/g, "");
     if (!cleanSearch) return undefined;
 
-    // 1. Direct match on normalized roll_no
+    // 1. Direct match on normalized roll_no or alt_roll_no
     let found = this.results.find((r) => {
-      const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
-      return rRoll === cleanSearch;
+      const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+      const rAlt = (r.alt_roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+      return rRoll === cleanSearch || (rAlt && rAlt === cleanSearch);
     });
 
     // 2. Direct match on normalized enrollment_no
     if (!found) {
       found = this.results.find((r) => {
-        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
         return rEnr && rEnr === cleanSearch;
       });
     }
@@ -1231,20 +1286,47 @@ class LocalStore {
     // 3. Direct match on serial_no
     if (!found) {
       found = this.results.find((r) => {
-        const rSer = (r.serial_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        const rSer = (r.serial_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
         return rSer && rSer === cleanSearch;
       });
     }
 
-    // 4. Substring or partial match for search length >= 5
+    // 4. Candidate Full Name or partial name match
+    if (!found) {
+      const termUpper = term.trim().toUpperCase();
+      found = this.results.find((r) => {
+        const sName = (r.student_name || "").trim().toUpperCase();
+        return (
+          sName === termUpper ||
+          (termUpper.length >= 4 && (sName.includes(termUpper) || termUpper.includes(sName)))
+        );
+      });
+    }
+
+    // 5. Substring or partial match for search length >= 5
     if (!found && cleanSearch.length >= 5) {
       found = this.results.find((r) => {
-        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
-        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        const rAlt = (r.alt_roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
         return (
-          rRoll.includes(cleanSearch) ||
-          cleanSearch.includes(rRoll) ||
-          (rEnr && (rEnr.includes(cleanSearch) || cleanSearch.includes(rEnr)))
+          (rRoll && (rRoll.includes(cleanSearch) || cleanSearch.includes(rRoll))) ||
+          (rEnr && (rEnr.includes(cleanSearch) || cleanSearch.includes(rEnr))) ||
+          (rAlt && (rAlt.includes(cleanSearch) || cleanSearch.includes(rAlt)))
+        );
+      });
+    }
+
+    // 6. Typo-tolerant single digit match for long strings (>= 6 digits)
+    if (!found && cleanSearch.length >= 6) {
+      found = this.results.find((r) => {
+        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        const rAlt = (r.alt_roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        return (
+          (rRoll && this.isTypoMatch(cleanSearch, rRoll)) ||
+          (rEnr && this.isTypoMatch(cleanSearch, rEnr)) ||
+          (rAlt && this.isTypoMatch(cleanSearch, rAlt))
         );
       });
     }
@@ -1259,22 +1341,39 @@ class LocalStore {
 
   getResultByRollAdmin(term: string): StudentResult | undefined {
     if (!term) return undefined;
-    const cleanSearch = term.trim().toUpperCase().replace(/[\s-]/g, "");
+    const cleanSearch = term.trim().toUpperCase().replace(/[\s\-_/]/g, "");
     if (!cleanSearch) return undefined;
 
     return (
       this.results.find((r) => {
-        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
-        return rRoll === cleanSearch;
+        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        const rAlt = (r.alt_roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+        return rRoll === cleanSearch || (rAlt && rAlt === cleanSearch);
       }) ||
       this.results.find((r) => {
-        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
         return rEnr && rEnr === cleanSearch;
       }) ||
       this.results.find((r) => {
-        const rSer = (r.serial_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        const rSer = (r.serial_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
         return rSer && rSer === cleanSearch;
-      })
+      }) ||
+      this.results.find((r) => {
+        const sName = (r.student_name || "").trim().toUpperCase();
+        return sName.includes(cleanSearch) || cleanSearch.includes(sName);
+      }) ||
+      (cleanSearch.length >= 6
+        ? this.results.find((r) => {
+            const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+            const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+            const rAlt = (r.alt_roll_no || "").trim().toUpperCase().replace(/[\s\-_/]/g, "");
+            return (
+              (rRoll && this.isTypoMatch(cleanSearch, rRoll)) ||
+              (rEnr && this.isTypoMatch(cleanSearch, rEnr)) ||
+              (rAlt && this.isTypoMatch(cleanSearch, rAlt))
+            );
+          })
+        : undefined)
     );
   }
 

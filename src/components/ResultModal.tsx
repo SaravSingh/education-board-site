@@ -112,6 +112,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
     if (captchaInput.trim().toLowerCase() !== captchaCode.toLowerCase()) {
       setErrorMsg("ReCAPTCHA verification failed. Please enter the correct code.");
       generateCaptcha();
+      setCaptchaInput("");
       return;
     }
 
@@ -126,6 +127,8 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
       }
       setStep(2); // Move to Step 2: Student Details preview card
     } else {
+      generateCaptcha();
+      setCaptchaInput("");
       setErrorMsg(
         `No Result found for '${rollNoInput}'. Please verify your Roll Number or Enrollment Number and try again.`,
       );
