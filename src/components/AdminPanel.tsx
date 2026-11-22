@@ -1933,15 +1933,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   )}
                 </button>
 
-                {/* Edit Record Button */}
-                <button
-                  onClick={() => handleEditStudent(detailStudent)}
-                  className="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-lg transition-all shadow-sm cursor-pointer flex items-center gap-1.5 active:scale-95 border border-amber-500"
-                  title="Edit Student Marks & Details"
-                >
-                  <Edit3 className="w-3.5 h-3.5 text-slate-950" />
-                  <span>Edit Record</span>
-                </button>
 
                 {/* Download PDF Button */}
                 <button
@@ -1999,7 +1990,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   <FileText
                     className={`w-3.5 h-3.5 ${docTab === "COSE_MARKSHEET" ? "text-amber-300" : "text-blue-700"}`}
                   />
-                  <span>COSE Marksheet</span>
+                  <span>BHSED Marksheet</span>
                 </button>
 
                 <button
@@ -2027,7 +2018,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   <GraduationCap
                     className={`w-3.5 h-3.5 ${docTab === "COSE_DEGREE" ? "text-amber-300" : "text-amber-600"}`}
                   />
-                  <span>COSE Degree</span>
+                  <span>BHSED Degree</span>
                 </button>
 
                 <button
