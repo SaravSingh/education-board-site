@@ -1249,9 +1249,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 className="bg-slate-900 p-5 rounded-lg border border-slate-700 space-y-5"
               >
                 {/* Registration Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Roll Number
                     </label>
                     <input
@@ -1260,25 +1260,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={rollNo}
                       onChange={(e) => setRollNo(e.target.value)}
                       placeholder="e.g. 500109"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-400"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-400"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
-                      Date of Birth in Words (DOB in Words)
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
+                      DOB in Words
                     </label>
                     <input
                       type="text"
                       value={dobWords}
                       onChange={(e) => setDobWords(e.target.value)}
                       placeholder="e.g. SECOND MAY TWO THOUSAND ONE"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-300 uppercase"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-300 uppercase"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       School Code
                     </label>
                     <input
@@ -1286,18 +1286,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={schoolCode}
                       onChange={(e) => setSchoolCode(e.target.value)}
                       placeholder="e.g. 105"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Status / Mode
                     </label>
                     <select
                       value={statusMode}
                       onChange={(e) => setStatusMode(e.target.value)}
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-bold"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-bold"
                     >
                       <option value="PRIVATE">PRIVATE</option>
                       <option value="REGULAR">REGULAR</option>
@@ -1307,8 +1307,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                 {/* Bio Info */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Candidate Full Name
                     </label>
                     <input
@@ -1317,12 +1317,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={studentName}
                       onChange={(e) => setStudentName(e.target.value)}
                       placeholder="RAKESH KUMAR"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-bold"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-bold"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Date of Birth (DD-MM-YYYY)
                     </label>
                     <input
@@ -1330,12 +1330,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={dob}
                       onChange={(e) => setDob(e.target.value)}
                       placeholder="05-01-1992"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Father's Name
                     </label>
                     <input
@@ -1343,12 +1343,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={fatherName}
                       onChange={(e) => setFatherName(e.target.value)}
                       placeholder="MULKH RAJ"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Mother's Name
                     </label>
                     <input
@@ -1356,12 +1356,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={motherName}
                       onChange={(e) => setMotherName(e.target.value)}
                       placeholder="DWARKA DEVI"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Enrollment No.
                     </label>
                     <input
@@ -1369,18 +1369,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={enrollmentNo}
                       onChange={(e) => setEnrollmentNo(e.target.value)}
                       placeholder="e.g. 1028112518013"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Class Level
                     </label>
                     <select
                       value={course}
                       onChange={(e) => setCourse(e.target.value)}
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-bold"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-bold"
                     >
                       <option value="10TH (General)">10TH (Secondary Examination)</option>
                       <option value="12TH (Senior Secondary)">
@@ -1389,8 +1389,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Session Year
                     </label>
                     <input
@@ -1398,12 +1398,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={examYear}
                       onChange={(e) => setExamYear(e.target.value)}
                       placeholder="2026"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Session / Batch
                     </label>
                     <input
@@ -1411,12 +1411,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={batch}
                       onChange={(e) => setBatch(e.target.value)}
                       placeholder="e.g. 2024 or SESSION: 2023-24"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-300"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-300"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                  <div className="flex flex-col justify-end">
+                    <label className="text-[11px] font-bold text-slate-300 uppercase mb-1 h-5 flex items-center whitespace-nowrap">
                       Date of Issue (Marksheet & Primary)
                     </label>
                     <input
@@ -1424,7 +1424,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       value={resultDeclarationDate}
                       onChange={(e) => setResultDeclarationDate(e.target.value)}
                       placeholder="DD/MM/YYYY or DD-MM-YYYY"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-emerald-400"
+                      className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-emerald-400"
                     />
                   </div>
                 </div>
@@ -1438,8 +1438,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                     </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-bold text-purple-300 uppercase mb-1">
+                    <div className="flex flex-col justify-end">
+                      <label className="text-[10px] font-bold text-purple-300 uppercase mb-1 h-4 flex items-center whitespace-nowrap">
                         Migration Certificate Issue Date
                       </label>
                       <input
@@ -1447,11 +1447,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                         value={migrationIssueDate}
                         onChange={(e) => setMigrationIssueDate(e.target.value)}
                         placeholder={resultDeclarationDate || "DD/MM/YYYY"}
-                        className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-purple-300"
+                        className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-purple-300"
                       />
                     </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-emerald-300 uppercase mb-1">
+                    <div className="flex flex-col justify-end">
+                      <label className="text-[10px] font-bold text-emerald-300 uppercase mb-1 h-4 flex items-center whitespace-nowrap">
                         Transfer Cert. (TC) Issue Date
                       </label>
                       <input
@@ -1459,11 +1459,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                         value={tcIssueDate}
                         onChange={(e) => setTcIssueDate(e.target.value)}
                         placeholder={resultDeclarationDate || "DD/MM/YYYY"}
-                        className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-emerald-300"
+                        className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-emerald-300"
                       />
                     </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-blue-300 uppercase mb-1">
+                    <div className="flex flex-col justify-end">
+                      <label className="text-[10px] font-bold text-blue-300 uppercase mb-1 h-4 flex items-center whitespace-nowrap">
                         Provisional Cert. Issue Date
                       </label>
                       <input
@@ -1471,7 +1471,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                         value={provisionalIssueDate}
                         onChange={(e) => setProvisionalIssueDate(e.target.value)}
                         placeholder={resultDeclarationDate || "DD/MM/YYYY"}
-                        className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-blue-300"
+                        className="w-full h-8 text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-blue-300"
                       />
                     </div>
                   </div>
