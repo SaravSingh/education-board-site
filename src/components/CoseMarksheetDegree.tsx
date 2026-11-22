@@ -571,16 +571,16 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
               </div>
 
               {/* STUDENT PARTICULARS & PASSPORT PHOTO */}
-              <div className="flex justify-between items-start gap-2 my-1 px-1 text-[11.5px] sm:text-[12.5px] text-[#0028a5] font-semibold leading-relaxed">
+              <div className="w-full flex items-start justify-between gap-2.5 my-1 px-1 text-[11.5px] sm:text-[12.5px] text-[#0028a5] font-semibold leading-relaxed overflow-hidden">
                 {/* Particulars Stack */}
-                <div className="flex-1 space-y-1">
+                <div className="flex-1 min-w-0 space-y-1 pr-1">
                   <div>
                     <div className="leading-tight">यह प्रमाणित किया जाता है कि</div>
                     <div className="leading-tight flex items-baseline">
                       <span className="w-32 sm:w-36 shrink-0 font-medium">
                         This is to certify that
                       </span>
-                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
+                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase truncate">
                         {student.student_name}
                       </span>
                     </div>
@@ -592,7 +592,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                       <span className="w-32 sm:w-36 shrink-0 font-medium">
                         Son/Daughter of Shri
                       </span>
-                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
+                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase truncate">
                         {student.father_name}
                       </span>
                     </div>
@@ -602,7 +602,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                     <div className="leading-tight">एवम् श्रीमति</div>
                     <div className="leading-tight flex items-baseline">
                       <span className="w-32 sm:w-36 shrink-0 font-medium">and Smt.</span>
-                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase whitespace-nowrap">
+                      <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wider uppercase truncate">
                         {student.mother_name}
                       </span>
                     </div>
@@ -612,7 +612,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                     <div className="leading-tight">जिनकी जन्मतिथि</div>
                     <div className="leading-tight flex items-baseline">
                       <span className="w-32 sm:w-36 shrink-0 font-medium">born on</span>
-                      <span className="font-mono font-bold text-black text-[11px] sm:text-[12.5px] tracking-wider uppercase whitespace-nowrap">
+                      <span className="font-mono font-bold text-black text-[11px] sm:text-[12.5px] tracking-wider uppercase break-words leading-tight">
                         {student.dob_words} ({student.dob})
                       </span>
                     </div>
@@ -636,7 +636,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
 
                   <div className="flex items-baseline pt-0.5">
                     <span className="w-32 sm:w-36 shrink-0" />
-                    <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wide uppercase whitespace-nowrap">
+                    <span className="font-mono font-bold text-black text-xs sm:text-[13px] tracking-wide uppercase break-words leading-tight">
                       {student.school_name || "CENTRE CODE- 105-G NASIK (MS)"}
                     </span>
                   </div>
@@ -649,14 +649,14 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                   </div>
                 </div>
 
-                {/* Passport Photo */}
-                <div className="shrink-0 flex flex-col items-center pt-0.5">
-                  <div className="border border-black p-[2px] bg-white">
+                {/* Passport Photo Frame */}
+                <div className="w-[105px] sm:w-[115px] shrink-0 flex flex-col items-end pt-0.5 pr-0.5">
+                  <div className="border border-black p-[2px] bg-white shadow-2xs">
                     <img
                       src={student.photo_url || "/students/dhirodutta_saha.jpg"}
                       alt={student.student_name}
                       crossOrigin="anonymous"
-                      className="w-[105px] h-[132px] sm:w-[115px] sm:h-[144px] object-cover block grayscale contrast-105"
+                      className="w-[100px] h-[126px] sm:w-[110px] sm:h-[138px] object-cover block grayscale contrast-105"
                     />
                   </div>
                 </div>
