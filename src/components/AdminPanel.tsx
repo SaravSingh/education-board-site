@@ -443,7 +443,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
       const rawData = event.target?.result as string;
       const img = new Image();
       img.onload = () => {
-        const maxDim = 500;
+        const maxDim = 260;
         let width = img.width;
         let height = img.height;
         if (width > maxDim || height > maxDim) {
@@ -461,9 +461,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
-          const optimizedDataUrl = canvas.toDataURL(file.type || "image/jpeg", 0.88);
+          const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
           setPhotoUrl(optimizedDataUrl);
-          showMsg("Local photo loaded & ready!");
+          showMsg("Local photo loaded & optimized!");
         } else {
           setPhotoUrl(rawData);
           showMsg("Local photo loaded & ready!");
@@ -498,7 +498,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   // Add or Update student result handler
   const handleAddOrUpdateResult = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!rollNo || !studentName) return;
+    if (!rollNo.trim() || !studentName.trim()) {
+      showMsg("Please enter both Roll Number and Candidate Name.");
+      return;
+    }
 
     const computedSubjects = subjects.map((s, i) => {
       const total = Number(s.theory) + Number(s.practical);
@@ -519,34 +522,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     const totalWords = numberToIndividualDigitWords(totalMarks);
 
     const newResult: StudentResult = {
-      serial_no: serialNo.toUpperCase(),
-      roll_no: rollNo.toUpperCase(),
-      school_code: schoolCode,
-      exam_center: examCenter.toUpperCase(),
-      status_mode: statusMode.toUpperCase(),
-      fee_status: feeStatus.toUpperCase(),
-      student_name: studentName.toUpperCase(),
-      dob,
-      dob_words: dobWords.toUpperCase(),
-      father_name: fatherName.toUpperCase() || "N/A",
-      mother_name: motherName.toUpperCase() || "N/A",
-      course,
-      batch,
-      enrollment_no: enrollmentNo.toUpperCase(),
-      school_name: schoolName.toUpperCase(),
+      serial_no: (serialNo || "N/A").trim().toUpperCase(),
+      roll_no: rollNo.trim().toUpperCase(),
+      school_code: (schoolCode || "210001").trim(),
+      exam_center: (examCenter || "BHSE DELHI").trim().toUpperCase(),
+      status_mode: (statusMode || "REGULAR").trim().toUpperCase(),
+      fee_status: (feeStatus || "PAID").trim().toUpperCase(),
+      student_name: studentName.trim().toUpperCase(),
+      dob: dob || "01-01-2005",
+      dob_words: dobWords ? dobWords.trim().toUpperCase() : "FIRST JANUARY TWO THOUSAND FIVE",
+      father_name: (fatherName || "N/A").trim().toUpperCase(),
+      mother_name: (motherName || "N/A").trim().toUpperCase(),
+      course: course || "10TH (General)",
+      batch: (batch || examYear || "2026").trim(),
+      enrollment_no: (enrollmentNo || rollNo).trim().toUpperCase(),
+      school_name: (schoolName || "BOARD OF HIGHER SECONDARY EDUCATION DELHI").trim().toUpperCase(),
       photo_url:
         photoUrl ||
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-      exam_year: examYear,
+      exam_year: (examYear || "2026").trim(),
       total_marks: totalMarks,
       max_marks: maxMarks,
       total_words: totalWords,
       percentage,
       status,
-      result_declaration_date: resultDeclarationDate,
-      migration_issue_date: migrationIssueDate || resultDeclarationDate,
-      tc_issue_date: tcIssueDate || resultDeclarationDate,
-      provisional_issue_date: provisionalIssueDate || resultDeclarationDate,
+      result_declaration_date: resultDeclarationDate || "22-06-2026",
+      migration_issue_date: migrationIssueDate || resultDeclarationDate || "22-06-2026",
+      tc_issue_date: tcIssueDate || resultDeclarationDate || "22-06-2026",
+      provisional_issue_date: provisionalIssueDate || resultDeclarationDate || "22-06-2026",
       subjects_json: JSON.stringify(computedSubjects),
       is_hidden: isHidden,
     };
@@ -564,10 +567,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
       issue_date: newResult.migration_issue_date || newResult.result_declaration_date,
     });
 
+    // Reset filters so the new/updated student is immediately visible at the top
+    setSelectedClassFilter("ALL");
+    setSelectedYearFilter("ALL");
+    setSearchTerm("");
+
     setResults([...dbStore.getResults()]);
     setEditingRollNo(null);
     setActiveTab("students");
-    showMsg(`Student ${newResult.student_name} (${newResult.roll_no}) saved successfully!`);
+    showMsg(`Student ${newResult.student_name} (${newResult.roll_no}) saved and added to directory!`);
   };
 
   // Delete result handler
@@ -626,26 +634,37 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     showMsg(`Enrollment Certificate ${newEnr.cert_no} added & verified!`);
   };
 
-  // Filter students based on Class, Year, Search Term
-  const filteredStudents = results.filter((st) => {
+  // Filter students based on Class, Year, Search Term safely
+  const filteredStudents = (results || []).filter((st) => {
+    if (!st) return false;
+    const courseStr = (st.course || "").toUpperCase();
     const matchesClass =
       selectedClassFilter === "ALL" ||
-      (selectedClassFilter === "10TH" && st.course.includes("10")) ||
-      (selectedClassFilter === "12TH" && st.course.includes("12"));
+      (selectedClassFilter === "10TH" &&
+        (courseStr.includes("10") || courseStr.includes("SEC") || courseStr.includes("HIGH"))) ||
+      (selectedClassFilter === "12TH" &&
+        (courseStr.includes("12") || courseStr.includes("SR") || courseStr.includes("INTER")));
 
-    const matchesYear = selectedYearFilter === "ALL" || st.exam_year === selectedYearFilter;
+    const matchesYear =
+      selectedYearFilter === "ALL" ||
+      String(st.exam_year || "").trim() === String(selectedYearFilter || "").trim();
 
+    const cleanSearch = (searchTerm || "").trim().toLowerCase();
     const matchesSearch =
-      st.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      st.roll_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      st.enrollment_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      st.school_name.toLowerCase().includes(searchTerm.toLowerCase());
+      !cleanSearch ||
+      (st.student_name || "").toLowerCase().includes(cleanSearch) ||
+      (st.roll_no || "").toLowerCase().includes(cleanSearch) ||
+      (st.enrollment_no || "").toLowerCase().includes(cleanSearch) ||
+      (st.school_name || "").toLowerCase().includes(cleanSearch) ||
+      (st.serial_no || "").toLowerCase().includes(cleanSearch);
 
     return matchesClass && matchesYear && matchesSearch;
   });
 
   // Unique session years in database for filter
-  const sessionYears = Array.from(new Set(results.map((r) => r.exam_year)))
+  const sessionYears = Array.from(
+    new Set((results || []).map((r) => String(r.exam_year || "").trim()).filter(Boolean)),
+  )
     .sort()
     .reverse();
 
@@ -996,10 +1015,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 <div>
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-amber-400" /> Student Directory &amp;
-                    Records Management
+                    Records Management ({results.length})
                   </h2>
                   <p className="text-xs text-slate-400">
-                    View, edit, toggle visibility, and generate marksheets/certificates for students
+                    Total: {results.length} student{results.length !== 1 ? "s" : ""} registered (showing {filteredStudents.length})
                   </p>
                 </div>
 
@@ -1167,8 +1186,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={8} className="p-8 text-center text-slate-500 font-medium">
-                          No student records found matching the filter criteria.
+                        <td colSpan={8} className="p-8 text-center text-slate-400 font-medium">
+                          <div className="space-y-2">
+                            <p>No student records found matching the active filter criteria.</p>
+                            {results.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedClassFilter("ALL");
+                                  setSelectedYearFilter("ALL");
+                                  setSearchTerm("");
+                                }}
+                                className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded cursor-pointer transition shadow-xs"
+                              >
+                                Clear Filters &amp; View All ({results.length} Students)
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     )}

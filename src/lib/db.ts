@@ -1010,7 +1010,10 @@ class LocalStore {
         localStorage.getItem(RESULTS_STORAGE_KEY) ||
         localStorage.getItem("bhse_results_v9") ||
         localStorage.getItem("bhse_results_v8") ||
-        localStorage.getItem("bhse_results_v7");
+        localStorage.getItem("bhse_results_v7") ||
+        localStorage.getItem("bhse_results_v6") ||
+        localStorage.getItem("bhse_results_v5") ||
+        localStorage.getItem("bhse_results");
       if (savedRes) {
         try {
           const parsed: StudentResult[] = JSON.parse(savedRes);
@@ -1037,7 +1040,10 @@ class LocalStore {
         localStorage.getItem(ENROLLMENTS_STORAGE_KEY) ||
         localStorage.getItem("bhse_enrollments_v9") ||
         localStorage.getItem("bhse_enrollments_v8") ||
-        localStorage.getItem("bhse_enrollments_v7");
+        localStorage.getItem("bhse_enrollments_v7") ||
+        localStorage.getItem("bhse_enrollments_v6") ||
+        localStorage.getItem("bhse_enrollments_v5") ||
+        localStorage.getItem("bhse_enrollments");
       if (savedEnr) {
         try {
           const parsedEnr: EnrollmentRecord[] = JSON.parse(savedEnr);
@@ -1119,11 +1125,15 @@ class LocalStore {
 
   private save() {
     if (typeof window !== "undefined") {
-      localStorage.setItem(ANNOUNCEMENTS_STORAGE_KEY, JSON.stringify(this.announcements));
-      localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(this.results));
-      localStorage.setItem(ENROLLMENTS_STORAGE_KEY, JSON.stringify(this.enrollments));
-      localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(this.inquiries));
-      localStorage.setItem(ADMIN_CREDS_STORAGE_KEY, JSON.stringify(this.adminCreds));
+      try {
+        localStorage.setItem(ANNOUNCEMENTS_STORAGE_KEY, JSON.stringify(this.announcements));
+        localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(this.results));
+        localStorage.setItem(ENROLLMENTS_STORAGE_KEY, JSON.stringify(this.enrollments));
+        localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(this.inquiries));
+        localStorage.setItem(ADMIN_CREDS_STORAGE_KEY, JSON.stringify(this.adminCreds));
+      } catch (err) {
+        console.warn("Storage save error (e.g. quota or security):", err);
+      }
     }
     this.notify();
   }
@@ -1302,10 +1312,9 @@ class LocalStore {
     });
 
     if (idx >= 0) {
-      this.results[idx] = sanitizedRes;
-    } else {
-      this.results.unshift(sanitizedRes);
+      this.results.splice(idx, 1);
     }
+    this.results.unshift(sanitizedRes);
     this.save();
     return sanitizedRes;
   }
