@@ -144,9 +144,15 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
   const courseDisplayName = isClass12 ? "SENIOR - SECONDARY" : "SECONDARY";
 
   const examSessionName =
-    student.exam_year && student.exam_year !== "N/A"
-      ? `APRIL - ${student.exam_year}`
-      : "APRIL - 2012";
+    student.batch && student.batch.trim().length > 0 && student.batch !== "N/A"
+      ? student.batch.toUpperCase().startsWith("SESSION") ||
+        student.batch.toUpperCase().includes("APRIL") ||
+        student.batch.toUpperCase().includes("MAY")
+        ? student.batch.toUpperCase()
+        : `SESSION: ${student.batch.toUpperCase()}`
+      : student.exam_year && student.exam_year !== "N/A"
+      ? `SESSION: ${student.exam_year}`
+      : "SESSION: 2024";
 
   const schoolDisplayName =
     student.school_name && student.school_name.trim().length > 0
@@ -156,7 +162,7 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
   const issueDate =
     student.result_declaration_date && student.result_declaration_date !== "N/A"
       ? student.result_declaration_date.replace(/-/g, "/")
-      : "19/06/2012";
+      : "02/10/2026";
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -442,9 +448,9 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
                 <div className="space-y-0.5 text-xs text-slate-800 font-semibold">
                   <div>दिल्ली</div>
                   <div className="font-mono text-xs text-slate-600">Delhi</div>
-                  <div className="pt-1.5">दिनांक</div>
+                  <div className="pt-1.5">दिनांक / Date of Issue</div>
                   <div className="flex items-baseline gap-1">
-                    <span>Dated</span>
+                    <span>Date of Issue / Dated :</span>
                     <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-800 px-2">
                       {issueDate}
                     </span>

@@ -819,9 +819,9 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                     <div className="pt-2 text-xs sm:text-[12px] font-bold leading-tight">
                       <div>दिल्ली</div>
                       <div>Delhi</div>
-                      <div className="mt-1">दिनांक :</div>
+                      <div className="mt-1">दिनांक / Date of Issue :</div>
                       <div className="flex items-baseline">
-                        <span>Dated :</span>
+                        <span>Date of Issue / Dated :</span>
                         <span className="font-mono font-bold text-black ml-2 text-xs sm:text-[13px]">
                           {student.result_declaration_date
                             ? student.result_declaration_date.replace(/-/g, "/")
