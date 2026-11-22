@@ -46,6 +46,7 @@ import {
   LogOut,
   Download,
   Loader2,
+  Upload,
 } from "lucide-react";
 import logoEmblem from "@/assets/logo_emblem.svg";
 import digitalIndia from "@/assets/digital_india.svg";
@@ -426,12 +427,62 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
     showMsg(`Loaded Roll No ${r.roll_no} into editor.`);
   };
 
+  // Local photo upload handler (from Downloads, Documents, etc.)
+  const handleLocalPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const rawData = event.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 500;
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const optimizedDataUrl = canvas.toDataURL(file.type || "image/jpeg", 0.88);
+          setPhotoUrl(optimizedDataUrl);
+          showMsg("Local photo loaded & ready!");
+        } else {
+          setPhotoUrl(rawData);
+          showMsg("Local photo loaded & ready!");
+        }
+      };
+      img.onerror = () => {
+        setPhotoUrl(rawData);
+        showMsg("Local photo loaded & ready!");
+      };
+      img.src = rawData;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
   const handleClearForm = () => {
     setEditingRollNo(null);
     setRollNo("");
     setStudentName("");
     setFatherName("");
     setMotherName("");
+    setEnrollmentNo("");
+    setBatch("SESSION: 2025-26");
+    setExamYear("2026");
+    setResultDeclarationDate("22-06-2026");
     setIsHidden(false);
   };
 
@@ -1254,6 +1305,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                   <div>
                     <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                      Enrollment No.
+                    </label>
+                    <input
+                      type="text"
+                      value={enrollmentNo}
+                      onChange={(e) => setEnrollmentNo(e.target.value)}
+                      placeholder="e.g. 1028112518013"
+                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
                       Class Level
                     </label>
                     <select
@@ -1280,6 +1344,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold"
                     />
                   </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                      Session / Batch
+                    </label>
+                    <input
+                      type="text"
+                      value={batch}
+                      onChange={(e) => setBatch(e.target.value)}
+                      placeholder="e.g. 2024 or SESSION: 2023-24"
+                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-300"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                      Date of Issue
+                    </label>
+                    <input
+                      type="text"
+                      value={resultDeclarationDate}
+                      onChange={(e) => setResultDeclarationDate(e.target.value)}
+                      placeholder="DD/MM/YYYY or DD-MM-YYYY"
+                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-emerald-400"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1297,15 +1387,39 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
                   <div>
                     <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
-                      Candidate Photo URL
+                      Candidate Photo (URL or Local File)
                     </label>
-                    <input
-                      type="text"
-                      value={photoUrl}
-                      onChange={(e) => setPhotoUrl(e.target.value)}
-                      placeholder="https://..."
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
-                    />
+                    <div className="flex items-center gap-2">
+                      {photoUrl && (
+                        <div className="relative shrink-0">
+                          <img
+                            src={photoUrl}
+                            alt="Preview"
+                            className="w-8 h-8 object-cover rounded border border-slate-600 bg-slate-950"
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = "none";
+                            }}
+                          />
+                        </div>
+                      )}
+                      <input
+                        type="text"
+                        value={photoUrl}
+                        onChange={(e) => setPhotoUrl(e.target.value)}
+                        placeholder="https://... or choose local file"
+                        className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
+                      />
+                      <label className="shrink-0 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded cursor-pointer transition shadow-sm select-none">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Choose File</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleLocalPhotoUpload}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
 

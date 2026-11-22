@@ -575,7 +575,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                       ? "Senior Secondary School Certificate Examination (10+2)"
                       : "Secondary School Certificate Examination (High School)"}{" "}
                     <span className="font-mono font-bold text-black ml-1.5 text-xs sm:text-[14px]">
-                      {student.exam_year || "2026"}
+                      {student.batch || student.exam_year || "2026"}
                     </span>
                   </div>
                   <div className="text-[#0028a5] font-bold text-[11px] sm:text-[12.5px] mt-0.5">
@@ -648,7 +648,7 @@ export const CoseMarksheetDegree: React.FC<CoseMarksheetDegreeProps> = ({
                         Examination,
                       </span>
                       <span className="font-mono font-bold text-black ml-2 text-xs sm:text-[13px]">
-                        {student.exam_year || "2026"}
+                        {student.batch || student.exam_year || "2026"}
                       </span>
                     </div>
                   </div>
