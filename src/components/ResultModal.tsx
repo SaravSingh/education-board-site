@@ -127,7 +127,7 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
       setStep(2); // Move to Step 2: Student Details preview card
     } else {
       setErrorMsg(
-        `No Result found for Roll No. '${rollNoInput}'. Please verify your Examination Hall Ticket and try again.`,
+        `No Result found for '${rollNoInput}'. Please verify your Roll Number or Enrollment Number and try again.`,
       );
     }
   };
@@ -393,17 +393,17 @@ export const ResultModal: React.FC<ResultModalProps> = ({ isOpen, onClose }) => 
                       </select>
                     </div>
 
-                    {/* ROLL NO */}
+                    {/* ROLL NO OR ENROLLMENT NO */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                       <label className="sm:w-1/3 text-gray-700 font-bold uppercase text-[11px] sm:text-xs">
-                        ROLL No.
+                        ROLL / ENROLLMENT NO.
                       </label>
                       <input
                         type="text"
                         required
                         value={rollNoInput}
                         onChange={(e) => setRollNoInput(e.target.value)}
-                        placeholder="e.g. 500109 or 26019482"
+                        placeholder="Enter Roll No or Enrollment No"
                         className="sm:w-2/3 border border-gray-300 rounded-md px-3 py-2 font-mono text-xs text-gray-900 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-2xs"
                       />
                     </div>

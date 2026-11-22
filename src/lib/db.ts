@@ -978,6 +978,13 @@ const INITIAL_ENROLLMENTS: EnrollmentRecord[] = [
 
 type StoreListener = () => void;
 
+const RESULTS_STORAGE_KEY = "bhse_results_v10";
+const ENROLLMENTS_STORAGE_KEY = "bhse_enrollments_v10";
+const ANNOUNCEMENTS_STORAGE_KEY = "bhse_announcements_v2";
+const INQUIRIES_STORAGE_KEY = "bhse_inquiries_v1";
+const ADMIN_CREDS_STORAGE_KEY = "bhse_admin_creds";
+const ADMIN_AUTH_SESSION_KEY = "bhse_admin_auth";
+
 class LocalStore {
   private announcements: Announcement[] = INITIAL_ANNOUNCEMENTS;
   private results: StudentResult[] = INITIAL_RESULTS;
@@ -989,81 +996,70 @@ class LocalStore {
 
   constructor() {
     if (typeof window !== "undefined") {
-      const savedAnn = localStorage.getItem("bhse_announcements_v2");
+      const savedAnn = localStorage.getItem(ANNOUNCEMENTS_STORAGE_KEY);
       if (savedAnn) {
         try {
           this.announcements = JSON.parse(savedAnn);
         } catch (e) {
           console.warn("Failed to parse saved announcements:", e);
         }
-      } else {
-        localStorage.removeItem("bhse_announcements");
-        this.save();
       }
-      const savedRes = localStorage.getItem("bhse_results_v8");
+
+      // Load results from primary key or fallback keys
+      const savedRes =
+        localStorage.getItem(RESULTS_STORAGE_KEY) ||
+        localStorage.getItem("bhse_results_v9") ||
+        localStorage.getItem("bhse_results_v8") ||
+        localStorage.getItem("bhse_results_v7");
       if (savedRes) {
         try {
           const parsed: StudentResult[] = JSON.parse(savedRes);
-          // Ensure any missing initial results are present, and sync updated initial course values
-          const existingRolls = new Set(parsed.map((r) => r.roll_no.toLowerCase()));
+          const existingRolls = new Set(
+            parsed.map((r) => (r.roll_no ? r.roll_no.toLowerCase().trim() : "")),
+          );
           INITIAL_RESULTS.forEach((initR) => {
-            if (!existingRolls.has(initR.roll_no.toLowerCase())) {
-              parsed.unshift(initR);
-            } else {
-              const target = parsed.find(
-                (p) => p.roll_no.toLowerCase() === initR.roll_no.toLowerCase(),
-              );
-              if (target) {
-                target.course = initR.course;
-              }
+            const cleanInit = initR.roll_no.toLowerCase().trim();
+            if (!existingRolls.has(cleanInit)) {
+              parsed.push(initR);
             }
           });
           this.results = parsed;
         } catch (e) {
           console.warn("Failed to parse saved results:", e);
+          this.results = [...INITIAL_RESULTS];
         }
       } else {
-        localStorage.removeItem("bhse_results");
-        localStorage.removeItem("bhse_results_v2");
-        localStorage.removeItem("bhse_results_v3");
-        localStorage.removeItem("bhse_results_v4");
-        localStorage.removeItem("bhse_results_v5");
-        localStorage.removeItem("bhse_results_v6");
-        localStorage.removeItem("bhse_results_v7");
-        this.save();
+        this.results = [...INITIAL_RESULTS];
       }
-      const savedEnr = localStorage.getItem("bhse_enrollments_v8");
+
+      // Load enrollments from primary key or fallback keys
+      const savedEnr =
+        localStorage.getItem(ENROLLMENTS_STORAGE_KEY) ||
+        localStorage.getItem("bhse_enrollments_v9") ||
+        localStorage.getItem("bhse_enrollments_v8") ||
+        localStorage.getItem("bhse_enrollments_v7");
       if (savedEnr) {
         try {
           const parsedEnr: EnrollmentRecord[] = JSON.parse(savedEnr);
-          const existingEnrs = new Set(parsedEnr.map((e) => e.enrollment_no.toLowerCase()));
+          const existingEnrs = new Set(
+            parsedEnr.map((e) => (e.enrollment_no ? e.enrollment_no.toLowerCase().trim() : "")),
+          );
           INITIAL_ENROLLMENTS.forEach((initE) => {
-            if (!existingEnrs.has(initE.enrollment_no.toLowerCase())) {
-              parsedEnr.unshift(initE);
-            } else {
-              const targetEnr = parsedEnr.find(
-                (p) => p.enrollment_no.toLowerCase() === initE.enrollment_no.toLowerCase(),
-              );
-              if (targetEnr) {
-                targetEnr.course = initE.course;
-              }
+            const cleanInit = initE.enrollment_no.toLowerCase().trim();
+            if (!existingEnrs.has(cleanInit)) {
+              parsedEnr.push(initE);
             }
           });
           this.enrollments = parsedEnr;
         } catch (e) {
           console.warn("Failed to parse saved enrollments:", e);
+          this.enrollments = [...INITIAL_ENROLLMENTS];
         }
       } else {
-        localStorage.removeItem("bhse_enrollments");
-        localStorage.removeItem("bhse_enrollments_v2");
-        localStorage.removeItem("bhse_enrollments_v3");
-        localStorage.removeItem("bhse_enrollments_v4");
-        localStorage.removeItem("bhse_enrollments_v5");
-        localStorage.removeItem("bhse_enrollments_v6");
-        localStorage.removeItem("bhse_enrollments_v7");
-        this.save();
+        this.enrollments = [...INITIAL_ENROLLMENTS];
       }
-      const savedInq = localStorage.getItem("bhse_inquiries_v1");
+
+      const savedInq = localStorage.getItem(INQUIRIES_STORAGE_KEY);
       if (savedInq) {
         try {
           this.inquiries = JSON.parse(savedInq);
@@ -1071,7 +1067,8 @@ class LocalStore {
           console.warn("Failed to parse saved inquiries:", e);
         }
       }
-      const savedAdmin = localStorage.getItem("bhse_admin_creds");
+
+      const savedAdmin = localStorage.getItem(ADMIN_CREDS_STORAGE_KEY);
       if (savedAdmin) {
         try {
           this.adminCreds = JSON.parse(savedAdmin);
@@ -1079,10 +1076,14 @@ class LocalStore {
           console.warn("Failed to parse saved admin credentials:", e);
         }
       }
-      const savedAuth = sessionStorage.getItem("bhse_admin_auth");
+
+      const savedAuth = sessionStorage.getItem(ADMIN_AUTH_SESSION_KEY);
       if (savedAuth === "true") {
         this.isLoggedIn = true;
       }
+
+      // Standardize and persist immediately
+      this.save();
 
       window.addEventListener("storage", () => {
         this.reloadFromStorage();
@@ -1103,13 +1104,13 @@ class LocalStore {
   private reloadFromStorage() {
     if (typeof window === "undefined") return;
     try {
-      const savedAnn = localStorage.getItem("bhse_announcements_v2");
+      const savedAnn = localStorage.getItem(ANNOUNCEMENTS_STORAGE_KEY);
       if (savedAnn) this.announcements = JSON.parse(savedAnn);
-      const savedRes = localStorage.getItem("bhse_results_v7");
+      const savedRes = localStorage.getItem(RESULTS_STORAGE_KEY);
       if (savedRes) this.results = JSON.parse(savedRes);
-      const savedEnr = localStorage.getItem("bhse_enrollments_v7");
+      const savedEnr = localStorage.getItem(ENROLLMENTS_STORAGE_KEY);
       if (savedEnr) this.enrollments = JSON.parse(savedEnr);
-      const savedInq = localStorage.getItem("bhse_inquiries_v1");
+      const savedInq = localStorage.getItem(INQUIRIES_STORAGE_KEY);
       if (savedInq) this.inquiries = JSON.parse(savedInq);
     } catch (e) {
       console.warn("Error reloading storage:", e);
@@ -1118,11 +1119,11 @@ class LocalStore {
 
   private save() {
     if (typeof window !== "undefined") {
-      localStorage.setItem("bhse_announcements_v2", JSON.stringify(this.announcements));
-      localStorage.setItem("bhse_results_v7", JSON.stringify(this.results));
-      localStorage.setItem("bhse_enrollments_v7", JSON.stringify(this.enrollments));
-      localStorage.setItem("bhse_inquiries_v1", JSON.stringify(this.inquiries));
-      localStorage.setItem("bhse_admin_creds", JSON.stringify(this.adminCreds));
+      localStorage.setItem(ANNOUNCEMENTS_STORAGE_KEY, JSON.stringify(this.announcements));
+      localStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(this.results));
+      localStorage.setItem(ENROLLMENTS_STORAGE_KEY, JSON.stringify(this.enrollments));
+      localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(this.inquiries));
+      localStorage.setItem(ADMIN_CREDS_STORAGE_KEY, JSON.stringify(this.adminCreds));
     }
     this.notify();
   }
@@ -1198,23 +1199,79 @@ class LocalStore {
     return this.results;
   }
 
-  getResultByRoll(rollNo: string): StudentResult | undefined {
-    const found = this.results.find(
-      (r) => r.roll_no.trim().toUpperCase() === rollNo.trim().toUpperCase(),
-    );
-    if (found && found.is_hidden) {
-      return undefined; // Hidden from public search
+  getResultByRoll(term: string): StudentResult | undefined {
+    if (!term) return undefined;
+    const cleanSearch = term.trim().toUpperCase().replace(/[\s-]/g, "");
+    if (!cleanSearch) return undefined;
+
+    // 1. Direct match on normalized roll_no
+    let found = this.results.find((r) => {
+      const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+      return rRoll === cleanSearch;
+    });
+
+    // 2. Direct match on normalized enrollment_no
+    if (!found) {
+      found = this.results.find((r) => {
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        return rEnr && rEnr === cleanSearch;
+      });
     }
+
+    // 3. Direct match on serial_no
+    if (!found) {
+      found = this.results.find((r) => {
+        const rSer = (r.serial_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        return rSer && rSer === cleanSearch;
+      });
+    }
+
+    // 4. Substring or partial match for search length >= 5
+    if (!found && cleanSearch.length >= 5) {
+      found = this.results.find((r) => {
+        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        return (
+          rRoll.includes(cleanSearch) ||
+          cleanSearch.includes(rRoll) ||
+          (rEnr && (rEnr.includes(cleanSearch) || cleanSearch.includes(rEnr)))
+        );
+      });
+    }
+
+    // Hidden check: If hidden by admin, do not show in public result query
+    if (found && found.is_hidden) {
+      return undefined;
+    }
+
     return found;
   }
 
-  getResultByRollAdmin(rollNo: string): StudentResult | undefined {
-    return this.results.find((r) => r.roll_no.trim().toUpperCase() === rollNo.trim().toUpperCase());
+  getResultByRollAdmin(term: string): StudentResult | undefined {
+    if (!term) return undefined;
+    const cleanSearch = term.trim().toUpperCase().replace(/[\s-]/g, "");
+    if (!cleanSearch) return undefined;
+
+    return (
+      this.results.find((r) => {
+        const rRoll = (r.roll_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        return rRoll === cleanSearch;
+      }) ||
+      this.results.find((r) => {
+        const rEnr = (r.enrollment_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        return rEnr && rEnr === cleanSearch;
+      }) ||
+      this.results.find((r) => {
+        const rSer = (r.serial_no || "").trim().toUpperCase().replace(/[\s-]/g, "");
+        return rSer && rSer === cleanSearch;
+      })
+    );
   }
 
   toggleStudentVisibility(rollNo: string): boolean {
+    const cleanRoll = rollNo.trim().toUpperCase().replace(/[\s-]/g, "");
     const student = this.results.find(
-      (r) => r.roll_no.trim().toUpperCase() === rollNo.trim().toUpperCase(),
+      (r) => r.roll_no.trim().toUpperCase().replace(/[\s-]/g, "") === cleanRoll,
     );
     if (student) {
       student.is_hidden = !student.is_hidden;
@@ -1225,16 +1282,32 @@ class LocalStore {
   }
 
   saveResult(res: StudentResult): StudentResult {
-    const idx = this.results.findIndex(
-      (r) => r.roll_no.trim().toUpperCase() === res.roll_no.trim().toUpperCase(),
-    );
+    const cleanRoll = (res.roll_no || "").trim().toUpperCase();
+    const cleanEnr = (res.enrollment_no || "").trim().toUpperCase();
+
+    const sanitizedRes: StudentResult = {
+      ...res,
+      roll_no: cleanRoll,
+      enrollment_no: cleanEnr || res.enrollment_no,
+      student_name: (res.student_name || "").trim().toUpperCase(),
+    };
+
+    const idx = this.results.findIndex((r) => {
+      const rRoll = (r.roll_no || "").trim().toUpperCase();
+      const rEnr = (r.enrollment_no || "").trim().toUpperCase();
+      return (
+        (cleanRoll && rRoll === cleanRoll) ||
+        (cleanEnr && rEnr && rEnr === cleanEnr)
+      );
+    });
+
     if (idx >= 0) {
-      this.results[idx] = res;
+      this.results[idx] = sanitizedRes;
     } else {
-      this.results.unshift(res);
+      this.results.unshift(sanitizedRes);
     }
     this.save();
-    return res;
+    return sanitizedRes;
   }
 
   deleteResult(rollNo: string) {
@@ -1323,16 +1396,22 @@ class LocalStore {
   }
 
   saveEnrollment(enr: EnrollmentRecord): EnrollmentRecord {
+    const cleanEnr = (enr.enrollment_no || "").trim().toUpperCase();
+    const sanitizedEnr: EnrollmentRecord = {
+      ...enr,
+      enrollment_no: cleanEnr,
+      student_name: (enr.student_name || "").trim().toUpperCase(),
+    };
     const idx = this.enrollments.findIndex(
-      (e) => e.enrollment_no.toUpperCase() === enr.enrollment_no.toUpperCase(),
+      (e) => (e.enrollment_no || "").trim().toUpperCase() === cleanEnr,
     );
     if (idx >= 0) {
-      this.enrollments[idx] = enr;
+      this.enrollments[idx] = sanitizedEnr;
     } else {
-      this.enrollments.unshift(enr);
+      this.enrollments.unshift(sanitizedEnr);
     }
     this.save();
-    return enr;
+    return sanitizedEnr;
   }
 
   deleteEnrollment(enrNo: string) {

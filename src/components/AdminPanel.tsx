@@ -82,13 +82,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   // Inquiries state
   const [inquiries, setInquiries] = useState<InquiryRecord[]>(dbStore.getInquiries());
 
-  useEffect(() => {
-    const unsub = dbStore.subscribe(() => {
-      setInquiries(dbStore.getInquiries());
-    });
-    return unsub;
-  }, []);
-
   // Announcements state
   const [announcements, setAnnouncements] = useState<Announcement[]>(dbStore.getAnnouncements());
   const [annText, setAnnText] = useState("");
@@ -102,6 +95,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [editingRollNo, setEditingRollNo] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsub = dbStore.subscribe(() => {
+      setInquiries(dbStore.getInquiries());
+      setResults([...dbStore.getResults()]);
+      setEnrollments([...dbStore.getEnrollments()]);
+      setAnnouncements([...dbStore.getAnnouncements()]);
+    });
+    return unsub;
+  }, []);
 
   // Form Fields for Add/Edit Student
   const [serialNo, setSerialNo] = useState("250110");
@@ -1968,8 +1971,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => handleToggleVisibility(detailStudent.roll_no)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 shadow-sm border active:scale-95 ${
                     detailStudent.is_hidden
-                      ? "bg-red-950/80 hover:bg-red-900 text-red-200 border-red-700/80"
-                      : "bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border-emerald-700/80"
+                    ? "bg-red-950/80 hover:bg-red-900 text-red-200 border-red-700/80"
+                    : "bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border-emerald-700/80"
                   }`}
                   title={
                     detailStudent.is_hidden
@@ -2040,8 +2043,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("COSE_MARKSHEET")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "COSE_MARKSHEET"
-                      ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
+                    ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
                   }`}
                 >
                   <FileText
@@ -2054,8 +2057,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("MIGRATION")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "MIGRATION"
-                      ? "bg-purple-800 text-white shadow-sm ring-1 ring-purple-900 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-purple-900"
+                    ? "bg-purple-800 text-white shadow-sm ring-1 ring-purple-900 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-purple-900"
                   }`}
                 >
                   <Award
@@ -2068,8 +2071,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("COSE_DEGREE")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "COSE_DEGREE"
-                      ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
+                    ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
                   }`}
                 >
                   <GraduationCap
@@ -2082,8 +2085,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("PROVISIONAL")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "PROVISIONAL"
-                      ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
+                    ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
                   }`}
                 >
                   <Award
@@ -2096,8 +2099,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("TC")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "TC"
-                      ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
+                    ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
                   }`}
                 >
                   <School
@@ -2110,8 +2113,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("TRANSCRIPT")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "TRANSCRIPT"
-                      ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
+                    ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-blue-900"
                   }`}
                 >
                   <FileText
@@ -2124,8 +2127,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                   onClick={() => setDocTab("MARKSHEET")}
                   className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                     docTab === "MARKSHEET"
-                      ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
-                      : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-600"
+                    ? "bg-[#002b7f] text-white shadow-sm ring-1 ring-blue-700 font-extrabold"
+                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-600"
                   }`}
                 >
                   <FileCheck
@@ -2143,8 +2146,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                     onClick={() => setAdminInternetCopy((prev) => !prev)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 border cursor-pointer active:scale-95 ${
                       adminInternetCopy
-                        ? "bg-amber-50 text-amber-900 border-amber-300 shadow-2xs"
-                        : "bg-blue-50 text-blue-900 border-blue-200 shadow-2xs"
+                      ? "bg-amber-50 text-amber-900 border-amber-300 shadow-2xs"
+                      : "bg-blue-50 text-blue-900 border-blue-200 shadow-2xs"
                     }`}
                     title="Toggle between Clean Official certificate and Internet Result copy watermark"
                   >
@@ -3128,7 +3131,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                           <div className="pt-1">
                             Date:{" "}
                             <span className="font-mono font-black text-slate-950 border-b border-dotted border-slate-900 px-2">
-                              {detailStudent.result_declaration_date}
                             </span>
                           </div>
                           <div className="pt-2 font-bold text-slate-700">
