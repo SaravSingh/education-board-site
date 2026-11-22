@@ -107,7 +107,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
   }, []);
 
   // Form Fields for Add/Edit Student
-  const [serialNo, setSerialNo] = useState("250110");
+  const [serialNo, setSerialNo] = useState("N/A");
   const [rollNo, setRollNo] = useState("500110");
   const [schoolCode, setSchoolCode] = useState("105");
   const [examCenter, setExamCenter] = useState("105 - ELLENABAD EXAM HALL");
@@ -487,8 +487,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
 
   const handleClearForm = () => {
     setEditingRollNo(null);
+    setSerialNo("N/A");
     setRollNo("");
     setStudentName("");
+    setDob("");
+    setDobWords("");
     setFatherName("");
     setMotherName("");
     setEnrollmentNo("");
@@ -1246,21 +1249,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                 className="bg-slate-900 p-5 rounded-lg border border-slate-700 space-y-5"
               >
                 {/* Registration Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
-                      Serial No.
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={serialNo}
-                      onChange={(e) => setSerialNo(e.target.value)}
-                      placeholder="e.g. 250109"
-                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
-                    />
-                  </div>
-
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
                       Roll Number
@@ -1329,6 +1318,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToSite }) => {
                       onChange={(e) => setDob(e.target.value)}
                       placeholder="05-01-1992"
                       className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase mb-1">
+                      Date of Birth in Words (DOB in Words)
+                    </label>
+                    <input
+                      type="text"
+                      value={dobWords}
+                      onChange={(e) => setDobWords(e.target.value)}
+                      placeholder="e.g. SECOND MAY TWO THOUSAND ONE"
+                      className="w-full text-xs bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono font-bold text-amber-300 uppercase"
                     />
                   </div>
 
