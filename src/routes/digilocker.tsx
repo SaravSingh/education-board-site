@@ -8,6 +8,7 @@ import {
   Loader2,
   Eye,
   EyeOff,
+  CheckCircle2,
 } from "lucide-react";
 import digiLockerLogo from "@/assets/digilocker_logo.png";
 import logoEmblem from "@/assets/logo_emblem.svg";
@@ -159,6 +160,7 @@ function DigiLockerPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loggedInStudent, setLoggedInStudent] = useState<StudentResult | null>(null);
+  const [isScannedMode, setIsScannedMode] = useState(false);
 
   // Auto-load and display verified document when accessed directly or via QR Code scan
   useEffect(() => {
@@ -172,6 +174,7 @@ function DigiLockerPage() {
           params.get("enrollment") ||
           params.get("id");
         if (rollParam) {
+          setIsScannedMode(true);
           const student = dbStore.getResultByRoll(rollParam.trim());
           if (student) {
             setLoggedInStudent(student);
@@ -325,23 +328,30 @@ function DigiLockerPage() {
           }
         `}</style>
 
-        {/* TOP ACTION BAR (Matches User Screenshot) */}
+        {/* TOP ACTION BAR */}
         <div className="w-full max-w-[760px] mx-auto flex items-center justify-between pb-3 print:hidden">
-          {/* Logout Button */}
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="bg-[#dc2626] hover:bg-[#b91c1c] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
+          {/* Hide Logout and Back button when scanned; show official verification badge */}
+          {isScannedMode ? (
+            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1.5 rounded-md shadow-2xs select-none">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Official DigiLocker Verified Document</span>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="bg-[#dc2626] hover:bg-[#b91c1c] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </button>
+          )}
 
           {/* Print Marksheet Button */}
           <button
             type="button"
             onClick={handlePrintMarksheet}
-            className="bg-[#0066ff] hover:bg-[#0055d4] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+            className="bg-[#0066ff] hover:bg-[#0055d4] text-white px-4 py-1.5 sm:py-2 rounded-md font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95 ml-auto"
           >
             <Printer className="w-4 h-4" />
             <span>Print Marksheet</span>
