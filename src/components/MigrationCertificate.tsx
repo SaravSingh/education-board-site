@@ -160,7 +160,11 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
       : "OM INSTITUTE NASIK (105)-G (MS)";
 
   const issueDate =
-    student.result_declaration_date && student.result_declaration_date !== "N/A"
+    student.migration_issue_date &&
+    student.migration_issue_date.trim().length > 0 &&
+    student.migration_issue_date !== "N/A"
+      ? student.migration_issue_date.replace(/-/g, "/")
+      : student.result_declaration_date && student.result_declaration_date !== "N/A"
       ? student.result_declaration_date.replace(/-/g, "/")
       : "02/10/2026";
 
@@ -315,13 +319,12 @@ export const MigrationCertificate: React.FC<MigrationCertificateProps> = ({
 
                   {/* Central Round Emblem */}
                   <div className="pt-1.5 pb-0.5 flex justify-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full p-1 border-2 border-[#b8860b] shadow-xs flex items-center justify-center ring-2 ring-[#0c2356]/15">
-                      <img
-                        src="/bhse_emblem_blue.png"
-                        alt="BHSE Emblem"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
+                    <img
+                      src="/bhse_emblem_blue.png"
+                      alt="BHSE Emblem"
+                      crossOrigin="anonymous"
+                      className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+                    />
                   </div>
                 </div>
 

@@ -53,6 +53,9 @@ export interface StudentResult {
   board_name?: string; // "COUNCIL OF OPEN SCHOOL EDUCATION, RAJASTHAN"
   format?: "COSE" | "BHSE";
   aadhaar_no?: string;
+  migration_issue_date?: string;
+  tc_issue_date?: string;
+  provisional_issue_date?: string;
 }
 
 export interface EnrollmentRecord {
